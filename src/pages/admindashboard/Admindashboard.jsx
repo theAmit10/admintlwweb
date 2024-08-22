@@ -23,6 +23,9 @@ import { AllDeposit } from "../../components/alldeposit/AllDeposit";
 import { AllWithdraw } from "../../components/allwithdraw/AllWithdraw";
 import Aboutus from "../../components/aboutus/Aboutus";
 import Balancesheet from "../../components/balancesheet/Balancesheet";
+import ChangePassword from "../../components/changepassword/ChangePassword";
+import Logout from "../../components/logout/Logout";
+import Notification from "../../components/notification/Notification";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);
@@ -288,6 +291,23 @@ function Admindashboard() {
 
           <div
             className="adLContenContainer"
+            key={"changepassword"}
+            onClick={() => handleComponentClick("changepassword")}
+            style={{
+              background:
+                selectedComponent === "changepassword"
+                  ? "linear-gradient(180deg, #7EC630, #3D6017)"
+                  : "linear-gradient(180deg, #011833, #011833)",
+            }}
+          >
+            <div className="adLContenContainerIcon">
+              <FaInfoCircle color={COLORS.white_s} size={"2.5rem"} />
+            </div>
+            <label className="adLContenContainerLabel">Change Password</label>
+          </div>
+
+          <div
+            className="adLContenContainer"
             key={"aboutus"}
             onClick={() => handleComponentClick("aboutus")}
             style={{
@@ -303,6 +323,23 @@ function Admindashboard() {
             <label className="adLContenContainerLabel">About us</label>
           </div>
 
+          <div
+            className="adLContenContainer"
+            key={"logout"}
+            onClick={() => handleComponentClick("logout")}
+            style={{
+              background:
+                selectedComponent === "logout"
+                  ? "linear-gradient(180deg, #7EC630, #3D6017)"
+                  : "linear-gradient(180deg, #011833, #011833)",
+            }}
+          >
+            <div className="adLContenContainerIcon">
+              <FaInfoCircle color={COLORS.white_s} size={"2.5rem"} />
+            </div>
+            <label className="adLContenContainerLabel">Log out</label>
+          </div>
+
           {/** CONTENT end */}
         </div>
 
@@ -315,6 +352,9 @@ function Admindashboard() {
           {selectedComponent === "withdraw" && <AllWithdraw />}
           {selectedComponent === "aboutus" && <Aboutus />}
           {selectedComponent === "balancesheet" && <Balancesheet />}
+          {selectedComponent === "changepassword" && <ChangePassword />}
+          {selectedComponent === "logout" && <Logout />}
+          {selectedComponent === "notification" && <Notification />}
         </div>
       </div>
 
