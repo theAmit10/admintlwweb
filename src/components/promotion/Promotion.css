@@ -1,0 +1,44 @@
+.gameDescriptionContainer{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #0162AF, #011833);
+    border-radius: 1rem;
+}
+
+.allContentContainer-promotion{
+    min-height: 20rem;
+    background-color: var(--background);
+    margin-left: 2rem;
+    margin-right: 2rem;
+    margin-bottom: 0.5rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.promotionMainContainer{
+    flex: 1;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: 60vh;
+   
+}
+
+.promotionImageContainer{
+    flex: 1;
+    height: 18rem;
+}
+
+.proimg{
+    height: 100%;
+    width: 100%;
+    object-fit:contain;
+   
+  }

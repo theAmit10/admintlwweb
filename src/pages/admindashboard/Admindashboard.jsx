@@ -28,6 +28,8 @@ import Logout from "../../components/logout/Logout";
 import Notification from "../../components/notification/Notification";
 import AllCountry from "../../components/allcountry/AllCountry";
 import { PushNotification } from "../../components/pushnotification/PushNotification";
+import { AllWallet } from "../../components/walletmodification/AllWallet";
+import Promotion from "../../components/promotion/Promotion";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);
@@ -376,6 +378,8 @@ function Admindashboard() {
           {selectedComponent === "notification" && <Notification />}
           {selectedComponent === "pushnotification" && <PushNotification />}
           {selectedComponent === "allcountry" && <AllCountry />}
+          {selectedComponent === "walletmod" && <AllWallet />}
+          {selectedComponent === "promotion" && <Promotion />}
         </div>
       </div>
 
