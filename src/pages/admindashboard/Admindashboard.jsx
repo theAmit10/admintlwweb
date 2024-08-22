@@ -19,6 +19,8 @@ import { FaInfoCircle } from "react-icons/fa";
 import { HomeDashboard } from "../../components/dashboard/HomeDashboard";
 import AllLocation from "../../components/alllocation/AllLocation";
 import GameDescription from "../../components/gameDescription/GameDescription";
+import { AllDeposit } from "../../components/alldeposit/AllDeposit";
+import { AllWithdraw } from "../../components/allwithdraw/AllWithdraw";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);
@@ -147,11 +149,11 @@ function Admindashboard() {
 
           <div
             className="adLContenContainer"
-            key={"deposit"}
-            onClick={() => handleComponentClick("deposit")}
+            key={"alldeposit"}
+            onClick={() => handleComponentClick("alldeposit")}
             style={{
               background:
-                selectedComponent === "deposit"
+                selectedComponent === "alldeposit"
                   ? "linear-gradient(180deg, #7EC630, #3D6017)"
                   : "linear-gradient(180deg, #011833, #011833)",
             }}
@@ -289,6 +291,8 @@ function Admindashboard() {
           {selectedComponent === "dashboard" && <HomeDashboard />}
           {selectedComponent === "alllocation" && <AllLocation />}
           {selectedComponent === "gamedescription" && <GameDescription />}
+          {selectedComponent === "alldeposit" && <AllDeposit />}
+          {selectedComponent === "withdraw" && <AllWithdraw />}
         </div>
       </div>
 
