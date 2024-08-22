@@ -21,6 +21,8 @@ import AllLocation from "../../components/alllocation/AllLocation";
 import GameDescription from "../../components/gameDescription/GameDescription";
 import { AllDeposit } from "../../components/alldeposit/AllDeposit";
 import { AllWithdraw } from "../../components/allwithdraw/AllWithdraw";
+import Aboutus from "../../components/aboutus/Aboutus";
+import Balancesheet from "../../components/balancesheet/Balancesheet";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);
@@ -264,6 +266,24 @@ function Admindashboard() {
               <IoIosNotifications color={COLORS.white_s} size={"2.5rem"} />
             </div>
             <label className="adLContenContainerLabel">Notification</label>
+            
+          </div>
+
+          <div
+            className="adLContenContainer"
+            key={"balancesheet"}
+            onClick={() => handleComponentClick("balancesheet")}
+            style={{
+              background:
+                selectedComponent === "balancesheet"
+                  ? "linear-gradient(180deg, #7EC630, #3D6017)"
+                  : "linear-gradient(180deg, #011833, #011833)",
+            }}
+          >
+            <div className="adLContenContainerIcon">
+              <FaInfoCircle color={COLORS.white_s} size={"2.5rem"} />
+            </div>
+            <label className="adLContenContainerLabel">Balance Sheet</label>
           </div>
 
           <div
@@ -293,6 +313,8 @@ function Admindashboard() {
           {selectedComponent === "gamedescription" && <GameDescription />}
           {selectedComponent === "alldeposit" && <AllDeposit />}
           {selectedComponent === "withdraw" && <AllWithdraw />}
+          {selectedComponent === "aboutus" && <Aboutus />}
+          {selectedComponent === "balancesheet" && <Balancesheet />}
         </div>
       </div>
 
