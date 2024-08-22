@@ -9,8 +9,11 @@ import { MdDelete } from "react-icons/md";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { IoLocationSharp } from "react-icons/io5";
 import { CiTimer } from "react-icons/ci";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+
+import TimePicker from "react-multi-date-picker/plugins/time_picker";
+import DatePicker from "react-multi-date-picker";
+import "react-multi-date-picker/styles/colors/teal.css";
+import images from "../../assets/constants/images";
 
 export const locationdata = [
   {
@@ -245,7 +248,7 @@ function AllLocation() {
     setShowCreateLocation(false);
     setShowAllTime(false);
     setShowAllDate(false);
-    setShowCreateResult(false)
+    setShowCreateResult(false);
     setShowResult(true);
   };
 
@@ -257,9 +260,38 @@ function AllLocation() {
     setShowCreateTime(false);
     setShowAllDate(false);
     setShowCreateDate(false);
-    setShowResult(false)
+    setShowResult(false);
     setShowCreateResult(true);
   };
+
+  const backhandlerResult = () => {
+    setShowAllLocation(false);
+    setShowCreateLocation(false);
+    setShowCreateLocation(false);
+    setShowAllTime(false);
+    setShowCreateTime(false);
+    setShowAllDate(true);
+    setShowCreateDate(false);
+    setShowResult(false);
+    setShowCreateResult(false);
+  };
+
+  const backhandlerCreateResult = () => {
+    setShowAllLocation(false);
+    setShowCreateLocation(false);
+    setShowCreateLocation(false);
+    setShowAllTime(false);
+    setShowCreateTime(false);
+    setShowAllDate(false);
+    setShowCreateDate(false);
+    setShowResult(true);
+    setShowCreateResult(false);
+  };
+
+  const [time, setTime] = useState(null);
+  const [date, setDate] = useState(null);
+
+  const [nextResultData, setNextResultData] = useState("");
 
   return (
     <>
@@ -487,25 +519,12 @@ function AllLocation() {
                 <CiTimer color={COLORS.background} size={"2.5rem"} />
               </div>
 
-              <div style={{ flex: 1, width: "100%" }}>
+              <div className="timeContainerAL">
                 <DatePicker
-                  selected={selectedTime}
-                  onChange={handleTimeChange}
-                  showTimeSelect
-                  showTimeSelectOnly
-                  timeIntervals={15}
-                  timeCaption="Time"
-                  dateFormat="h:mm aa"
-                  placeholderText="For Eg: 05:35 PM"
-                  customInput={
-                    <input
-                      className="al-search-input"
-                      style={{
-                        flex: 1,
-                        width: "100%",
-                      }}
-                    />
-                  }
+                  value={time}
+                  onChange={setTime}
+                  format="hh:mm A"
+                  plugins={[<TimePicker key={1} />]}
                 />
               </div>
             </div>
@@ -605,6 +624,14 @@ function AllLocation() {
               <div className="searchIconContainer">
                 <CiTimer color={COLORS.background} size={"2.5rem"} />
               </div>
+
+              <div className="timeContainerAL">
+                <DatePicker
+                  value={date}
+                  onChange={setDate}
+                  format="DD-MM-YYYY"
+                />
+              </div>
             </div>
           </div>
 
@@ -619,7 +646,7 @@ function AllLocation() {
         <div className="allLocationContainer">
           {/** TOP NAVIGATION CONTATINER */}
           <div className="alCreatLocationTopContainer">
-            <div className="searchIconContainer" onClick={backhandlerAllDate}>
+            <div className="searchIconContainer" onClick={backhandlerResult}>
               <IoArrowBackCircleOutline
                 color={COLORS.white_s}
                 size={"2.5rem"}
@@ -630,7 +657,34 @@ function AllLocation() {
             </div>
           </div>
 
-          <div className="allLocationMainContainer-time">{/** CONTENT */}</div>
+          <div className="allLocationMainContainer-result">
+            {/** Time content container */}
+            <div className="hdLocationContainerRightTimeContainerContentContainer-result">
+              <div className="hdLocationContainerRightTimeContainerContentContainer-resultright">
+                <div className="trophyimagecontainer">
+                  <img
+                    src={images.cups}
+                    alt="trphy"
+                    className="catandtrophyimg"
+                  />
+                </div>
+
+                <div className="hdLocationContainerRightTimeContainerContentContainer-resultleft">
+                  <label className="hdLocationContainerRightTimeContainerContentContainer-resultleft-number">
+                    09
+                  </label>
+                  <label className="hdLocationContainerRightTimeContainerContentContainer-resultleft-date">
+                    24-07-2024
+                  </label>
+                </div>
+
+                <div className="catimagecontainer">
+                  <img src={images.cat} alt="cat" className="catandtrophyimg" />
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/** SEARCH CONTATINER */}
           <div className="alBottomContainer" onClick={settingCreateResult}>
             <label className="alBottomContainerlabel">Create Result</label>
@@ -647,7 +701,7 @@ function AllLocation() {
           <div className="alCreatLocationTopContainer">
             <div
               className="searchIconContainer"
-              onClick={backhandlerCreateLocation}
+              onClick={backhandlerCreateResult}
             >
               <IoArrowBackCircleOutline
                 color={COLORS.white_s}
@@ -664,7 +718,7 @@ function AllLocation() {
           {/** MAIN CREATE LOCATION */}
           <div className="allLocationMainContainer-CL">
             {/** LOCATION NAME */}
-            <label className="alCLLabel">Location Name</label>
+            <label className="alCLLabel">Result Number</label>
             <div className="alSearchContainer">
               <div className="searchIconContainer">
                 <IoLocationSharp color={COLORS.background} size={"2.5rem"} />
@@ -672,14 +726,14 @@ function AllLocation() {
 
               <input
                 className="al-search-input"
-                placeholder="Enter location name"
+                placeholder="Enter result number"
                 value={enterData}
                 onChange={(e) => setEnterData(e.target.value)}
               />
             </div>
 
             {/** MAXIMUM RNAGE */}
-            <label className="alCLLabel">Maximum Range</label>
+            <label className="alCLLabel">Next Result</label>
             <div className="alSearchContainer">
               <div className="searchIconContainer">
                 <IoLocationSharp color={COLORS.background} size={"2.5rem"} />
@@ -687,24 +741,9 @@ function AllLocation() {
 
               <input
                 className="al-search-input"
-                placeholder="For example:  2 - 2x"
-                value={rangeData}
-                onChange={(e) => setRangeData(e.target.value)}
-              />
-            </div>
-
-            {/** MAXIMUM RETURN */}
-            <label className="alCLLabel">Maximum Number</label>
-            <div className="alSearchContainer">
-              <div className="searchIconContainer">
-                <IoLocationSharp color={COLORS.background} size={"2.5rem"} />
-              </div>
-
-              <input
-                className="al-search-input"
-                placeholder="For example:  2x"
-                value={maximumReturn}
-                onChange={(e) => setmaximumReturn(e.target.value)}
+                placeholder="Enter next result"
+                value={nextResultData}
+                onChange={(e) => setNextResultData(e.target.value)}
               />
             </div>
           </div>

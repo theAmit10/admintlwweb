@@ -178,3 +178,24 @@
     gap: 2rem;
     justify-content: flex-end;
 }
+
+.timeContainerAL{
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.allLocationMainContainer-result{
+    flex: 1;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: 50vh;
+    background-color: var(--background);
+    margin: 2rem;
+    justify-content: center;
+    align-items: center;
+   
+}

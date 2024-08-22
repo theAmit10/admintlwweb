@@ -1,0 +1,124 @@
+.loginContainer {
+    height: 100vh;
+    width: 100%;
+    background-color: var(--background);
+    display: flex;
+    flex-direction: column;
+    font-family: "MR";
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+
+  }
+
+  .loginContainerLeft{
+    width: 20%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    padding-top: 2rem;
+  }
+
+
+  .loginContainerRight{
+    flex: 1;
+
+  }
+
+  .rightParenCR{
+    height: 70vh;
+    background: linear-gradient(180deg, #0162AF, #011833);
+    border-radius: 3rem;
+    margin: 3rem;
+    display: flex;
+    position: relative;
+  }
+
+  .rightParenCMainR{
+    height: 90%;
+    width: 100%;
+    background: linear-gradient(180deg, #0162AF, #011833);
+    border-radius: 3rem;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    position: absolute;
+    right: -2rem;
+    top: 2rem;
+  
+  }
+
+  .labelHeader{
+    color: var(--white_s);
+    font-family: "MB";
+    font-size: 3rem;
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .labelSubHeader{
+    color: var(--white_s);
+    font-family: "MSB";
+    font-size: 1.5rem;
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .lBottomContainer{
+    min-height: 5rem;
+    background-color: var(--blue);
+    margin: 2rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2rem;
+    cursor: pointer;
+}
+
+.lfContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.lBottomContainerlabel{
+    color: var(--blue);
+    font-family: "MB";
+    font-size: 1.5rem;
+    align-self: center;
+    cursor: pointer;
+}
+.loginContainerLeftBottom{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logcatimagecontainer{
+    height: 30rem;
+    width: 30rem;
+ }
+
+ .logcatandtrophyimg{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+ }
+
+ @media (max-width: 768px) {
+    .loginContainerLeft{
+        display: none;
+    }
+    }
+
+
+@media (max-width: 480px) {
+.loginContainerLeft{
+    display: none;
+}
+}
