@@ -6,7 +6,9 @@ import { CiSearch } from "react-icons/ci";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import { locationdata } from "../alllocation/AllLocation";
-import { IoArrowBackCircleOutline } from "react-icons/io5";
+import { IoArrowBackCircleOutline, IoSnow } from "react-icons/io5";
+import { PiSubtitles } from "react-icons/pi";
+import { IoDocumentText } from "react-icons/io5";
 
 function GameDescription() {
   const [filteredData, setFilteredData] = useState([]);
@@ -29,6 +31,11 @@ function GameDescription() {
   const backhandlerSelectedLocation = () => {
     setSelectedLocation(null);
   };
+
+  //  FOR CREATING AND UPDATING
+
+  const [titleValue, setTitle] = useState("");
+  const [discriptionValue, setDescription] = useState("");
 
   return (
     <div className="gameDescriptionContainer">
@@ -88,6 +95,43 @@ function GameDescription() {
               </label>
             </div>
           </div>
+
+           {/** TITLE */}
+           <label className="alCLLabel">Title</label>
+            <div className="alSearchContainer">
+              <div className="searchIconContainer">
+                <PiSubtitles color={COLORS.background} size={"2.5rem"} />
+              </div>
+
+              <input
+                className="al-search-input"
+                placeholder="Enter title"
+                value={titleValue}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
+
+            {/** DESCRIPTION */}
+           <label className="alCLLabel">Description</label>
+            <div className="alSearchContainer">
+              <div className="searchIconContainer">
+                <IoDocumentText color={COLORS.background} size={"2.5rem"} />
+              </div>
+
+              <input
+                className="al-search-input"
+                placeholder="Enter description"
+                value={discriptionValue}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+
+             {/** SUBMIT CONTATINER */}
+          <div className="alBottomContainer">
+            <label className="alBottomContainerlabel">Submit</label>
+          </div>
+
+
         </div>
       )}
     </div>
