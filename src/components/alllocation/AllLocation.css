@@ -72,7 +72,7 @@
 }
 
 .allContentContainer-al{
-    height: 8rem;
+    min-height: 6rem;
     background-color: var(--background);
     margin-left: 2rem;
     margin-right: 2rem;

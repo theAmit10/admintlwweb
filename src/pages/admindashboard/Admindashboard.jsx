@@ -26,6 +26,8 @@ import Balancesheet from "../../components/balancesheet/Balancesheet";
 import ChangePassword from "../../components/changepassword/ChangePassword";
 import Logout from "../../components/logout/Logout";
 import Notification from "../../components/notification/Notification";
+import AllCountry from "../../components/allcountry/AllCountry";
+import { PushNotification } from "../../components/pushnotification/PushNotification";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);
@@ -256,11 +258,11 @@ function Admindashboard() {
 
           <div
             className="adLContenContainer"
-            key={"notification"}
-            onClick={() => handleComponentClick("notification")}
+            key={"pushnotification"}
+            onClick={() => handleComponentClick("pushnotification")}
             style={{
               background:
-                selectedComponent === "notification"
+                selectedComponent === "pushnotification"
                   ? "linear-gradient(180deg, #7EC630, #3D6017)"
                   : "linear-gradient(180deg, #011833, #011833)",
             }}
@@ -268,7 +270,7 @@ function Admindashboard() {
             <div className="adLContenContainerIcon">
               <IoIosNotifications color={COLORS.white_s} size={"2.5rem"} />
             </div>
-            <label className="adLContenContainerLabel">Notification</label>
+            <label className="adLContenContainerLabel">Push Notification</label>
             
           </div>
 
@@ -287,6 +289,23 @@ function Admindashboard() {
               <FaInfoCircle color={COLORS.white_s} size={"2.5rem"} />
             </div>
             <label className="adLContenContainerLabel">Balance Sheet</label>
+          </div>
+
+          <div
+            className="adLContenContainer"
+            key={"allcountry"}
+            onClick={() => handleComponentClick("allcountry")}
+            style={{
+              background:
+                selectedComponent === "allcountry"
+                  ? "linear-gradient(180deg, #7EC630, #3D6017)"
+                  : "linear-gradient(180deg, #011833, #011833)",
+            }}
+          >
+            <div className="adLContenContainerIcon">
+              <FaInfoCircle color={COLORS.white_s} size={"2.5rem"} />
+            </div>
+            <label className="adLContenContainerLabel">All Country</label>
           </div>
 
           <div
@@ -355,6 +374,8 @@ function Admindashboard() {
           {selectedComponent === "changepassword" && <ChangePassword />}
           {selectedComponent === "logout" && <Logout />}
           {selectedComponent === "notification" && <Notification />}
+          {selectedComponent === "pushnotification" && <PushNotification />}
+          {selectedComponent === "allcountry" && <AllCountry />}
         </div>
       </div>
 

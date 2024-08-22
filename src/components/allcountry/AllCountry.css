@@ -1,0 +1,36 @@
+.gameDescriptionContainer{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #0162AF, #011833);
+    border-radius: 1rem;
+}
+
+
+.acMainContainer{
+    flex: 1;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: 50vh;
+   
+}
+
+.acMainContainer-create{
+    flex: 1;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: 80vh;
+   
+}
+
+.imageContainerAC{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
