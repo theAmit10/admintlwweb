@@ -6,7 +6,7 @@ import { CiSearch } from "react-icons/ci";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import { locationdata } from "../alllocation/AllLocation";
-import { IoArrowBackCircleOutline, IoSnow } from "react-icons/io5";
+import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { PiSubtitles } from "react-icons/pi";
 import { IoDocumentText } from "react-icons/io5";
 

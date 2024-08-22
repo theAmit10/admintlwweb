@@ -1,0 +1,88 @@
+.upContainer{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #0162AF, #011833);
+    border-radius: 1rem;
+}
+
+.upUserDetail{
+    flex: 1;
+    background: linear-gradient(180deg, #0162AF, #011833);
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    overflow-y: scroll;
+    height: 40vh;
+}
+
+.alUpdatePContainer{
+    height: 5rem;
+    background-color: var(--grayHalfBg);
+    margin: 2rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upContentContainer{
+    height: 20rem;
+    background-color: var(--background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.upuserimage{
+    height: 8rem;
+    width: 8rem;
+    background-color: white;
+    border-radius: 50%;
+    overflow: hidden;
+    padding: 0.10rem;
+   
+}
+
+.upuserimg{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+.upContentContainerLabel{
+    color: var(--white_s);
+    font-family: "MR";
+    font-size: 1.5rem;
+}
+.upContentContainerLabelB{
+    color: var(--white_s);
+    font-family: "MB";
+    font-size: 1.5rem;
+}
+
+.userDetailContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.upsMainContainer{
+    flex: 1;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: 60vh;
+    margin: 2rem;
+   
+}

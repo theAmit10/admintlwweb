@@ -30,6 +30,8 @@ import AllCountry from "../../components/allcountry/AllCountry";
 import { PushNotification } from "../../components/pushnotification/PushNotification";
 import { AllWallet } from "../../components/walletmodification/AllWallet";
 import Promotion from "../../components/promotion/Promotion";
+import { AllSubAdmin } from "../../components/subadmin/AllSubAdmin";
+import { UpdateProfile } from "../../components/updateprofile/UpdateProfile";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);
@@ -273,7 +275,6 @@ function Admindashboard() {
               <IoIosNotifications color={COLORS.white_s} size={"2.5rem"} />
             </div>
             <label className="adLContenContainerLabel">Push Notification</label>
-            
           </div>
 
           <div
@@ -308,6 +309,23 @@ function Admindashboard() {
               <FaInfoCircle color={COLORS.white_s} size={"2.5rem"} />
             </div>
             <label className="adLContenContainerLabel">All Country</label>
+          </div>
+
+          <div
+            className="adLContenContainer"
+            key={"updateprofile"}
+            onClick={() => handleComponentClick("updateprofile")}
+            style={{
+              background:
+                selectedComponent === "updateprofile"
+                  ? "linear-gradient(180deg, #7EC630, #3D6017)"
+                  : "linear-gradient(180deg, #011833, #011833)",
+            }}
+          >
+            <div className="adLContenContainerIcon">
+              <FaInfoCircle color={COLORS.white_s} size={"2.5rem"} />
+            </div>
+            <label className="adLContenContainerLabel">Update Profile</label>
           </div>
 
           <div
@@ -366,7 +384,12 @@ function Admindashboard() {
 
         {/** RIGHT CONTINER */}
         <div className="adRightContainer">
-          {selectedComponent === "dashboard" && <HomeDashboard />}
+          {selectedComponent === "dashboard" && (
+            <HomeDashboard
+              selectedComponent={selectedComponent}
+              handleComponentClick={handleComponentClick}
+            />
+          )}
           {selectedComponent === "alllocation" && <AllLocation />}
           {selectedComponent === "gamedescription" && <GameDescription />}
           {selectedComponent === "alldeposit" && <AllDeposit />}
@@ -380,6 +403,8 @@ function Admindashboard() {
           {selectedComponent === "allcountry" && <AllCountry />}
           {selectedComponent === "walletmod" && <AllWallet />}
           {selectedComponent === "promotion" && <Promotion />}
+          {selectedComponent === "subadmin" && <AllSubAdmin />}
+          {selectedComponent === "updateprofile" && <UpdateProfile />}
         </div>
       </div>
 

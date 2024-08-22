@@ -11,7 +11,7 @@ import { MdAdminPanelSettings } from "react-icons/md";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import images from "../../assets/constants/images";
 
-export const HomeDashboard = () => {
+export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
   const [timeVisible, setTimeVisible] = useState(true);
   const [dateVisible, setDateVisible] = useState(false);
   const [resultVisible, setResultVisible] = useState(false);
@@ -39,7 +39,9 @@ export const HomeDashboard = () => {
       {/** ALL ITEMS */}
       <div className="hdAllContainer">
         {/** ALL USERS */}
-        <div className="hdAllContainerContent">
+        <div className="hdAllContainerContent"
+        onClick={() => handleComponentClick("subadmin")}
+        >
           <div className="hdAllContainerContentTop">
             <label className="hdAllContainerContentTopBoldLabel">Users</label>
             <label className="hdAllContainerContentTopBoldLabel">57</label>
@@ -55,7 +57,9 @@ export const HomeDashboard = () => {
         </div>
 
         {/** NEW USERS */}
-        <div className="hdAllContainerContent">
+        <div className="hdAllContainerContent"
+        onClick={() => handleComponentClick("subadmin")}
+        >
           <div className="hdAllContainerContentTop">
             <label className="hdAllContainerContentTopBoldLabel">
               New Users
@@ -72,7 +76,9 @@ export const HomeDashboard = () => {
           </div>
         </div>
         {/** LOCATION */}
-        <div className="hdAllContainerContent">
+        <div className="hdAllContainerContent"
+        onClick={() => handleComponentClick("subadmin")}
+        >
           <div className="hdAllContainerContentTop">
             <label className="hdAllContainerContentTopBoldLabel">
               Locations
@@ -89,7 +95,9 @@ export const HomeDashboard = () => {
           </div>
         </div>
         {/** RESULT */}
-        <div className="hdAllContainerContent">
+        <div className="hdAllContainerContent"
+        onClick={() => handleComponentClick("subadmin")}
+        >
           <div className="hdAllContainerContentTop">
             <label className="hdAllContainerContentTopBoldLabel">Results</label>
             <label className="hdAllContainerContentTopBoldLabel">57</label>
@@ -104,7 +112,9 @@ export const HomeDashboard = () => {
           </div>
         </div>
         {/** PLAY */}
-        <div className="hdAllContainerContent">
+        <div className="hdAllContainerContent"
+        onClick={() => handleComponentClick("subadmin")}
+        >
           <div className="hdAllContainerContentTop">
             <label className="hdAllContainerContentTopBoldLabel">Play</label>
             <label className="hdAllContainerContentTopBoldLabel">57</label>
@@ -119,7 +129,9 @@ export const HomeDashboard = () => {
           </div>
         </div>
         {/** SUB ADMIN */}
-        <div className="hdAllContainerContent">
+        <div className="hdAllContainerContent"
+        onClick={() => handleComponentClick("subadmin")}
+        >
           <div className="hdAllContainerContentTop">
             <label className="hdAllContainerContentTopBoldLabel">
               Sub Admin
