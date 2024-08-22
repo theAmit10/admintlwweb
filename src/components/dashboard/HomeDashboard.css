@@ -1,0 +1,295 @@
+.homeDashboardContainer{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.hdAllContainer{
+    flex: 1;
+    background: linear-gradient(180deg, #0162AF, #011833);
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    overflow-y: scroll;
+    height: 40vh;
+}
+
+.hdAllContainerContent{
+    height: 45%;
+    width: 35rem;
+    background-color: var(--background);
+    margin: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.hdAllContainerContentTop{
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    align-items: center;
+}
+.hdAllContainerContentBottom{
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    align-items: center;
+}
+
+.hdAllContainerContentTopBoldLabel{
+    color: var(--white_s);
+    font-family: "MB";
+    font-size: 2.5rem;
+}
+.hdAllContainerContentTopRegularLabel{
+    color: var(--white_s);
+    font-family: "MR";
+    font-size: 1.5rem;
+}
+.hdContenContainerIcon{
+    height: 4rem;
+    width: 4rem;
+    background-color: var(--white_s);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    padding: 1rem;
+   
+  }
+
+.hdLocationContainer{
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    height: 40vh;
+}
+
+.hdLocationContainerLeft{
+    width: 20%;
+    background: linear-gradient(180deg, #0162AF, #011833);
+    margin: 1rem;
+    border-radius: 1rem;
+    overflow-y: scroll;
+}
+
+
+.hdLocationContainerLeftContent{
+    height: 5rem;
+    background-color: green;
+    margin: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.hdLocationContainerLeftContentNameLabel{
+    color: var(--white_s);
+    font-family: "MSB";
+    font-size: 1.5rem;
+}
+.hdLocationContainerLeftContentLimitLabel{
+    color: var(--white_s);
+    font-family: "MR";
+    font-size: 1rem;
+}
+
+.hdLocationContainerRight{
+    flex: 1;
+    display: flex;
+    background: linear-gradient(180deg, #0162AF, #011833);
+    margin: 1rem;
+
+    border-radius: 1rem;
+}
+
+.hdLocationContainerRightTimeContainer{
+    flex: 1;
+    display: flex;
+  
+    margin: 1rem;
+    border-radius: 1rem;
+    flex-direction: column;
+}
+.hdLocationContainerRightTimeContainerTop{
+    height: 5rem;
+  background-color: #011833;
+    margin: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.hdLocationContainerRightTimeContainerContentContainer{
+   flex: 1;
+
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+}
+
+.hdLocationContainerRightTimeContainerContentContainer-result{
+    flex: 1;
+ 
+     margin-left: 1rem;
+     margin-right: 1rem;
+     margin-bottom: 1rem;
+     display: flex;
+     flex-direction: row;
+ }
+
+.hdLocationContainerRightTimeContainerContentContainer-time{
+    height: 4rem;
+    width: fit-content;
+    background-color: var(--background);
+    margin: 1rem;
+    border-radius: 1rem;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-left: 1rem;
+    padding-right: 1rem;
+   
+}
+
+.hdLocationContainerRightTimeContainerContentContainer-time-label{
+    color: var(--white_s);
+    font-family: "MSB";
+    font-size: 1.5rem;
+  
+}
+
+.hdLocationContainerRightTimeContainerContentContainer-resultleft{
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+ }
+
+ .hdLocationContainerRightTimeContainerContentContainer-resultright{
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+ }
+
+ .hdLocationContainerRightTimeContainerContentContainer-resultleft-number{
+    color: var(--white_s);
+    font-family: "MSB";
+    font-size: 10rem;
+ }
+
+ .hdLocationContainerRightTimeContainerContentContainer-resultleft-date{
+    color: var(--white_s);
+    font-family: "MR";
+    font-size: 1.5rem;
+    background-color: var(--background);
+    padding: 1rem;
+    border-radius: 1rem;
+ }
+
+ .trophyimagecontainer{
+    height: 10rem;
+    width: 10rem;
+
+ }
+
+ .catimagecontainer{
+    height: 10rem;
+    width: 10rem;
+ }
+
+ .catandtrophyimg{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+   
+  }
+
+
+@media (max-width: 1024px){
+    .hdAllContainerContent{
+        height: 35%;
+        width: 30rem;
+    }
+}
+
+@media (max-width: 768px){
+    .hdAllContainerContent{
+        height: 30%;
+        width: 30rem;
+    }
+    .hdLocationContainerLeftContentLimitLabel{
+        display: none;
+    }
+    .hdLocationContainerRightTimeContainerContentContainer-result{
+        flex-direction: column;
+    }
+   
+}
+
+@media (max-width: 480px){
+    .hdAllContainerContent{
+        height: 30%;
+        width: 20rem;
+    }
+    .hdLocationContainerLeftContentLimitLabel{
+        display: none;
+    }
+    .hdLocationContainerRightTimeContainerContentContainer-time-label{
+        font-size: 1rem;
+    }
+    .hdLocationContainerRightTimeContainerContentContainer-result{
+         flex-direction: column;
+     }
+    
+   
+}
+
+@media (max-width: 350px){
+    .hdAllContainerContent{
+        height: 20rem;
+        width: 20rem;
+    }
+    .hdAllContainer{
+        flex: 1;
+        width: 100%;
+        background: linear-gradient(180deg, #0162AF, #011833);
+        border-radius: 2rem;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        overflow-y: scroll;
+        height: 40vh;
+    }
+    .hdLocationContainer{
+        flex: 1;
+        width: 100%;
+    }
+    .hdLocationContainerRightTimeContainerContentContainer-time-label{
+        font-size: 0.8rem;
+    }
+   
+}

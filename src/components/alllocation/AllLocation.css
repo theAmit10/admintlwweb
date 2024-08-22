@@ -1,0 +1,180 @@
+.allLocationContainer{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #0162AF, #011833);
+    border-radius: 1rem;
+}
+
+.allLocationMainContainer{
+    flex: 1;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: 60vh;
+   
+}
+
+.allLocationMainContainer-time{
+    flex: 1;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: 50vh;
+   
+}
+.alSearchContainer{
+    height: 5rem;
+    background-color: var(--grayHalfBg);
+    margin: 2rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+.alBottomContainer{
+    height: 5rem;
+    background-color: var(--green);
+    margin: 2rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2rem;
+    cursor: pointer;
+}
+
+.alBottomContainerlabel{
+    color: var(--white_s);
+    font-family: "MR";
+    font-size: 1.5rem;
+    align-self: center;
+    cursor: pointer;
+}
+
+
+.searchIconContainer{
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.al-search-input{
+    background-color: transparent;
+    flex: 1;
+    color: var(--background);
+    font-family: "MR";
+    font-size: 2rem;
+    border-color: transparent;
+}
+
+.allContentContainer-al{
+    height: 8rem;
+    background-color: var(--background);
+    margin-left: 2rem;
+    margin-right: 2rem;
+    margin-bottom: 0.5rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.allContentContainer-al:hover{
+    border: 2px solid var(--green); /* Change border color on hover */
+    cursor: pointer;
+}
+
+.allContentContainerLocationL{
+    color: var(--white_s);
+    font-family: "MSB";
+    font-size: 1.5rem;
+}
+.allContentContainerLimitL{
+    color: var(--white_s);
+    font-family: "MR";
+    font-size: 1.5rem;
+    align-self: center;
+}
+.switchContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    align-content: center;
+}
+
+.allContentContainerIconContainer{
+    height: 4rem;
+    width: 4rem;
+    background-color: var(--white_s);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+
+
+.allLocationBottomContainer{
+    height: 10vh;
+    background-color: orange;
+}
+
+/** FOR CREATE LOCATION */
+
+.alCreatLocationTopContainer{
+    height: 5rem;
+    background-color: var(--background);
+    margin: 2rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.alCreatLocationTopContaineCL{
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
+.alCreatLocationTopContainerlabel{
+    color: var(--white_s);
+    font-family: "MSB";
+    font-size: 1.5rem;
+    align-self: center;
+}
+.alCLLabel{
+    color: var(--white_s);
+    font-family: "MSB";
+    font-size: 1.5rem;
+   padding-left: 2rem;
+}
+
+.allLocationMainContainer-CL{
+    flex: 1;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: 60vh;
+    
+   
+}
+
+.alllEditControllerContainer{
+    flex: 1;
+    flex-direction: row;
+    display: flex;
+    padding: 1rem;
+    gap: 2rem;
+    justify-content: flex-end;
+}

@@ -1,0 +1,101 @@
+@import './assets/constants/variables.css';
+
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  min-height: 100vh;
+  height: 100%;
+  width: 100%;
+  font-size: 62.5%; /*  10px*/
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+@media (max-width: 1024px) {
+  html{
+    font-size: 50%;
+  }
+}
+
+@media (max-width: 768px) {
+ html{
+   font-size: 40%;
+ }
+}
+
+@media (max-width: 480px) {
+  html{
+    font-size: 30%;
+  }
+}
+@media (max-width: 350px){
+  html{
+    font-size: 20%;
+  }
+}
+
+
+@font-face {
+  font-family: "MR";   /*Can be any text*/
+  src: local("MontserratRegular"),
+    url("../src/assets/fonts/MontserratRegular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "E";   /*Can be any text*/
+  src: local("Elephant"),
+    url("../src/assets/fonts/Elephant.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "HB"; 
+  src: local("HelveticaBold"),
+    url("../src/assets/fonts/HelveticaBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "HR"; 
+  src: local("Helvetica"),
+    url("../src/assets/fonts/Helvetica.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "SFM"; 
+  src: local("SFPROMEDIUM"),
+    url("../src/assets/fonts/SFPROMEDIUM.OTF") format("opentype");
+}
+
+@font-face {
+  font-family: "SFR"; 
+  src: local("SFPROREGULAR"),
+    url("../src/assets/fonts/SFPROREGULAR.OTF") format("opentype");
+}
+
+@font-face {
+  font-family: "MB"; 
+  src: local("MontserratBold"),
+    url("../src/assets/fonts/MontserratBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "MSB"; 
+  src: local("MontserratBold"),
+    url("../src/assets/fonts/MontserratSemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "ZR"; 
+  src: local("ZCOOLRegular"),
+    url("../src/assets/fonts/ZCOOLRegular.ttf") format("truetype");
+}
+
+
+
