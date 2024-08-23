@@ -32,6 +32,7 @@ import { AllWallet } from "../../components/walletmodification/AllWallet";
 import Promotion from "../../components/promotion/Promotion";
 import { AllSubAdmin } from "../../components/subadmin/AllSubAdmin";
 import { UpdateProfile } from "../../components/updateprofile/UpdateProfile";
+import PaymentDeposit from "../../components/paymentdeposit/PaymentDeposit";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);
@@ -405,6 +406,7 @@ function Admindashboard() {
           {selectedComponent === "promotion" && <Promotion />}
           {selectedComponent === "subadmin" && <AllSubAdmin />}
           {selectedComponent === "updateprofile" && <UpdateProfile />}
+          {selectedComponent === "payment" && <PaymentDeposit />}
         </div>
       </div>
 
