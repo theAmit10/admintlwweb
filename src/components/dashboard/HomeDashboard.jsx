@@ -40,7 +40,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
       <div className="hdAllContainer">
         {/** ALL USERS */}
         <div className="hdAllContainerContent"
-        onClick={() => handleComponentClick("subadmin")}
+        onClick={() => handleComponentClick("alluser")}
         >
           <div className="hdAllContainerContentTop">
             <label className="hdAllContainerContentTopBoldLabel">Users</label>
@@ -58,7 +58,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
 
         {/** NEW USERS */}
         <div className="hdAllContainerContent"
-        onClick={() => handleComponentClick("subadmin")}
+        onClick={() => handleComponentClick("newuser")}
         >
           <div className="hdAllContainerContentTop">
             <label className="hdAllContainerContentTopBoldLabel">
@@ -77,7 +77,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
         </div>
         {/** LOCATION */}
         <div className="hdAllContainerContent"
-        onClick={() => handleComponentClick("subadmin")}
+        onClick={() => handleComponentClick("alllocation")}
         >
           <div className="hdAllContainerContentTop">
             <label className="hdAllContainerContentTopBoldLabel">
@@ -113,7 +113,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
         </div>
         {/** PLAY */}
         <div className="hdAllContainerContent"
-        onClick={() => handleComponentClick("subadmin")}
+        onClick={() => handleComponentClick("play")}
         >
           <div className="hdAllContainerContentTop">
             <label className="hdAllContainerContentTopBoldLabel">Play</label>

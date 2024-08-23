@@ -34,6 +34,8 @@ import { AllSubAdmin } from "../../components/subadmin/AllSubAdmin";
 import { UpdateProfile } from "../../components/updateprofile/UpdateProfile";
 import PaymentDeposit from "../../components/paymentdeposit/PaymentDeposit";
 import { PlayLocation } from "../../components/play/PlayLocation";
+import { AllUser } from "../../components/alluser/AllUser";
+import { NewUser } from "../../components/newuser/NewUser";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);
@@ -412,6 +414,8 @@ function Admindashboard() {
           {selectedComponent === "updateprofile" && <UpdateProfile />}
           {selectedComponent === "payment" && <PaymentDeposit />}
           {selectedComponent === "play" && <PlayLocation />}
+          {selectedComponent === "alluser" && <AllUser />}
+          {selectedComponent === "newuser" && <NewUser />}
         </div>
       </div>
 
