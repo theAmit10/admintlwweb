@@ -4,7 +4,6 @@ import images from "../../assets/constants/images";
 import { IoIosNotifications } from "react-icons/io";
 import COLORS from "../../assets/constants/colors";
 import { TiThMenu } from "react-icons/ti";
-import { TbWorld } from "react-icons/tb";
 import { FaHome } from "react-icons/fa";
 import { IoLocationSharp } from "react-icons/io5";
 import { GiTrophy } from "react-icons/gi";
@@ -36,6 +35,12 @@ import PaymentDeposit from "../../components/paymentdeposit/PaymentDeposit";
 import { PlayLocation } from "../../components/play/PlayLocation";
 import { AllUser } from "../../components/alluser/AllUser";
 import { NewUser } from "../../components/newuser/NewUser";
+import { AllResults } from "../../components/allresult/AllResults";
+import { FaBalanceScale } from "react-icons/fa";
+import { TbWorld } from "react-icons/tb";
+import { MdOutlineManageAccounts } from "react-icons/md";
+import { RiLockPasswordFill } from "react-icons/ri";
+import { LuLogOut } from "react-icons/lu";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);
@@ -73,16 +78,22 @@ function Admindashboard() {
             <label className="dcontentlabel">Welcome to your dashboard</label>
           </div>
           <div className="top-right-right-d">
-            <div className="iconcontainertop">
+            <div
+             onClick={() => handleComponentClick("allcountry")}
+            className="iconcontainertop">
               <TbWorld color={COLORS.background} size={"3rem"} />
             </div>
 
-            <div className="iconcontainertop">
+            <div
+              onClick={() => handleComponentClick("notification")}
+            className="iconcontainertop">
               <IoIosNotifications color={COLORS.background} size={"3rem"} />
             </div>
 
-            <div className="iconcontainertop">
-              <TiThMenu color={COLORS.background} size={"3rem"} />
+            <div
+            onClick={() => handleComponentClick("dashboard")}
+            className="iconcontainertop">
+              <FaHome color={COLORS.background} size={"3rem"} />
             </div>
           </div>
         </div>
@@ -295,10 +306,11 @@ function Admindashboard() {
             }}
           >
             <div className="adLContenContainerIcon">
-              <FaInfoCircle color={COLORS.white_s} size={"2.5rem"} />
+              <FaBalanceScale color={COLORS.white_s} size={"2.5rem"} />
             </div>
             <label className="adLContenContainerLabel">Balance Sheet</label>
           </div>
+
 
           <div
             className="adLContenContainer"
@@ -312,7 +324,7 @@ function Admindashboard() {
             }}
           >
             <div className="adLContenContainerIcon">
-              <FaInfoCircle color={COLORS.white_s} size={"2.5rem"} />
+              <TbWorld color={COLORS.white_s} size={"2.5rem"} />
             </div>
             <label className="adLContenContainerLabel">All Country</label>
           </div>
@@ -329,7 +341,7 @@ function Admindashboard() {
             }}
           >
             <div className="adLContenContainerIcon">
-              <FaInfoCircle color={COLORS.white_s} size={"2.5rem"} />
+              <MdOutlineManageAccounts color={COLORS.white_s} size={"2.5rem"} />
             </div>
             <label className="adLContenContainerLabel">Update Profile</label>
           </div>
@@ -346,7 +358,7 @@ function Admindashboard() {
             }}
           >
             <div className="adLContenContainerIcon">
-              <FaInfoCircle color={COLORS.white_s} size={"2.5rem"} />
+              <RiLockPasswordFill  color={COLORS.white_s} size={"2.5rem"} />
             </div>
             <label className="adLContenContainerLabel">Change Password</label>
           </div>
@@ -380,7 +392,7 @@ function Admindashboard() {
             }}
           >
             <div className="adLContenContainerIcon">
-              <FaInfoCircle color={COLORS.white_s} size={"2.5rem"} />
+              <LuLogOut color={COLORS.white_s} size={"2.5rem"} />
             </div>
             <label className="adLContenContainerLabel">Log out</label>
           </div>
@@ -416,6 +428,7 @@ function Admindashboard() {
           {selectedComponent === "play" && <PlayLocation />}
           {selectedComponent === "alluser" && <AllUser />}
           {selectedComponent === "newuser" && <NewUser />}
+          {selectedComponent === "allresults" && <AllResults />}
         </div>
       </div>
 

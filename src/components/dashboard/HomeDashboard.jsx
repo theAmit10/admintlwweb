@@ -96,7 +96,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
         </div>
         {/** RESULT */}
         <div className="hdAllContainerContent"
-        onClick={() => handleComponentClick("subadmin")}
+        onClick={() => handleComponentClick("allresults")}
         >
           <div className="hdAllContainerContentTop">
             <label className="hdAllContainerContentTopBoldLabel">Results</label>
