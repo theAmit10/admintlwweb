@@ -1,0 +1,225 @@
+.PLContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: row; /* Set row direction for horizontal alignment */
+    background: linear-gradient(180deg, #0162AF, #011833);
+    border-radius: 1rem;
+  }
+  
+  .PLContainerMain {
+    flex: 1;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: 80vh;
+  }
+
+
+  .PLCotentContainer {
+    min-height: 15rem;
+
+    
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    
+    /* Use shorthand for border-bottom */
+    border-bottom: 1px solid var(--background); /* Ensure that var(--background) is defined */
+  }
+
+  .PLCotentContainerLeft {
+    width: 20%; /* Fixed width for the left container */
+    height: 100%;
+
+  }
+  
+  .PLCotentContainerRight {
+    flex: 1; /* Takes up the remaining space */
+
+    width: 70vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .PLLLocContainer{
+    height: 5rem;
+    background-color: var(--background);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    align-items: center;
+    margin: 1rem;
+    border-radius: 1rem;
+  }
+  
+  .limitLabel{
+    color: var(--white_s);
+    font-family: "MR";
+    font-size: 1rem;
+
+  }
+
+  .locLabel{
+    color: var(--white_s);
+    font-family: "MSB";
+    font-size: 1.5rem;
+
+  }
+
+  .timeLabel{
+    color: var(--white_s);
+    font-family: "MSB";
+    font-size: 1.2rem;
+
+  }
+  
+  .PLRTimeContainer{
+    height: 5rem;
+    width: 10rem;
+    background-color: var(--background);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    align-items: center;
+    margin: 1rem;
+    border-radius: 1rem;
+  }
+
+  .plBottomContainer{
+    flex: 1;
+    background: linear-gradient(180deg, #0162AF, #011833);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow-y: scroll;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .PLPMainContainer{
+    flex: 1;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: 50vh;
+   
+}
+
+.PLGIMainContainer{
+  flex: 1;
+  border-radius: 2rem;
+  display: flex;
+  flex-direction: row;
+  overflow-y: scroll;
+  max-height: 70vh;
+
+  margin-left:2rem ;
+  margin-right: 2rem;
+ 
+}
+
+.PLGIMainContainerLeft{
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+}
+
+.PLGIMainContainerRight{
+  flex: 1;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.PLPIContentC{
+  height: 5rem;
+  background-color: var(--background);
+  margin-left: 2rem;
+  margin-right: 2rem;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.PLGIRComponent{
+  height: 60%;
+  width: 60%;
+  background: linear-gradient(180deg, #0162AF, #011833);
+  margin: 2rem;
+  display: flex;
+  border-radius: 1rem;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.PLGIRtop{
+  height: 6rem;
+
+  display: flex;
+  flex-direction: row;
+}
+.PLGIRmiddle{
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.PLGIRbottom{
+  height: 6rem;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.PLGIRtopL{
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.PLGIRtopR{
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.PLGIRbottomCon{
+  flex: 1;
+  margin: 0.5rem;
+
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rnL{
+  color: var(--white_s);
+  font-size: 6rem;
+  font-family: "MB";
+}
+ 

@@ -28,6 +28,11 @@
     flex-direction: column;
 }
 
+.hdAllContainerContent:hover{
+    border: 2px solid var(--green); /* Change border color on hover */
+    cursor: pointer;
+}
+
 .hdAllContainerContentTop{
     flex: 1;
     display: flex;

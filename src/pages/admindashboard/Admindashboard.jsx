@@ -33,6 +33,7 @@ import Promotion from "../../components/promotion/Promotion";
 import { AllSubAdmin } from "../../components/subadmin/AllSubAdmin";
 import { UpdateProfile } from "../../components/updateprofile/UpdateProfile";
 import PaymentDeposit from "../../components/paymentdeposit/PaymentDeposit";
+import { PlayLocation } from "../../components/play/PlayLocation";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);
@@ -125,22 +126,7 @@ function Admindashboard() {
             <label className="adLContenContainerLabel">All Location</label>
           </div>
 
-          <div
-            className="adLContenContainer"
-            key={"createresult"}
-            onClick={() => handleComponentClick("createresult")}
-            style={{
-              background:
-                selectedComponent === "createresult"
-                  ? "linear-gradient(180deg, #7EC630, #3D6017)"
-                  : "linear-gradient(180deg, #011833, #011833)",
-            }}
-          >
-            <div className="adLContenContainerIcon">
-              <GiTrophy color={COLORS.white_s} size={"2.5rem"} />
-            </div>
-            <label className="adLContenContainerLabel">Create Result</label>
-          </div>
+         
 
           <div
             className="adLContenContainer"
@@ -225,6 +211,23 @@ function Admindashboard() {
               <FaWallet color={COLORS.white_s} size={"2.5rem"} />
             </div>
             <label className="adLContenContainerLabel">Wallet</label>
+          </div>
+
+          <div
+            className="adLContenContainer"
+            key={"createresult"}
+            onClick={() => handleComponentClick("createresult")}
+            style={{
+              background:
+                selectedComponent === "createresult"
+                  ? "linear-gradient(180deg, #7EC630, #3D6017)"
+                  : "linear-gradient(180deg, #011833, #011833)",
+            }}
+          >
+            <div className="adLContenContainerIcon">
+              <GiTrophy color={COLORS.white_s} size={"2.5rem"} />
+            </div>
+            <label className="adLContenContainerLabel">Create Result</label>
           </div>
 
           <div
@@ -392,6 +395,7 @@ function Admindashboard() {
             />
           )}
           {selectedComponent === "alllocation" && <AllLocation />}
+          {selectedComponent === "createresult" && <AllLocation />}
           {selectedComponent === "gamedescription" && <GameDescription />}
           {selectedComponent === "alldeposit" && <AllDeposit />}
           {selectedComponent === "withdraw" && <AllWithdraw />}
@@ -407,6 +411,7 @@ function Admindashboard() {
           {selectedComponent === "subadmin" && <AllSubAdmin />}
           {selectedComponent === "updateprofile" && <UpdateProfile />}
           {selectedComponent === "payment" && <PaymentDeposit />}
+          {selectedComponent === "play" && <PlayLocation />}
         </div>
       </div>
 
