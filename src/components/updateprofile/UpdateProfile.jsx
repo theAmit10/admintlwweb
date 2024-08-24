@@ -8,32 +8,104 @@ import { MdDriveFileRenameOutline } from "react-icons/md";
 import images from "../../assets/constants/images";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { PiSubtitles } from "react-icons/pi";
+import { useDispatch, useSelector } from "react-redux";
+import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
+import axios from "axios";
+import UrlHelper from "../../helper/UrlHelper";
+import { loadProfile } from "../../redux/actions/userAction";
+import { FaRegUser } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { FaPhoneAlt } from "react-icons/fa";
+import { MdAddIcCall } from "react-icons/md";
+import { FaUserEdit } from "react-icons/fa";
+import { CiCircleChevDown } from "react-icons/ci";
+import CircularProgressBar from "../helper/CircularProgressBar";
+import { LoadingComponent } from "../helper/LoadingComponent";
+import { serverName } from "../../redux/store";
 
 export const UpdateProfile = () => {
   const [showUP, setShowUP] = useState(true);
   const [showUPPic, setShowUPPic] = useState(false);
   const [showUPName, setShowUPName] = useState(false);
+  const [showUPCEmail, setShowUPCEmail] = useState(false);
+  const [showUPCPhone, setShowUPCPhone] = useState(false);
+  const [showUPAEmail, setShowUPAEmail] = useState(false);
+  const [showUPAPhone, setShowUPAPhone] = useState(false);
 
   const backhandlerUPP = () => {
     setShowUP(true);
     setShowUPPic(false);
     setShowUPName(false);
+    setShowUPCEmail(false);
+    setShowUPCPhone(false);
+    setShowUPAEmail(false);
+    setShowUPAPhone(false);
   };
 
   const settingUPP = () => {
     setShowUP(false);
     setShowUPPic(true);
     setShowUPName(false);
+    setShowUPCEmail(false);
+    setShowUPCPhone(false);
+    setShowUPAEmail(false);
+    setShowUPAPhone(false);
   };
 
   const settingUPN = () => {
     setShowUP(false);
     setShowUPPic(false);
     setShowUPName(true);
+    setShowUPCEmail(false);
+    setShowUPCPhone(false);
+    setShowUPAEmail(false);
+    setShowUPAPhone(false);
+  };
+
+  const settingUPUE = () => {
+    setShowUP(false);
+    setShowUPPic(false);
+    setShowUPName(false);
+    setShowUPCEmail(true);
+    setShowUPCPhone(false);
+    setShowUPAEmail(false);
+    setShowUPAPhone(false);
+  };
+
+  const settingUPUP = () => {
+    setShowUP(false);
+    setShowUPPic(false);
+    setShowUPName(false);
+    setShowUPCEmail(false);
+    setShowUPCPhone(true);
+    setShowUPAEmail(false);
+    setShowUPAPhone(false);
+  };
+
+  const settingUPAE = () => {
+    setShowUP(false);
+    setShowUPPic(false);
+    setShowUPName(false);
+    setShowUPCEmail(false);
+    setShowUPCPhone(false);
+    setShowUPAEmail(true);
+    setShowUPAPhone(false);
+  };
+
+  const settingUPAP = () => {
+    setShowUP(false);
+    setShowUPPic(false);
+    setShowUPName(false);
+    setShowUPCEmail(false);
+    setShowUPCPhone(false);
+    setShowUPAEmail(false);
+    setShowUPAPhone(true);
   };
 
   const [imageSource, setImageSource] = useState(null);
   const [titleValue, setTitle] = useState("");
+  const [showProgressBar, setProgressBar] = useState(false);
+  const [enterValue, setEnterValue] = useState("");
 
   const selectDoc = (e) => {
     try {
@@ -41,6 +113,260 @@ export const UpdateProfile = () => {
       setImageSource(e.target.files[0]);
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const checkEmailOrPhone = (str) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(str);
+  };
+
+  const dispatch = useDispatch();
+
+  const { accesstoken, user } = useSelector((state) => state.user);
+
+  const [selectedActivity, setSelectedActivity] = useState("");
+
+  const handleUpdateProfile = async () => {
+    if (!imageSource) {
+      showErrorToast("Add profile picture");
+    } else {
+      setProgressBar(true);
+
+      try {
+        const formData = new FormData();
+        formData.append("file", imageSource);
+
+        if (!imageSource) {
+          showErrorToast("Please select a image");
+        } else {
+          const response = await axios.post(
+            UrlHelper.USER_PROFILE_PIC_API,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${accesstoken}`,
+              },
+            }
+          );
+          console.log("Profile updated successfully:", response.data);
+          showSuccessToast("Profile updated successfully");
+          setProgressBar(false);
+          setSelectedActivity("");
+          dispatch(loadProfile(accesstoken));
+        }
+
+        setProgressBar(false);
+      } catch (error) {
+        setProgressBar(false);
+        showErrorToast("Something went wrong");
+        console.log(error);
+      }
+    }
+  };
+
+  const updateProfileEmailandPhoneHandler = async (datatype) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^(?:\+91|0)?[6-9]\d{9}$/;
+
+    const forData = datatype;
+
+    if (forData === "Email") {
+      if (!enterValue) {
+        showErrorToast("Please enter your email");
+      } else if (!emailRegex.test(enterValue)) {
+        showErrorToast("Enter valid email address");
+      } else {
+        setProgressBar(true);
+
+        try {
+          const { data } = await axios.put(
+            UrlHelper.UPDATE_USER_PROFILE_API,
+            {
+              email: enterValue,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accesstoken}`,
+              },
+            }
+          );
+
+          console.log("datat :: " + data);
+
+          dispatch(loadProfile(accesstoken));
+
+          showSuccessToast(data.message);
+          setProgressBar(false);
+          setSelectedActivity("");
+          setEnterValue("");
+        } catch (error) {
+          setProgressBar(false);
+          showErrorToast("Something went wrong");
+          console.log(error);
+        }
+      }
+    } else {
+      if (!enterValue) {
+        showErrorToast("Please enter your Phone Number");
+      } else if (!phoneRegex.test(enterValue)) {
+        showErrorToast("Enter valid Phone Number");
+      } else {
+        setProgressBar(true);
+        try {
+          const { data } = await axios.put(
+            UrlHelper.UPDATE_USER_PROFILE_API,
+            {
+              email: enterValue,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accesstoken}`,
+              },
+            }
+          );
+
+          console.log("datat :: " + data);
+
+          dispatch(loadProfile(accesstoken));
+
+          showSuccessToast(data.message);
+          setProgressBar(false);
+          setSelectedActivity("");
+          setEnterValue("");
+        } catch (error) {
+          setProgressBar(false);
+          showErrorToast("Something went wrong");
+          console.log(error);
+        }
+      }
+    }
+  };
+
+  // FOR ADDING CONTACT
+  const updateProfileContactHandler = async (datatype) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^(?:\+91|0)?[6-9]\d{9}$/;
+
+    const forData = datatype;
+
+    if (forData === "Email") {
+      if (!enterValue) {
+        showErrorToast("Please enter your email");
+      } else if (!emailRegex.test(enterValue)) {
+        showErrorToast("Enter valid email address");
+      } else {
+        setProgressBar(true);
+
+        try {
+          const { data } = await axios.put(
+            UrlHelper.UPDATE_USER_PROFILE_API,
+            {
+              contact: enterValue,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accesstoken}`,
+              },
+            }
+          );
+
+          console.log("datat :: " + data);
+
+          dispatch(loadProfile(accesstoken));
+
+          showSuccessToast(data.message);
+          setProgressBar(false);
+          setSelectedActivity("");
+          setEnterValue("");
+        } catch (error) {
+          setProgressBar(false);
+          showErrorToast("Something went wrong");
+          console.log(error);
+        }
+      }
+    } else {
+      if (!enterValue) {
+        showErrorToast("Please enter your Phone Number");
+      } else if (!phoneRegex.test(enterValue)) {
+        showErrorToast("Enter valid Phone Number");
+      } else {
+        setProgressBar(true);
+
+        try {
+          const { data } = await axios.put(
+            UrlHelper.UPDATE_USER_PROFILE_API,
+            {
+              contact: enterValue,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accesstoken}`,
+              },
+            }
+          );
+
+          console.log("datat :: " + data);
+
+          dispatch(loadProfile(accesstoken));
+
+          showSuccessToast(data.message);
+          setProgressBar(false);
+          setSelectedActivity("");
+          setEnterValue("");
+        } catch (error) {
+          setProgressBar(false);
+          if (error.response.data.message === "Contact Already exist") {
+            showErrorToast(error.response.data.message);
+          } else {
+            showErrorToast("Something went wrong");
+          }
+
+          console.log(error);
+          console.log(error.response.data.message);
+        }
+      }
+    }
+  };
+
+  // FOR NAME
+  const updateProfileNameHandler = async () => {
+    if (!enterValue) {
+      showErrorToast("Please enter your name");
+    } else {
+      setProgressBar(true);
+
+      try {
+        const { data } = await axios.put(
+          UrlHelper.UPDATE_USER_PROFILE_API,
+          {
+            name: enterValue,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accesstoken}`,
+            },
+          }
+        );
+
+        console.log("datat :: " + data);
+
+        dispatch(loadProfile(accesstoken));
+
+        showSuccessToast(data.message);
+        setProgressBar(false);
+        setSelectedActivity("");
+        setEnterValue("");
+      } catch (error) {
+        setProgressBar(false);
+        showErrorToast("Something went wrong");
+        console.log(error);
+      }
     }
   };
 
@@ -64,17 +390,36 @@ export const UpdateProfile = () => {
           {/** USER DETAILS CONTAINER */}
           <div className="upContentContainer">
             <div className="upuserimage">
-              <img
-                src={images.user}
-                alt="Profile Picture"
-                className="upuserimg"
-              />
+              {user?.avatar?.url ? (
+                <img
+                  src={`${serverName}/uploads/${user?.avatar.url}`}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              ) : (
+                <img
+                  src={images.user}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              )}
             </div>
 
             <div className="userDetailContainer">
-              <label className="upContentContainerLabelB">Amy</label>
-              <label className="upContentContainerLabel">amy@gmail.com</label>
-              <label className="upContentContainerLabel">User ID : 1008</label>
+              <label className="upContentContainerLabelB">
+                {user ? user.name : ""}
+              </label>
+              <label className="upContentContainerLabel">
+                {user ? user.email : ""}
+              </label>
+              {user && user.contact != user.userId ? (
+                <label className="upContentContainerLabel">
+                  {user ? user.contact : ""}
+                </label>
+              ) : null}
+              <label className="upContentContainerLabel">
+                User ID : {user ? user.userId : ""}
+              </label>
             </div>
           </div>
 
@@ -106,6 +451,74 @@ export const UpdateProfile = () => {
               <IoIosArrowDropright color={COLORS.background} size={"2.5rem"} />
             </div>
           </div>
+
+          {/** UPDATE EMAIL */}
+          {/** UPDATE PHONE NUMBER */}
+          {checkEmailOrPhone(user.email) ? (
+            <div className="alUpdatePContainer" onClick={settingUPUE}>
+              <div className="searchIconContainer">
+                <MdEmail color={COLORS.background} size={"2.5rem"} />
+              </div>
+
+              <label className="al-search-input">Change Email</label>
+
+              <div className="searchIconContainer">
+                <IoIosArrowDropright
+                  color={COLORS.background}
+                  size={"2.5rem"}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="alUpdatePContainer" onClick={settingUPUN}>
+              <div className="searchIconContainer">
+                <FaPhoneAlt color={COLORS.background} size={"2.5rem"} />
+              </div>
+
+              <label className="al-search-input">Change Phone Number</label>
+
+              <div className="searchIconContainer">
+                <IoIosArrowDropright
+                  color={COLORS.background}
+                  size={"2.5rem"}
+                />
+              </div>
+            </div>
+          )}
+
+          {/** ADD EMAIL */}
+          {/** ADD PHONE NUMBER */}
+          {checkEmailOrPhone(user.email) ? (
+            <div className="alUpdatePContainer" onClick={settingUPAP}>
+              <div className="searchIconContainer">
+                <FaPhoneAlt color={COLORS.background} size={"2.5rem"} />
+              </div>
+
+              <label className="al-search-input">Add Phone Number</label>
+
+              <div className="searchIconContainer">
+                <IoIosArrowDropright
+                  color={COLORS.background}
+                  size={"2.5rem"}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="alUpdatePContainer" onClick={settingUPAE}>
+              <div className="searchIconContainer">
+                <MdEmail color={COLORS.background} size={"2.5rem"} />
+              </div>
+
+              <label className="al-search-input">Add Email</label>
+
+              <div className="searchIconContainer">
+                <IoIosArrowDropright
+                  color={COLORS.background}
+                  size={"2.5rem"}
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -132,17 +545,36 @@ export const UpdateProfile = () => {
           {/** USER DETAILS CONTAINER */}
           <div className="upContentContainer">
             <div className="upuserimage">
-              <img
-                src={images.user}
-                alt="Profile Picture"
-                className="upuserimg"
-              />
+              {user?.avatar?.url ? (
+                <img
+                  src={`${serverName}/uploads/${user?.avatar.url}`}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              ) : (
+                <img
+                  src={images.user}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              )}
             </div>
 
             <div className="userDetailContainer">
-              <label className="upContentContainerLabelB">Amy</label>
-              <label className="upContentContainerLabel">amy@gmail.com</label>
-              <label className="upContentContainerLabel">User ID : 1008</label>
+              <label className="upContentContainerLabelB">
+                {user ? user.name : ""}
+              </label>
+              <label className="upContentContainerLabel">
+                {user ? user.email : ""}
+              </label>
+              {user && user.contact != user.userId ? (
+                <label className="upContentContainerLabel">
+                  {user ? user.contact : ""}
+                </label>
+              ) : null}
+              <label className="upContentContainerLabel">
+                User ID : {user ? user.userId : ""}
+              </label>
             </div>
           </div>
 
@@ -164,9 +596,13 @@ export const UpdateProfile = () => {
             </div>
           </div>
 
-          <div className="alBottomContainer">
-            <label className="alBottomContainerlabel">Upload Image</label>
-          </div>
+          {showProgressBar ? (
+            <LoadingComponent />
+          ) : (
+            <div className="alBottomContainer" onClick={handleUpdateProfile}>
+              <label className="alBottomContainerlabel">Upload Image</label>
+            </div>
+          )}
         </div>
       )}
 
@@ -193,37 +629,400 @@ export const UpdateProfile = () => {
           {/** USER DETAILS CONTAINER */}
           <div className="upContentContainer">
             <div className="upuserimage">
-              <img
-                src={images.user}
-                alt="Profile Picture"
-                className="upuserimg"
-              />
+              {user?.avatar?.url ? (
+                <img
+                  src={`${serverName}/uploads/${user?.avatar.url}`}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              ) : (
+                <img
+                  src={images.user}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              )}
             </div>
 
             <div className="userDetailContainer">
-              <label className="upContentContainerLabelB">Amy</label>
-              <label className="upContentContainerLabel">amy@gmail.com</label>
-              <label className="upContentContainerLabel">User ID : 1008</label>
+              <label className="upContentContainerLabelB">
+                {user ? user.name : ""}
+              </label>
+              <label className="upContentContainerLabel">
+                {user ? user.email : ""}
+              </label>
+              {user && user.contact != user.userId ? (
+                <label className="upContentContainerLabel">
+                  {user ? user.contact : ""}
+                </label>
+              ) : null}
+              <label className="upContentContainerLabel">
+                User ID : {user ? user.userId : ""}
+              </label>
             </div>
           </div>
 
           <label className="alCLLabel">Name</label>
-            <div className="alSearchContainer">
-              <div className="searchIconContainer">
-                <PiSubtitles color={COLORS.background} size={"2.5rem"} />
-              </div>
-
-              <input
-                className="al-search-input"
-                placeholder="Enter title"
-                value={titleValue}
-                onChange={(e) => setTitle(e.target.value)}
-              />
+          <div className="alSearchContainer">
+            <div className="searchIconContainer">
+              <PiSubtitles color={COLORS.background} size={"2.5rem"} />
             </div>
 
-          <div className="alBottomContainer">
-            <label className="alBottomContainerlabel">Submit</label>
+            <input
+              className="al-search-input"
+              placeholder="Enter name"
+              value={enterValue}
+              onChange={(e) => setEnterValue(e.target.value)}
+            />
           </div>
+
+          {showProgressBar ? (
+            <LoadingComponent />
+          ) : (
+            <div
+              className="alBottomContainer"
+              onClick={() => updateProfileNameHandler()}
+            >
+              <label className="alBottomContainerlabel">Submit</label>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/** UPDATE EMAIL  */}
+      {showUPCEmail && (
+        <div
+          className="upsMainContainer"
+          style={{ backgroundColor: COLORS.background }}
+        >
+          {/** TOP NAVIGATION CONTATINER */}
+          <div className="alCreatLocationTopContainer">
+            <div className="searchIconContainer" onClick={backhandlerUPP}>
+              <IoArrowBackCircleOutline
+                color={COLORS.white_s}
+                size={"2.5rem"}
+              />
+            </div>
+            <div className="alCreatLocationTopContaineCL">
+              <label className="alCreatLocationTopContainerlabel">
+                Update Email
+              </label>
+            </div>
+          </div>
+
+          {/** USER DETAILS CONTAINER */}
+          <div className="upContentContainer">
+            <div className="upuserimage">
+              {user?.avatar?.url ? (
+                <img
+                  src={`${serverName}/uploads/${user?.avatar.url}`}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              ) : (
+                <img
+                  src={images.user}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              )}
+            </div>
+
+            <div className="userDetailContainer">
+              <label className="upContentContainerLabelB">
+                {user ? user.name : ""}
+              </label>
+              <label className="upContentContainerLabel">
+                {user ? user.email : ""}
+              </label>
+              {user && user.contact != user.userId ? (
+                <label className="upContentContainerLabel">
+                  {user ? user.contact : ""}
+                </label>
+              ) : null}
+              <label className="upContentContainerLabel">
+                User ID : {user ? user.userId : ""}
+              </label>
+            </div>
+          </div>
+
+          <label className="alCLLabel">Email</label>
+          <div className="alSearchContainer">
+            <div className="searchIconContainer">
+              <PiSubtitles color={COLORS.background} size={"2.5rem"} />
+            </div>
+
+            <input
+              className="al-search-input"
+              placeholder="Enter email address"
+              type="email"
+              value={enterValue}
+              onChange={(e) => setEnterValue(e.target.value)}
+            />
+          </div>
+
+          {showProgressBar ? (
+            <LoadingComponent />
+          ) : (
+            <div
+              className="alBottomContainer"
+              onClick={() => updateProfileEmailandPhoneHandler("Email")}
+            >
+              <label className="alBottomContainerlabel">Submit</label>
+            </div>
+          )}
+        </div>
+      )}
+      {/** UPDATE PHONE  */}
+      {showUPCPhone && (
+        <div
+          className="upsMainContainer"
+          style={{ backgroundColor: COLORS.background }}
+        >
+          {/** TOP NAVIGATION CONTATINER */}
+          <div className="alCreatLocationTopContainer">
+            <div className="searchIconContainer" onClick={backhandlerUPP}>
+              <IoArrowBackCircleOutline
+                color={COLORS.white_s}
+                size={"2.5rem"}
+              />
+            </div>
+            <div className="alCreatLocationTopContaineCL">
+              <label className="alCreatLocationTopContainerlabel">
+                Update Phone
+              </label>
+            </div>
+          </div>
+
+          {/** USER DETAILS CONTAINER */}
+          <div className="upContentContainer">
+            <div className="upuserimage">
+              {user?.avatar?.url ? (
+                <img
+                  src={`${serverName}/uploads/${user?.avatar.url}`}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              ) : (
+                <img
+                  src={images.user}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              )}
+            </div>
+
+            <div className="userDetailContainer">
+              <label className="upContentContainerLabelB">
+                {user ? user.name : ""}
+              </label>
+              <label className="upContentContainerLabel">
+                {user ? user.email : ""}
+              </label>
+              {user && user.contact != user.userId ? (
+                <label className="upContentContainerLabel">
+                  {user ? user.contact : ""}
+                </label>
+              ) : null}
+              <label className="upContentContainerLabel">
+                User ID : {user ? user.userId : ""}
+              </label>
+            </div>
+          </div>
+
+          <label className="alCLLabel">Phone</label>
+          <div className="alSearchContainer">
+            <div className="searchIconContainer">
+              <PiSubtitles color={COLORS.background} size={"2.5rem"} />
+            </div>
+
+            <input
+              className="al-search-input"
+              placeholder="Enter phone number"
+              type="tel"
+              value={enterValue}
+              onChange={(e) => setEnterValue(e.target.value)}
+            />
+          </div>
+
+          {showProgressBar ? (
+            <LoadingComponent />
+          ) : (
+            <div
+              className="alBottomContainer"
+              onClick={() => updateProfileEmailandPhoneHandler("Phone")}
+            >
+              <label className="alBottomContainerlabel">Submit</label>
+            </div>
+          )}
+        </div>
+      )}
+      {/** ADD EMAIL  */}
+      {showUPAEmail && (
+        <div
+          className="upsMainContainer"
+          style={{ backgroundColor: COLORS.background }}
+        >
+          {/** TOP NAVIGATION CONTATINER */}
+          <div className="alCreatLocationTopContainer">
+            <div className="searchIconContainer" onClick={backhandlerUPP}>
+              <IoArrowBackCircleOutline
+                color={COLORS.white_s}
+                size={"2.5rem"}
+              />
+            </div>
+            <div className="alCreatLocationTopContaineCL">
+              <label className="alCreatLocationTopContainerlabel">
+                Add Email Address
+              </label>
+            </div>
+          </div>
+
+          {/** USER DETAILS CONTAINER */}
+          <div className="upContentContainer">
+            <div className="upuserimage">
+              {user?.avatar?.url ? (
+                <img
+                  src={`${serverName}/uploads/${user?.avatar.url}`}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              ) : (
+                <img
+                  src={images.user}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              )}
+            </div>
+
+            <div className="userDetailContainer">
+              <label className="upContentContainerLabelB">
+                {user ? user.name : ""}
+              </label>
+              <label className="upContentContainerLabel">
+                {user ? user.email : ""}
+              </label>
+              {user && user.contact != user.userId ? (
+                <label className="upContentContainerLabel">
+                  {user ? user.contact : ""}
+                </label>
+              ) : null}
+              <label className="upContentContainerLabel">
+                User ID : {user ? user.userId : ""}
+              </label>
+            </div>
+          </div>
+
+          <label className="alCLLabel">Email address</label>
+          <div className="alSearchContainer">
+            <div className="searchIconContainer">
+              <PiSubtitles color={COLORS.background} size={"2.5rem"} />
+            </div>
+
+            <input
+              className="al-search-input"
+              placeholder="Enter email address"
+              type="email"
+              value={enterValue}
+              onChange={(e) => setEnterValue(e.target.value)}
+            />
+          </div>
+
+          {showProgressBar ? (
+            <LoadingComponent />
+          ) : (
+            <div
+              className="alBottomContainer"
+              onClick={() => updateProfileContactHandler("Email")}
+            >
+              <label className="alBottomContainerlabel">Submit</label>
+            </div>
+          )}
+        </div>
+      )}
+      {/** ADD PHONE  */}
+      {showUPAPhone && (
+        <div
+          className="upsMainContainer"
+          style={{ backgroundColor: COLORS.background }}
+        >
+          {/** TOP NAVIGATION CONTATINER */}
+          <div className="alCreatLocationTopContainer">
+            <div className="searchIconContainer" onClick={backhandlerUPP}>
+              <IoArrowBackCircleOutline
+                color={COLORS.white_s}
+                size={"2.5rem"}
+              />
+            </div>
+            <div className="alCreatLocationTopContaineCL">
+              <label className="alCreatLocationTopContainerlabel">
+                Add Phone Number
+              </label>
+            </div>
+          </div>
+
+          {/** USER DETAILS CONTAINER */}
+          <div className="upContentContainer">
+            <div className="upuserimage">
+              {user?.avatar?.url ? (
+                <img
+                  src={`${serverName}/uploads/${user?.avatar.url}`}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              ) : (
+                <img
+                  src={images.user}
+                  alt="Profile Picture"
+                  className="upuserimg"
+                />
+              )}
+            </div>
+
+            <div className="userDetailContainer">
+              <label className="upContentContainerLabelB">
+                {user ? user.name : ""}
+              </label>
+              <label className="upContentContainerLabel">
+                {user ? user.email : ""}
+              </label>
+              {user && user.contact != user.userId ? (
+                <label className="upContentContainerLabel">
+                  {user ? user.contact : ""}
+                </label>
+              ) : null}
+              <label className="upContentContainerLabel">
+                User ID : {user ? user.userId : ""}
+              </label>
+            </div>
+          </div>
+
+          <label className="alCLLabel">Phone number</label>
+          <div className="alSearchContainer">
+            <div className="searchIconContainer">
+              <PiSubtitles color={COLORS.background} size={"2.5rem"} />
+            </div>
+
+            <input
+              className="al-search-input"
+              placeholder="Enter phone number"
+              type="tel"
+              value={enterValue}
+              onChange={(e) => setEnterValue(e.target.value)}
+            />
+          </div>
+
+          {showProgressBar ? (
+            <LoadingComponent />
+          ) : (
+            <div
+              className="alBottomContainer"
+              onClick={() => updateProfileContactHandler("Phone")}
+            >
+              <label className="alBottomContainerlabel">Submit</label>
+            </div>
+          )}
         </div>
       )}
     </div>
