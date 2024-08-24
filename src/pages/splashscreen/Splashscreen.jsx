@@ -26,7 +26,7 @@ function Splashscreen() {
 
   const getUserAccessToken = async () => {
     try {
-      const val = await localStorage.getItem('accesstoken');
+      const val = await localStorage.getItem('tlwaaccesstoken');
       console.log('From SS Access Token :: ' + val);
       // dispatch(getUserAccessToken(val));
       dispatch({
@@ -38,7 +38,7 @@ function Splashscreen() {
         if (val) {
           navigation('/dashboard')
         } else {
-          navigation('/dashboard')
+          navigation('/login')
         }
       }, 3000);
     } catch (error) {

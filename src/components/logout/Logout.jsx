@@ -1,53 +1,85 @@
-import React, { useState } from 'react'
-import "./Logout.css"
-import { PiSubtitles } from "react-icons/pi";
-import { IoDocumentText } from "react-icons/io5";
-import COLORS from '../../assets/constants/colors';
-import { RiLockPasswordLine } from "react-icons/ri";
-import images from '../../assets/constants/images';
+import React, { useState } from "react";
+import "./Logout.css";
+import images from "../../assets/constants/images";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useGetLogoutQuery } from "../../helper/Networkcall";
+import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
 
-function Logout() {
+function Logout({ selectedComponent, handleComponentClick }) {
+  const dispatch = useDispatch();
+  const navigation = useNavigate();
 
-    const [oldPassword, setOldPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+  const { accesstoken, user } = useSelector((state) => state.user);
+
+  const yesHandler = () => {
+    console.log("YES");
+    loggingOff();
+  };
+
+  const noHandler = () => {
+    console.log("NO");
+    handleComponentClick("dashboard")
+  };
+
+  const { data, error, isLoading } = useGetLogoutQuery(accesstoken);
+
+  const loggingOff = () => {
+    console.log("STARTING LOGGING OFF");
+
+    if (isLoading) {
+      console.log("Loading...");
+      return;
+    }
+
+    if (data) {
+      showSuccessToast("Logout Successfully");
+      localStorage.clear();
+      navigation("/login");
+    } else if (error) {
+      showErrorToast("Something went wrong");
+    }
+  };
 
   return (
-    <div className='cp-container'>
-         {/** TOP NAVIGATION CONTATINER */}
-         <div className="alCreatLocationTopContainer">
-            
-            <div className="alCreatLocationTopContaineCL">
-              <label className="alCreatLocationTopContainerlabel">
-                Log out
-              </label>
-            </div>
-          </div>
-        <div className="cp-container-main" style={{justifyContent: 'center', alignItems: 'center'}}>
-             
-
-
-             <div className="catimagecontainer">
-                    <img
-                      src={images.cat}
-                      alt="cat"
-                      className="catandtrophyimg"
-                    />
-                  </div>
-           <label className="alCLLabel">Are you sure?</label>
-           
-
+    <div className="cp-container">
+      {/** TOP NAVIGATION CONTATINER */}
+      <div className="alCreatLocationTopContainer">
+        <div className="alCreatLocationTopContaineCL">
+          <label className="alCreatLocationTopContainerlabel">Log out</label>
         </div>
+      </div>
+      <div
+        className="cp-container-main"
+        style={{ justifyContent: "center", alignItems: "center" }}
+      >
+        <div className="catimagecontainer">
+          <img src={images.cat} alt="cat" className="catandtrophyimg" />
+        </div>
+        <label className="alCLLabel">Are you sure?</label>
+      </div>
 
-        <div className="alBottomContainer">
-            <label className="alBottomContainerlabel">Yes</label>
-          </div>
+      <div
+        onClick={yesHandler}
+        className="alBottomContainer"
+        style={{
+          cursor: "pointer",
+        }}
+      >
+        <label className="alBottomContainerlabel">Yes</label>
+      </div>
 
-          <div className="alBottomContainer">
-            <label className="alBottomContainerlabel">No</label>
-          </div>
+      <div
+        onClick={noHandler}
+        className="alBottomContainer"
+        style={{
+          cursor: "pointer",
+        }}
+      >
+        <label className="alBottomContainerlabel">No</label>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Logout
+export default Logout;

@@ -36,16 +36,20 @@
   }
 
   .rightParenCMainR{
-    height: 90%;
+   
     width: 100%;
     background: linear-gradient(180deg, #0162AF, #011833);
     border-radius: 3rem;
     display: flex;
     flex-direction: column;
-    padding: 2rem;
+    padding-top: 2rem;
+    padding-left: 10rem;
+    padding-right: 10rem;
     position: absolute;
     right: -2rem;
     top: 2rem;
+    overflow-y: scroll;
+    height: 90vh;
   
   }
 
@@ -109,6 +113,60 @@
     width: 100%;
     object-fit: cover;
  }
+
+ .roleContainerR{
+  min-height: 6rem;
+  margin: 2rem;
+  background-color: var(--background);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 1rem;
+  align-items: center;
+  gap: 2rem;
+ }
+
+ .aC{
+  flex: 1;
+  background-color: var(--green);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+ }
+
+ .sAC{
+  flex: 1;
+  background-color: var(--orange);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+ }
+
+ .c-iconContainer{
+ 
+  height: 4rem;
+  width: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  padding-left: 2px;
+}
+
+ .c-icon{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+ }
+
 
  @media (max-width: 768px) {
     .loginContainerLeft{

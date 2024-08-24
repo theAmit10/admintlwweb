@@ -1,12 +1,118 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Login.css";
 import { PiSubtitles } from "react-icons/pi";
 import COLORS from "../../assets/constants/colors";
 import images from "../../assets/constants/images";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  showErrorToast,
+  showSuccessToast,
+} from "../../components/helper/showErrorToast";
+import { login } from "../../redux/actions/userAction";
+import { ToastContainer } from "react-toastify";
+import CircularProgressBar from "../../components/helper/CircularProgressBar";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const { loading, message, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const navigation = useNavigate();
+
+  const handleSignUpClick = () => {
+    navigation("/register");
+  };
+
+  const submitHandler = async () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^(?:\+91|0)?[6-9]\d{9}$/;
+
+    if (!email) {
+      showErrorToast("Please enter email");
+    } else if (!emailRegex.test(email) && !phoneRegex.test(email)) {
+      showErrorToast("Enter valid email address or phone number");
+    } else if (!password) {
+      showErrorToast("Enter password");
+    } else {
+      try {
+        console.log("Starting login");
+        console.log("email and password:: ", email, password);
+
+        dispatch(login(email, password));
+      } catch (error) {
+        showErrorToast("Someting went wrong");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (error) {
+      console.log("ERROR");
+      console.log(error);
+
+      showErrorToast(error);
+
+      dispatch({
+        type: "clearError",
+      });
+    }
+
+    if (message) {
+      console.log("RESULT FOUND");
+      console.log(message);
+      //   navigation.navigate(navigateTo)
+
+      // We are using navigation reset so that all the navigation stack will get clear
+
+      navigation("/dashboard");
+      showSuccessToast(message);
+
+      dispatch({
+        type: "clearMessage",
+      });
+    }
+  }, [error, message, dispatch]);
+
+  const getUserAccessToken = async () => {
+    try {
+      const val = await localStorage.getItem("tlwaaccesstoken");
+      console.log("From SS Access Token :: " + val);
+      // dispatch(getUserAccessToken(val));
+      dispatch({
+        type: "getaccesstoken",
+        payload: val,
+      });
+
+      const timer = setTimeout(() => {
+        if (val) {
+          navigation("/dashboard");
+        } else {
+          navigation("/login");
+        }
+      }, 3000);
+    } catch (error) {
+      console.log("error" + error);
+    }
+  };
+
+  useEffect(() => {
+    getUserAccessToken();
+  }, []);
+
   return (
     <div className="loginContainer">
       <div className="loginContainerLeft">
@@ -64,22 +170,46 @@ function Login() {
               />
             </div>
             <div className="lfContainer">
-              <label className="alBottomContainerlabel">Forgot password</label>
+              <label
+                onClick={() => navigation("/forgotpassword")}
+                className="alBottomContainerlabel"
+              >
+                Forgot password
+              </label>
             </div>
 
-            <div className="lBottomContainer">
-              <label className="alBottomContainerlabel">Submit</label>
-            </div>
+            {loading ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "2vw",
+                }}
+              >
+                <CircularProgressBar />
+              </div>
+            ) : (
+              <div className="lBottomContainer" onClick={submitHandler}>
+                <label className="alBottomContainerlabel">Submit</label>
+              </div>
+            )}
 
             <div className="lfContainer">
               <label className="alBottomContainerlabel">
                 Don’t have an account?{" "}
               </label>
-              <label className="lBottomContainerlabel">Sign up</label>
+              <label
+                onClick={handleSignUpClick}
+                className="lBottomContainerlabel"
+              >
+                Sign up
+              </label>
             </div>
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

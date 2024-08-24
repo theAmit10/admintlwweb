@@ -27,6 +27,20 @@
     display: flex;
     flex-direction: column;
 }
+.cirCon{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.NC{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
 
 .hdAllContainerContent:hover{
     border: 2px solid var(--green); /* Change border color on hover */
@@ -77,6 +91,7 @@
     display: flex;
     flex-direction: row;
     height: 40vh;
+   
 }
 
 .hdLocationContainerLeft{
@@ -140,12 +155,12 @@
 }
 .hdLocationContainerRightTimeContainerContentContainer{
    flex: 1;
-
     margin-left: 1rem;
     margin-right: 1rem;
     margin-bottom: 1rem;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .hdLocationContainerRightTimeContainerContentContainer-result{
@@ -173,6 +188,12 @@
     padding-right: 1rem;
    
 }
+
+.hdLocationContainerRightTimeContainerContentContainer-time:hover{
+    border: 2px solid var(--green); /* Change border color on hover */
+    cursor: pointer;
+}
+
 
 .hdLocationContainerRightTimeContainerContentContainer-time-label{
     color: var(--white_s);

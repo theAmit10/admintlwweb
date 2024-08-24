@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Admindashboard.css";
 import images from "../../assets/constants/images";
 import { IoIosNotifications } from "react-icons/io";
@@ -41,6 +41,9 @@ import { TbWorld } from "react-icons/tb";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { LuLogOut } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loadProfile } from "../../redux/actions/userAction";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);
@@ -50,6 +53,38 @@ function Admindashboard() {
     setSelectedComponent(comp);
   };
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const getUserAccessToken = async () => {
+    try {
+      const val = await localStorage.getItem("tlwaaccesstoken");
+      console.log("From SS Access Token :: " + val);
+      // dispatch(getUserAccessToken(val));
+      dispatch({
+        type: "getaccesstoken",
+        payload: val,
+      });
+
+      dispatch(loadProfile(val));
+    } catch (error) {
+      console.log("error" + error);
+    }
+  };
+
+  useEffect(() => {
+    getUserAccessToken();
+  }, []);
+
+  const { user, accesstoken, loading } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    dispatch(loadProfile(accesstoken));
+  }, []);
+
+  console.log(loading, user);
+
+
   return (
     <div className="adminDashboardContainer">
       {/** TOP CONTAINER */}
@@ -58,7 +93,7 @@ function Admindashboard() {
         <div className="top-left-d">
           <div className="top-left-left-d">
             <label className="hellolabel">Hello,</label>
-            <label className="usernamelabel">Wasu</label>
+            <label className="usernamelabel">{user ? user.name : ""}</label>
           </div>
           <div className="top-left-right-d">
             <div className="userimagecontainer">
@@ -416,7 +451,10 @@ function Admindashboard() {
           {selectedComponent === "aboutus" && <Aboutus />}
           {selectedComponent === "balancesheet" && <Balancesheet />}
           {selectedComponent === "changepassword" && <ChangePassword />}
-          {selectedComponent === "logout" && <Logout />}
+          {selectedComponent === "logout" && <Logout
+           selectedComponent={selectedComponent}
+           handleComponentClick={handleComponentClick}
+          />}
           {selectedComponent === "notification" && <Notification />}
           {selectedComponent === "pushnotification" && <PushNotification />}
           {selectedComponent === "allcountry" && <AllCountry />}

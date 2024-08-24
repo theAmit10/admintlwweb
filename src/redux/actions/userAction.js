@@ -1,5 +1,7 @@
+
 import axios from 'axios';
-import UrlHelper from '../../helper/UrlHelper.js';
+import {store} from '../store';
+import UrlHelper from '../../helper/UrlHelper';
 
 export const login = (email, password) => async dispatch => {
   try {
@@ -26,16 +28,15 @@ export const login = (email, password) => async dispatch => {
     );
 
     console.log('Data :: ' + data.token);
-    
-    localStorage.setItem('accesstoken', data.token);
+    // AsyncStorage.setItem('accessToken', response.data.access_token);
+   
+    localStorage.setItem('tlwaaccesstoken', data.token);
     // dispatch(updateAccessToken(response.data.access_token));
 
     dispatch({
-      type: 'getaccesstoken',
-      payload: data.token,
-    });
- 
-
+        type: 'getaccesstoken',
+        payload: data.token,
+      });
     dispatch({
       type: 'loginSuccess',
       payload: data.message,
@@ -53,7 +54,9 @@ export const login = (email, password) => async dispatch => {
 
 // Gettting Profile
 export const loadProfile = (accesstoken) => async dispatch => {
-  console.log('Loading Profile');
+
+    console.log("Loading Profile")
+    console.log("Access Token :: "+accesstoken)
 
   try {
     dispatch({
@@ -66,16 +69,19 @@ export const loadProfile = (accesstoken) => async dispatch => {
       },
     });
 
-    console.log('Data User :: ' + data.user);
+    console.log('Data :: ' + data.user);
 
     dispatch({
       type: 'loadUserSuccess',
       payload: data.user,
     });
   } catch (error) {
+    console.log("My Profile Error :: ")
     console.log(error);
-    console.log(error.response);
-    
+    // console.log(error.response);
+    console.log(error.response.data.message);
+    console.log("moye :: "+error.response.data.message);
+    console.log("moye Error :: ")
 
     dispatch({
       type: 'loadUserFail',
@@ -84,9 +90,10 @@ export const loadProfile = (accesstoken) => async dispatch => {
   }
 };
 
-// logging off
-export const logout = accesstoken => async dispatch => {
-  console.log('Processing logout');
+// logging off 
+export const logout = (accesstoken) => async dispatch => {
+
+    console.log("Processing logout")
 
   try {
     dispatch({
@@ -97,7 +104,7 @@ export const logout = accesstoken => async dispatch => {
       headers: {
         // Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVmMzk2YTA1ODRlYTZkZDhkNjE0ZjQiLCJpYXQiOjE3MTAxNzcyNzN9.k-dMQaWbwdx7oFweRKy2xl9aFCISpm168qdzEUwXPow`,
         Authorization: `Bearer ${accesstoken}`,
-      },
+    },
     });
 
     dispatch({
@@ -115,141 +122,100 @@ export const logout = accesstoken => async dispatch => {
   }
 };
 
-
 // Getting Registered
-export const register = (name,email,password,userDeviceToken) => async dispatch => {
-  console.log("Registering User")
-  console.log("Registering User data :: ",name,email,password,userDeviceToken)
-
-  try {
-    dispatch({
-      type: 'registerRequest',
-    });
-    const {data} = await axios.post(
-      UrlHelper.REGISTER_API,
-      {
-          name,
-          email,
-          password,
-          devicetoken: userDeviceToken,
-      }
-  ,
-      {
-        headers: {
-          'Content-Type': 'application/json',
+export const register = (name,email,password,selectedRole) => async dispatch => {
+    console.log("Registering User")
+    try {
+      dispatch({
+        type: 'registerRequest',
+      });
+      const {data} = await axios.post(
+        UrlHelper.REGISTER_API,
+        {
+            name,
+            email,
+            password,
+            role: selectedRole,
+        }
+    ,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      },
-    );
+      );
 
-    dispatch({
-      type: 'getaccesstoken',
-      payload: data.token,
-    });
+      // AsyncStorage.setItem("accesstoken",data.token)
+      // dispatch({
+      //   type: 'getaccesstoken',
+      //   payload: data.token,
+      // });
 
-    console.log("register data :: "+JSON.stringify(data))
+      console.log("register data :: "+JSON.stringify(data))
+  
+      dispatch({
+        type: 'registerSuccess',
+        payload: data.message,
+      });
+    } catch (error) {
+      console.log(error);
+      console.log(error.response.data.message);
+  
+      dispatch({
+        type: 'registerFail',
+        payload: error.response.data.message,
+      });
+    }
+  };
 
-    dispatch({
-      type: 'registerSuccess',
-      payload: data.message,
-    });
-  } catch (error) {
-    console.log(error);
-    console.log(error.response.data.message);
 
-    dispatch({
-      type: 'registerFail',
-      payload: error.response.data.message,
-    });
-  }
-};
+  // Getting Accesstoken
+export const getUserAccessToken = (token) => async dispatch => {
 
-// // Getting Registered
-// export const register = (name, email, password) => async dispatch => {
-//   console.log('Registering User');
-//   try {
-//     dispatch({
-//       type: 'registerRequest',
-//     });
-//     const {data} = await axios.post(
-//       UrlHelper.REGISTER_API,
-//       {
-//         name,
-//         email,
-//         password,
-//       },
-//       {
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//       },
-//     );
-
-//     console.log('register data :: ' + data);
-
-//     dispatch({
-//       type: 'registerSuccess',
-//       payload: data.message,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     console.log(error.response.data.message);
-
-//     dispatch({
-//       type: 'registerFail',
-//       payload: error.response.data.message,
-//     });
-//   }
-// };
-
-// Getting Accesstoken
-export const getUserAccessToken = token => async dispatch => {
-  console.log('Getting Access Token');
+    console.log("Getting Access Token")
 
   try {
+   
     dispatch({
-      type: 'getaccesstoken',
-      payload: token,
-    });
+        type: 'getaccesstoken',
+        payload: token,
+      });
   } catch (error) {
     console.log(error);
   }
 };
 
-// For Updating User Profile
 
-export const updateProfile = (name, accesstoken) => async dispatch => {
-  try {
-    console.log("Updated profile started :: "+name)
-    dispatch({
-      type: 'updateProfileRequest',
-    });
-    const {data} = await axios.put(
-      UrlHelper.UPDATE_USER_PROFILE_API,
-      {
-        name: name,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accesstoken}`,
-        },
-      },
-    );
 
-    console.log("Updated Prifile :: "+data.message)
+// Load All USERS
+export const loadAllUsers = (accesstoken) => async dispatch => {
+try {
+  dispatch({
+    type: 'allUserRequest',
+  });
 
-    dispatch({
-      type: 'updateProfileSuccess',
-      payload: data.message,
-    });
-  } catch (error) {
-    console.log(error);
-    dispatch({
-      type: 'updateProfileFail',
-      payload: error.response.data.message,
-    });
-  }
+  const {data} = await axios.get(UrlHelper.ALL_USERS_API, {
+    headers: {
+      Authorization: `Bearer ${accesstoken}`,
+    },
+  });
+
+  dispatch({
+    type: 'allUserSuccess',
+    payload: data.users,
+  });
+} catch (error) {
+  console.log(error);
+  console.log(error.response);
+  console.log(error.response.data.message);
+
+  dispatch({
+    type: 'loadUserFail',
+    payload: 'something went wrong',
+  });
+}
 };
+
 
 // Load All PROMOTION
 export const loadAllPromotion = (accesstoken) => async dispatch => {
@@ -278,8 +244,7 @@ export const loadAllPromotion = (accesstoken) => async dispatch => {
     });
   }
   };
-
-
+  
 
   // Load All About Us
 export const loadAllAboutUs = (accesstoken) => async dispatch => {
@@ -310,8 +275,71 @@ export const loadAllAboutUs = (accesstoken) => async dispatch => {
   };
 
 
+  // Load SINGLE USER
+export const loadSingleUser = (accesstoken,userid) => async dispatch => {
+  try {
+    dispatch({
+      type: 'getSingleUserLoadingRequest',
+    });
 
-  // Load All Notification
+    
+    const url = UrlHelper.SINGLE_USER_API+"/"+userid
+    console.log("Loading Single user details")
+    console.log(url)
+    console.log(userid)
+  
+    const {data} = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accesstoken}`,
+      },
+    });
+  
+    dispatch({
+      type: 'getSingleUserSuccess',
+      payload: data.user,
+    });
+  } catch (error) {
+    console.log(error);
+    console.log(error.response);
+  
+    dispatch({
+      type: 'getSingleUserFail',
+      payload: error.response.data.message,
+    });
+  }
+  };
+
+
+    // Load ALL 24 HOUR REGISTER USERS
+export const loadAllOneDayUser = (accesstoken,userid) => async dispatch => {
+  try {
+    dispatch({
+      type: 'getAllOneDayUserLoadingRequest',
+    });
+  
+    const {data} = await axios.get(UrlHelper.ALL_ONE_DAY_USER_API, {
+      headers: {
+        Authorization: `Bearer ${accesstoken}`,
+      },
+    });
+  
+    dispatch({
+      type: 'getAllOneDayUserSuccess',
+      payload: data.users,
+    });
+  } catch (error) {
+    console.log(error);
+    console.log(error.response);
+    console.log(error.response.data.message);
+  
+    dispatch({
+      type: 'getAllOneDayUserFail',
+      payload: 'Something went wrong',
+    });
+  }
+  };
+
+    // Load All Notification
 export const loadAllNotification = (accesstoken) => async dispatch => {
   try {
     dispatch({
@@ -338,3 +366,369 @@ export const loadAllNotification = (accesstoken) => async dispatch => {
     });
   }
   };
+
+
+  // Chanage User Password
+  // export const getResultAccordingToLocationTimeDate = (accesstoken,lotdateId,lottimeId,lotlocationId) => async dispatch => {
+  //   try {
+  //     dispatch({
+  //       type: 'getChangePasswordRequest',
+  //     });
+
+  //     const url = UrlHelper.RESULT_API+"?lotdateId="+`${lotdateId}`+"&lottimeId="+`${lottimeId}`+"&lotlocationId="+`${lotlocationId}`;
+  
+  //     console.log("URL :: "+url)
+
+  //     const {data} = await axios.get(url, {
+  //       headers: {
+  //         Authorization: `Bearer ${accesstoken}`,
+  //       },
+  //     });
+
+  //     console.log("ACTION result :: "+data.results)
+
+  //     dispatch({
+  //       type: 'getChangePasswordSuccess',
+  //       payload: data.results,
+  //     });
+
+  //   } catch (error) {
+  //     console.log(error);
+  //     console.log(error.response.data.message);
+  
+  //     dispatch({
+  //       type: 'changePasswordFail',
+  //       payload: error.response.data.message,
+  //     });
+  //   }
+  // };
+
+  
+
+  
+  
+
+
+// import {store} from '../store';
+// import { combineSlices } from '@reduxjs/toolkit';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import UrlHelper from '../../helper/UrlHelper';
+// import axios from 'axios';
+
+// export const login = (email, password) => async dispatch => {
+//   try {
+//     dispatch({
+//       type: 'loginRequest',
+//     });
+
+//     console.log('Email :: ' + email);
+//     console.log('Password :: ' + password);
+
+//     // Axios Calling
+
+//     const {data} = await axios.post(
+//       UrlHelper.LOGIN_API,
+//       {
+//         email,
+//         password,
+//       },
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//           // "Accept":"application/json"
+    
+//         },
+//       },
+//     );
+
+//     console.log('Data :: ' + data.token);
+//     // AsyncStorage.setItem('accessToken', response.data.access_token);
+//     AsyncStorage.setItem("accesstoken",data.token)
+//     // dispatch(updateAccessToken(response.data.access_token));
+
+//     dispatch({
+//         type: 'getaccesstoken',
+//         payload: data.token,
+//       });
+//     dispatch({
+//       type: 'loginSuccess',
+//       payload: data.message,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     // console.log(error.response);
+//     console.log(error.response.data);
+//     console.log(error.response.data.message);
+   
+
+//     dispatch({
+//       type: 'loginFail',
+//       payload: error.response.data.message,
+//     });
+//   }
+// };
+
+// // Gettting Profile
+// export const loadProfile = (accesstoken) => async dispatch => {
+
+//     console.log("Loading Profile")
+
+//   try {
+//     dispatch({
+//       type: 'loadUserRequest',
+//     });
+
+//     const {data} = await axios.get(UrlHelper.USER_PROFILE_API, {
+//       headers: {
+//         Authorization: `Bearer ${accesstoken}`,
+//       },
+//     });
+
+//     console.log('Data :: ' + data.user);
+
+//     dispatch({
+//       type: 'loadUserSuccess',
+//       payload: data.user,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     console.log(error.response);
+
+//     dispatch({
+//       type: 'loadUserFail',
+//       payload: error.response.data.message,
+//     });
+//   }
+// };
+
+// // logging off 
+// export const logout = (accesstoken) => async dispatch => {
+
+//     console.log("Processing logout")
+
+//   try {
+//     dispatch({
+//       type: 'logoutRequest',
+//     });
+
+//     const {data} = await axios.get(UrlHelper.LOGOUT_API, {
+//       headers: {
+//         // Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVmMzk2YTA1ODRlYTZkZDhkNjE0ZjQiLCJpYXQiOjE3MTAxNzcyNzN9.k-dMQaWbwdx7oFweRKy2xl9aFCISpm168qdzEUwXPow`,
+//         Authorization: `Bearer ${accesstoken}`,
+//     },
+//     });
+
+//     dispatch({
+//       type: 'logoutSuccess',
+//       payload: data.message,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     console.log(error.response.data.message);
+
+//     dispatch({
+//       type: 'loadUserFail',
+//       payload: error.response.data.message,
+//     });
+//   }
+// };
+
+// // Getting Registered
+// export const register = (name,email,password) => async dispatch => {
+//     console.log("Registering User")
+//     try {
+//       dispatch({
+//         type: 'registerRequest',
+//       });
+//       const {data} = await axios.post(
+//         UrlHelper.REGISTER_API,
+//         {
+//             name,
+//             email,
+//             password,
+//             role: 'admin'
+//         }
+//     ,
+//         {
+//           headers: {
+//             'Content-Type': 'application/json',
+//           },
+//         },
+//       );
+
+//       AsyncStorage.setItem("accesstoken",data.token)
+//       dispatch({
+//         type: 'getaccesstoken',
+//         payload: data.token,
+//       });
+
+//       console.log("register data :: "+JSON.stringify(data))
+  
+//       dispatch({
+//         type: 'registerSuccess',
+//         payload: data.message,
+//       });
+//     } catch (error) {
+//       console.log(error);
+//       console.log(error.response.data.message);
+  
+//       dispatch({
+//         type: 'registerFail',
+//         payload: error.response?.data?.message,
+//       });
+//     }
+//   };
+
+
+//   // Getting Accesstoken
+// export const getUserAccessToken = (token) => async dispatch => {
+
+//     console.log("Getting Access Token")
+
+//   try {
+   
+//     dispatch({
+//         type: 'getaccesstoken',
+//         payload: token,
+//       });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+
+
+// // Load All USERS
+// export const loadAllUsers = (accesstoken) => async dispatch => {
+// try {
+//   dispatch({
+//     type: 'allUserRequest',
+//   });
+
+//   const {data} = await axios.get(UrlHelper.ALL_USERS_API, {
+//     headers: {
+//       Authorization: `Bearer ${accesstoken}`,
+//     },
+//   });
+
+//   // Reverse the order of users before passing to the state
+//   const reversedUsers = data.users.reverse();
+//   dispatch({
+//     type: 'allUserSuccess',
+//     payload: reversedUsers,
+//   });
+
+
+//   // dispatch({
+//   //   type: 'allUserSuccess',
+//   //   payload: data.users,
+//   // });
+// } catch (error) {
+//   console.log(error);
+//   console.log(error.response);
+
+//   dispatch({
+//     type: 'loadUserFail',
+//     payload: error.response.data.message,
+//   });
+// }
+// };
+
+
+// // Load All PROMOTION
+// export const loadAllPromotion = (accesstoken) => async dispatch => {
+//   try {
+//     dispatch({
+//       type: 'getAllPromotionRequest',
+//   });
+  
+//     const {data} = await axios.get(UrlHelper.ALL_PROMOTIONS_API, {
+//       headers: {
+//         Authorization: `Bearer ${accesstoken}`,
+//       },
+//     });
+  
+//     dispatch({
+//       type: 'getAllPromotionSuccess',
+//       payload: data.promotions,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     console.log(error.response);
+  
+//     dispatch({
+//       type: 'getAllPromotionFail',
+//       payload: error.response.data.message,
+//     });
+//   }
+//   };
+  
+
+//   // Load All About Us
+// export const loadAllAboutUs = (accesstoken) => async dispatch => {
+//   try {
+//     dispatch({
+//       type: 'getAllAboutRequest',
+//   });
+  
+//     const {data} = await axios.get(UrlHelper.ALL_ABOUT_API, {
+//       headers: {
+//         Authorization: `Bearer ${accesstoken}`,
+//       },
+//     });
+  
+//     dispatch({
+//       type: 'getAllAboutSuccess',
+//       payload: data.aboutus,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     console.log(error.response);
+  
+//     dispatch({
+//       type: 'getAllAboutFail',
+//       payload: error.response.data.message,
+//     });
+//   }
+//   };
+
+
+//   // Chanage User Password
+//   // export const getResultAccordingToLocationTimeDate = (accesstoken,lotdateId,lottimeId,lotlocationId) => async dispatch => {
+//   //   try {
+//   //     dispatch({
+//   //       type: 'getChangePasswordRequest',
+//   //     });
+
+//   //     const url = UrlHelper.RESULT_API+"?lotdateId="+`${lotdateId}`+"&lottimeId="+`${lottimeId}`+"&lotlocationId="+`${lotlocationId}`;
+  
+//   //     console.log("URL :: "+url)
+
+//   //     const {data} = await axios.get(url, {
+//   //       headers: {
+//   //         Authorization: `Bearer ${accesstoken}`,
+//   //       },
+//   //     });
+
+//   //     console.log("ACTION result :: "+data.results)
+
+//   //     dispatch({
+//   //       type: 'getChangePasswordSuccess',
+//   //       payload: data.results,
+//   //     });
+
+//   //   } catch (error) {
+//   //     console.log(error);
+//   //     console.log(error.response.data.message);
+  
+//   //     dispatch({
+//   //       type: 'changePasswordFail',
+//   //       payload: error.response.data.message,
+//   //     });
+//   //   }
+//   // };
+
+  
+
+  
+  
