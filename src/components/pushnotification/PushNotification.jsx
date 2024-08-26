@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./PushNotification.css";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { GrUserNew } from "react-icons/gr";
@@ -13,6 +13,17 @@ import { PiSubtitles } from "react-icons/pi";
 import { IoDocumentText } from "react-icons/io5";
 import { locationdata } from "../alllocation/AllLocation";
 import { CiSearch } from "react-icons/ci";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
+import UrlHelper from "../../helper/UrlHelper";
+import axios from "axios";
+import { LoadingComponent } from "../helper/LoadingComponent";
+import {
+  loadAllNotification,
+  loadAllUsers,
+} from "../../redux/actions/userAction";
+import { NodataFound } from "../helper/NodataFound";
 
 export const PushNotification = () => {
   const [showPN, setShowPN] = useState(true);
@@ -20,6 +31,7 @@ export const PushNotification = () => {
   const [showCreateAllUser, setShowCreateAllUser] = useState(false);
   const [showCreateNewUser, setShowCreateNewUser] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const [userdata, setuserdata] = useState(null);
 
   // FOR ALL USER
   const settingForAllUsers = () => {
@@ -47,12 +59,13 @@ export const PushNotification = () => {
     setShowAU(true);
   };
 
-  const settingForSingleUsersCreate = () => {
+  const settingForSingleUsersCreate = (item) => {
     setShowPN(false);
-    setShowCreateNewUser(true);
     setShowNotification(false);
     setShowAU(false);
     setShowCreateAllUser(false);
+    setuserdata(item);
+    setShowCreateNewUser(true);
   };
 
   const BackHandlerForSingleUsers = () => {
@@ -85,13 +98,131 @@ export const PushNotification = () => {
 
   const [filteredData, setFilteredData] = useState([]);
 
+  // const handleSearch = (e) => {
+  //   const text = e.target.value;
+  //   const filtered = abouts.filter((item) =>
+  //     item.aboutTitle.toLowerCase().includes(text.toLowerCase())
+  //   );
+  //   setFilteredData(filtered);
+  // };
+
+  const [enterData, setEnterData] = useState("");
+  const {
+    accesstoken,
+    notifications,
+    loadingNotification,
+    loadingAll,
+    allusers,
+  } = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+  const navigation = useNavigate();
+  const [showProgressBar, setProgressBar] = useState(false);
+
+  const sendNotificationToAllUSer = async () => {
+    if (!titleValue) {
+      showErrorToast("Enter Title");
+    } else if (!discriptionValue) {
+      showErrorToast("Enter Discription");
+    } else {
+      setProgressBar(true);
+
+      try {
+        const url = `${UrlHelper.SEND_NOTIFICATION_FOR_ALL_USER}`;
+        const { data } = await axios.post(
+          url,
+          {
+            title: titleValue,
+            description: discriptionValue,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accesstoken}`,
+            },
+          }
+        );
+
+        console.log("datat :: " + data);
+
+        showSuccessToast(data.message);
+        setProgressBar(false);
+        BackHandlerForAllUsers();
+      } catch (error) {
+        setProgressBar(false);
+        showErrorToast("Something went wrong");
+        console.log(error);
+        console.log(error.response.data.message);
+      }
+    }
+  };
+
+  // FOR ALL NOTIFICATION
+
+  useEffect(() => {
+    dispatch(loadAllNotification(accesstoken));
+  }, [dispatch]);
+
+  const [selectedItem, setSelectedItem] = useState("");
+
+  // FOR SINGLE NOTIFICAITON
+
+  const sendNotificationToSingleUser = async () => {
+    if (!titleValue) {
+      showErrorToast("Enter Title");
+    } else if (!discriptionValue) {
+      showErrorToast("Enter Discription");
+    } else {
+      setProgressBar(true);
+
+      try {
+        const url = `${UrlHelper.SEND_NOTIFICATION_SINGLE_USER}`;
+        const { data } = await axios.post(
+          url,
+          {
+            title: titleValue,
+            description: discriptionValue,
+            devicetoken: userdata?.devicetoken,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accesstoken}`,
+            },
+          }
+        );
+
+        console.log("datat :: " + data);
+
+        showSuccessToast(data.message);
+        setProgressBar(false);
+        BackHandlerForSingleUsers();
+      } catch (error) {
+        setProgressBar(false);
+        showErrorToast("Something went wrong");
+        console.log(error);
+        console.log(error.response.data.message);
+      }
+    }
+  };
+
   const handleSearch = (e) => {
     const text = e.target.value;
-    const filtered = abouts.filter((item) =>
-      item.aboutTitle.toLowerCase().includes(text.toLowerCase())
+    const filtered = allusers.filter(
+      (item) =>
+        item.name.toLowerCase().includes(text.toLowerCase()) ||
+        item.userId?.toString() === text
     );
     setFilteredData(filtered);
   };
+
+  useEffect(() => {
+    dispatch(loadAllUsers(accesstoken));
+  }, [dispatch]);
+
+  useEffect(() => {
+    setFilteredData(allusers); // Update filteredData whenever locations change
+  }, [allusers]);
 
   return (
     <div className="pn-containter">
@@ -224,14 +355,21 @@ export const PushNotification = () => {
             />
           </div>
 
-          <div className="alBottomContainer">
-            <label className="alBottomContainerlabel">Submit</label>
-          </div>
+          {showProgressBar ? (
+            <LoadingComponent />
+          ) : (
+            <div
+              className="alBottomContainer"
+              onClick={sendNotificationToAllUSer}
+            >
+              <label className="alBottomContainerlabel">Submit</label>
+            </div>
+          )}
         </div>
       )}
 
       {showAU && (
-        <div className="pnMainContainer">
+        <div className="pnAUMainContainer">
           {/** TOP NAVIGATION CONTATINER */}
           <div className="alCreatLocationTopContainer">
             <div
@@ -263,28 +401,32 @@ export const PushNotification = () => {
             />
           </div>
 
-          <div className="alluMainContainer">
+          <div className="alluAUMainContainer">
             {/** CONTENT */}
-            {locationdata.map((item, index) => (
-              <div
-                key={index}
-                className="allContentContainer-al"
-                onClick={settingForSingleUsersCreate}
-              >
-                <label className="allContentContainerLocationL">
-                  {item.name}
-                </label>
-                <label className="allContentContainerLimitL">
-                  Max {item.limit}
-                </label>
-              </div>
-            ))}
+            {loadingAll ? (
+              <LoadingComponent />
+            ) : (
+              filteredData.map((item, index) => (
+                <div
+                  key={index}
+                  className="allContentContainer-al"
+                  onClick={() => settingForSingleUsersCreate(item)}
+                >
+                  <label className="allContentContainerLocationL">
+                    {item.name}
+                  </label>
+                  <label className="allContentContainerLimitL">
+                    User Id - {item.userId}
+                  </label>
+                </div>
+              ))
+            )}
           </div>
         </div>
       )}
 
       {/** SINGLE USER */}
-      {showCreateNewUser && (
+      {showCreateNewUser && userdata && (
         <div className="pnMainContainer">
           {/** TOP NAVIGATION CONTATINER */}
           <div className="alCreatLocationTopContainer">
@@ -334,16 +476,22 @@ export const PushNotification = () => {
             />
           </div>
 
-          <div className="alBottomContainer">
-            <label className="alBottomContainerlabel">Submit</label>
-          </div>
+          {showProgressBar ? (
+            <LoadingComponent />
+          ) : (
+            <div
+              className="alBottomContainer"
+              onClick={sendNotificationToSingleUser}
+            >
+              <label className="alBottomContainerlabel">Submit</label>
+            </div>
+          )}
         </div>
       )}
 
-      {
-        showNotification && (
-          <div className="allNotificataionContainer">
-            <div className="alCreatLocationTopContainer">
+      {showNotification && (
+        <div className="allNotificataionContainer">
+          <div className="alCreatLocationTopContainer">
             <div
               className="searchIconContainer"
               onClick={BackHandlerForAllUsers}
@@ -360,23 +508,26 @@ export const PushNotification = () => {
             </div>
           </div>
 
-          <div className="allNotificataionContainerContent">
-          {locationdata.map((item, index) => (
-          <div key={index} className="allContentContainer-about">
-            <label className="allContentContainerLocationL">{item.name}</label>
-            <label className="allContentContainerLimitL">
-              Max {item.limit}
-            </label>
-          </div>
-        ))}
-
-          </div>
-
-          </div>
-        )
-      }
-
-
+          {loadingNotification ? (
+            <LoadingComponent />
+          ) : notifications && notifications.length === 0 ? (
+            <NodataFound title={"No data found"} />
+          ) : (
+            <div className="allNotificataionContainerContent">
+              {notifications.map((item, index) => (
+                <div key={index} className="allContentContainer-about">
+                  <label className="allContentContainerLocationL">
+                    {item.title}
+                  </label>
+                  <label className="allContentContainerLimitL">
+                    {item.description}
+                  </label>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

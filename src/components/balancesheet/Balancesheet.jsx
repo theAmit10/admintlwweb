@@ -1,58 +1,40 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Balancesheet.css";
 import COLORS from "../../assets/constants/colors";
-import { useDispatch } from "react-redux";
-import { CiSearch } from "react-icons/ci";
-import { CiEdit } from "react-icons/ci";
-import { MdDelete } from "react-icons/md";
+import { useSelector } from "react-redux";
 import { locationdata } from "../alllocation/AllLocation";
-import { IoArrowBackCircleOutline, IoSnow } from "react-icons/io5";
-import { PiSubtitles } from "react-icons/pi";
-import { IoDocumentText } from "react-icons/io5";
+import { useGetAllBalanceQuery } from "../../helper/Networkcall";
+import { LoadingComponent } from "../helper/LoadingComponent";
+import { NodataFound } from "../helper/NodataFound";
+import moment from "moment";
 
 function Balancesheet() {
-  const [filteredData, setFilteredData] = useState([]);
-  const dispatch = useDispatch();
+  const { accesstoken } = useSelector((state) => state.user);
+  const { data, isLoading, error, refetch } =
+    useGetAllBalanceQuery(accesstoken);
 
-  const handleSearch = (e) => {
-    const text = e.target.value;
-    const filtered = abouts.filter((item) =>
-      item.aboutTitle.toLowerCase().includes(text.toLowerCase())
-    );
-    setFilteredData(filtered);
-  };
+  console.log("Balancesheet ::" + JSON.stringify(data));
 
-  const [selectedLocation, setSelectedLocation] = useState(null);
-
-  const selectingLocation = (item) => {
-    setSelectedLocation(item);
-  };
-
-  const backhandlerSelectedLocation = () => {
-    setSelectedLocation(null);
-  };
-
-  //  FOR CREATING AND UPDATING
-
-  const [titleValue, setTitle] = useState("");
-  const [discriptionValue, setDescription] = useState("");
-
-  const [showCreateAbout, setShowCrateAbout] = useState(false);
-
-  const settingShowCreateAboutUs = () => {
-    setShowCrateAbout(true);
-  };
-
-  const backHandlerCreateAboutUs = () => {
-    setShowCrateAbout(false);
+  const formatDateTime = (dateTimeString) => {
+    return moment(dateTimeString).format("MMMM DD, YYYY hh:mm A");
   };
 
   return (
     <div className="gameDescriptionContainer">
-      <div className="allLocationMainContainer-bs">
-        {/** CONTENT */}
-        {locationdata.map((item, index) => (
-          <div key={index} className="allContentContainer-bs">
+      {isLoading ? (
+        <LoadingComponent />
+      ) : data?.balancesheet?.length === 0 ? (
+        <div className="allLocationMainContainer-bs">
+          {/** CONTENT */}
+          <NodataFound title={"No data available"} />
+        </div>
+      ) : (
+        <div className="allLocationMainContainer-bs">
+          {/** CONTENT */}
+          <div
+            className="allContentContainer-bs"
+            style={{ backgroundColor: COLORS.green }}
+          >
             <div
               className="wContentContainerMain"
               style={{ backgroundColor: COLORS.green }}
@@ -72,42 +54,55 @@ function Balancesheet() {
               <div className="dHeaderContainerLabelContainer">
                 <label className="dHeaderContainerLabel">Game Bal</label>
               </div>
-              <div
-                className="dHeaderContainerLabelContainer"
-              >
+              <div className="dHeaderContainerLabelContainer">
                 <label className="dHeaderContainerLabel">Total Bal</label>
               </div>
             </div>
+          </div>
 
-            <div
-              className="wContentContainerMain"
-            >
-              <div className="dHeaderContainerLabelContainer">
-                <label className="dHeaderContainerLabel">-120INR</label>
-              </div>
-              <div className="dHeaderContainerLabelContainer">
-                <label className="dHeaderContainerLabel">Withdrawal Wallet</label>
-              </div>
-              <div className="dHeaderContainerLabelContainer">
-                <label className="dHeaderContainerLabel">August 21, 2024 02:30PM</label>
-              </div>
-              <div className="dHeaderContainerLabelContainer">
-                <label className="dHeaderContainerLabel">79000INR</label>
-              </div>
-              <div className="dHeaderContainerLabelContainer">
-                <label className="dHeaderContainerLabel">89000INR</label>
-              </div>
-              <div
-                className="dHeaderContainerLabelContainer"
-              >
-                <label className="dHeaderContainerLabel">8900000INR</label>
+          {data.balancesheet.map((item, index) => (
+            <div key={index} className="allContentContainer-bs">
+              <div className="bContentContainerMain">
+                <div className="dHeaderContainerLabelContainer">
+                  <label className="dHeaderContainerLabel">
+                    {item?.paymentProcessType === "Credit" ? "+" : "-"}{" "}
+                    {item?.amount} INR
+                  </label>
+                </div>
+                <div className="dHeaderContainerLabelContainer">
+                  <label className="dHeaderContainerLabel">
+                    {item?.activityType === "Bet"
+                      ? "Game Wallet"
+                      : "Withdrawal wallet"}
+                  </label>
+                </div>
+                <div className="dHeaderContainerLabelContainer">
+                  <label className="dHeaderContainerLabel">
+                    {formatDateTime(item?.createdAt)}
+                  </label>
+                </div>
+                <div className="dHeaderContainerLabelContainer">
+                  <label className="dHeaderContainerLabel">
+                    {" "}
+                    {item?.withdrawalbalance} INR
+                  </label>
+                </div>
+                <div className="dHeaderContainerLabelContainer">
+                  <label className="dHeaderContainerLabel">
+                    {" "}
+                    {item?.gamebalance} INR
+                  </label>
+                </div>
+                <div className="dHeaderContainerLabelContainer">
+                  <label className="dHeaderContainerLabel">
+                    {item?.totalbalance} INR
+                  </label>
+                </div>
               </div>
             </div>
-
-           
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

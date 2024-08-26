@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Promotion.css";
 import COLORS from "../../assets/constants/colors";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CiSearch } from "react-icons/ci";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
@@ -10,42 +10,28 @@ import { IoArrowBackCircleOutline, IoSnow } from "react-icons/io5";
 import { PiSubtitles } from "react-icons/pi";
 import { IoDocumentText } from "react-icons/io5";
 import images from "../../assets/constants/images";
+import { useNavigate } from "react-router-dom";
+import { loadAllPromotion } from "../../redux/actions/userAction";
+import UrlHelper from "../../helper/UrlHelper";
+import axios from "axios";
+import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
+import { LoadingComponent } from "../helper/LoadingComponent";
+import { NodataFound } from "../helper/NodataFound";
+import { serverName } from "../../redux/store";
 
 function Promotion() {
-  const [filteredData, setFilteredData] = useState([]);
-  const dispatch = useDispatch();
+  const [showAP, setShowAP] = useState(true);
+  const [showCP, setShowCP] = useState(false);
 
-  const handleSearch = (e) => {
-    const text = e.target.value;
-    const filtered = abouts.filter((item) =>
-      item.aboutTitle.toLowerCase().includes(text.toLowerCase())
-    );
-    setFilteredData(filtered);
+  const settingShowCP = () => {
+    setShowAP(false);
+    setShowCP(true);
   };
 
-  const [selectedLocation, setSelectedLocation] = useState(null);
-
-  const selectingLocation = (item) => {
-    setSelectedLocation(item);
+  const backHandlerCP = () => {
+    setShowAP(true);
+    setShowCP(false);
   };
-
-  const backhandlerSelectedLocation = () => {
-    setSelectedLocation(null);
-  };
-
-  //  FOR CREATING AND UPDATING
-
-  const [titleValue, setTitle] = useState("");
-
-  const [showCreateAbout, setShowCrateAbout] = useState(false)
-
-  const settingShowCreateAboutUs = () => {
-    setShowCrateAbout(true)
-  }
-
-  const backHandlerCreateAboutUs = () => {
-    setShowCrateAbout(false)
-  }
 
   const [imageSource, setImageSource] = useState(null);
 
@@ -58,61 +44,159 @@ function Promotion() {
     }
   };
 
+  const navigation = useNavigate();
+  const dispatch = useDispatch();
+
+  const { accesstoken, promotions, loadingPromotion } = useSelector(
+    (state) => state.user
+  );
+  // const {loading, locations} = useSelector(state => state.location);
+
+  console.log("ALL Promtions " + JSON.stringify(promotions));
+
+  useEffect(() => {
+    dispatch(loadAllPromotion(accesstoken));
+  }, [dispatch]);
+
+  const [selectedItem, setSelectedItem] = useState("");
+  const [showProgressBar, setProgressBar] = useState(false);
+
+  const deleteLocationHandler = async (item) => {
+    console.log("Item clicked :: " + item._id);
+    setProgressBar(true);
+    setSelectedItem(item._id);
+
+    try {
+      const url = `${UrlHelper.DELETE_PROMOTION_API}/${item._id}`;
+      const { data } = await axios.delete(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accesstoken}`,
+        },
+      });
+
+      console.log("datat :: " + data);
+
+      showSuccessToast(data.message);
+      setProgressBar(false);
+      dispatch(loadAllPromotion(accesstoken));
+    } catch (error) {
+      setProgressBar(false);
+      showErrorToast("Something went wrong");
+      console.log(error);
+    }
+  };
+
+  //  FOR CREATING PROMOTIONS
+
+  const creatingPromotion = async () => {
+    if (!imageSource) {
+      showErrorToast("Please, add promotion picture");
+    } else {
+      setProgressBar(true);
+
+      try {
+        if (!imageSource) {
+          showErrorToast("Please select a image");
+          setProgressBar(false);
+        } else {
+          const formData = new FormData();
+
+          formData.append("file", imageSource);
+
+          const response = await axios.post(
+            UrlHelper.CREATE_PROMOTIONS_API,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${accesstoken}`,
+              },
+            }
+          );
+
+          console.log("Promotion added successfully:", response.data);
+
+          showSuccessToast("Promotion added successfully");
+          setProgressBar(false);
+          dispatch(loadAllPromotion(accesstoken));
+          backHandlerCP();
+        }
+      } catch (error) {
+        setProgressBar(false);
+        showErrorToast("Something went wrong");
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <div className="gameDescriptionContainer">
-   
-
-      {!showCreateAbout && (
-         <div className="alCreatLocationTopContainer">
-        
-         <div className="alCreatLocationTopContaineCL">
-           <label className="alCreatLocationTopContainerlabel">
-           All Promotions
-           </label>
-         </div>
-       </div>
-      )}
-
-      {!showCreateAbout && (
-        <div className="promotionMainContainer">
-          {/** CONTENT */}
-          {locationdata.map((item, index) => (
-            <div
-              key={index}
-              className="allContentContainer-promotion"
-           
-            >
-                <div className="promotionImageContainer">
-                    
-                <img
-                      src={images.user}
-                      alt="promotion"
-                      className="proimg"
-                    />
-                </div>
-              
-                <div className="allContentContainerIconContainer">
-                  <MdDelete color={COLORS.background} size={"2.5rem"} />
-                </div>
+      {showAP && (
+        <>
+          <div className="alCreatLocationTopContainer">
+            <div className="alCreatLocationTopContaineCL">
+              <label className="alCreatLocationTopContainerlabel">
+                All Promotions
+              </label>
             </div>
-          ))}
-        </div>
+          </div>
+
+          {showAP && loadingPromotion ? (
+            <LoadingComponent />
+          ) : (
+            <div className="promotionMainContainer">
+              {/** CONTENT */}
+              {promotions.length === 0 ? (
+                <NodataFound title={"No promotion available"} />
+              ) : (
+                promotions.map((item, index) => (
+                  <div key={index} className="allContentContainer-promotion">
+                    <div className="promotionImageContainer">
+                      <img
+                        src={`${serverName}/uploads/promotion/${item.url}`}
+                        alt="promotion"
+                        className="proimg"
+                      />
+                    </div>
+
+                    {showProgressBar ? (
+                      selectedItem === item._id ? (
+                        <LoadingComponent />
+                      ) : (
+                        <div
+                          className="allContentContainerIconContainer"
+                          onClick={() => deleteLocationHandler(item)}
+                        >
+                          <MdDelete color={COLORS.background} size={"2.5rem"} />
+                        </div>
+                      )
+                    ) : (
+                      <div
+                        className="allContentContainerIconContainer"
+                        onClick={() => deleteLocationHandler(item)}
+                      >
+                        <MdDelete color={COLORS.background} size={"2.5rem"} />
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </>
       )}
 
-      {!showCreateAbout && (
-        <div className="alBottomContainer"    onClick={() => settingShowCreateAboutUs()}>
+      {showAP && !loadingPromotion && (
+        <div className="alBottomContainer" onClick={() => settingShowCP()}>
           <label className="alBottomContainerlabel">Create new promotion</label>
         </div>
       )}
 
-      {showCreateAbout && (
+      {showCP && (
         <div className="allLocationMainContainer">
           {/** TOP NAVIGATION CONTATINER */}
           <div className="alCreatLocationTopContainer">
-            <div
-              className="searchIconContainer"
-              onClick={backHandlerCreateAboutUs}
-            >
+            <div className="searchIconContainer" onClick={backHandlerCP}>
               <IoArrowBackCircleOutline
                 color={COLORS.white_s}
                 size={"2.5rem"}
@@ -120,7 +204,7 @@ function Promotion() {
             </div>
             <div className="alCreatLocationTopContaineCL">
               <label className="alCreatLocationTopContainerlabel">
-              Create new promotion
+                Create new promotion
               </label>
             </div>
           </div>
@@ -143,12 +227,14 @@ function Promotion() {
             </div>
           </div>
 
-         
-
           {/** SUBMIT CONTATINER */}
-          <div className="alBottomContainer">
-            <label className="alBottomContainerlabel">Submit</label>
-          </div>
+          {showProgressBar ? (
+            <LoadingComponent />
+          ) : (
+            <div className="alBottomContainer" onClick={creatingPromotion}>
+              <label className="alBottomContainerlabel">Submit</label>
+            </div>
+          )}
         </div>
       )}
     </div>

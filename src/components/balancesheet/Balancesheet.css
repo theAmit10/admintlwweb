@@ -7,11 +7,11 @@
 }
 
 .allContentContainer-bs{
-    min-height: 15rem;
+   
     background-color: var(--background);
     margin-left: 2rem;
     margin-right: 2rem;
-    margin-bottom: 0.5rem;
+    
     border-radius: 1rem;
     display: flex;
     flex-direction: column;
@@ -19,6 +19,7 @@
     align-items: center;
     padding-left: 1rem;
     padding-right: 1rem;
+    margin-bottom: 1rem;
 }
 
 .allLocationMainContainer-bs{
@@ -28,9 +29,22 @@
     flex-direction: column;
     overflow-y: scroll;
     max-height: 75vh;
-    margin-top: 1rem;
-
-
-    
+    margin-top: 1rem; 
    
+}
+
+.bContentContainerMain{
+    height: 5rem;
+    background-color: var(--background);
+    margin-left: 2rem;
+    margin-right: 2rem;
+ 
+    border-radius: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
