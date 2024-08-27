@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./GameDescription.css";
 import COLORS from "../../assets/constants/colors";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CiSearch } from "react-icons/ci";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
@@ -10,15 +10,33 @@ import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { PiSubtitles } from "react-icons/pi";
 import { IoDocumentText } from "react-icons/io5";
 import moment from "moment-timezone";
+import { getAllLocations } from "../../redux/actions/locationAction";
+import { LoadingComponent } from "../helper/LoadingComponent";
+import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
+import UrlHelper from "../../helper/UrlHelper";
+import axios from "axios";
 
 function GameDescription() {
   const [filteredData, setFilteredData] = useState([]);
+
+  const [showGD, setShowGD] = useState(true);
+  const [showCGD, setShowCGD] = useState(false);
+
+  const settingShowCGD = () => {
+    setShowGD(false);
+    setShowCGD(true);
+  };
+
+  const backHandlerCGD = () => {
+    setShowGD(true);
+    setShowCGD(false);
+  };
   const dispatch = useDispatch();
 
   const handleSearch = (e) => {
     const text = e.target.value;
-    const filtered = abouts.filter((item) =>
-      item.aboutTitle.toLowerCase().includes(text.toLowerCase())
+    const filtered = locations.filter((item) =>
+      item.lotlocation.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredData(filtered);
   };
@@ -27,10 +45,15 @@ function GameDescription() {
 
   const selectingLocation = (item) => {
     setSelectedLocation(item);
+    settingShowCGD();
+    setTitle(item.locationTitle)
+    setDescription(item.locationDescription)
+   
   };
 
   const backhandlerSelectedLocation = () => {
     setSelectedLocation(null);
+    backHandlerCGD();
   };
 
   //  FOR CREATING AND UPDATING
@@ -38,143 +61,212 @@ function GameDescription() {
   const [titleValue, setTitle] = useState("");
   const [discriptionValue, setDescription] = useState("");
 
-  function getUSTimeFromIST(indiaTime) {
-    // India time is in 24-hour format, e.g., "16:00" for 4:00 PM
-    const [indiaHours, indiaMinutes] = indiaTime.split(":").map(Number);
+  // TIMEZON FUNCTIONALITY FOR USER
 
-    // Date object for India time
-    const indiaDate = new Date();
-    indiaDate.setHours(indiaHours, indiaMinutes);
+  // function getUSTimeFromIST(indiaTime) {
+  //   // India time is in 24-hour format, e.g., "16:00" for 4:00 PM
+  //   const [indiaHours, indiaMinutes] = indiaTime.split(":").map(Number);
 
-    // Calculate the time differences for different US time zones
-    const timeZones = {
-      EST: -9.5, // 9 hours 30 minutes behind IST
-      CST: -10.5, // 10 hours 30 minutes behind IST
-      MST: -11.5, // 11 hours 30 minutes behind IST
-      PST: -12.5, // 12 hours 30 minutes behind IST
-    };
+  //   // Date object for India time
+  //   const indiaDate = new Date();
+  //   indiaDate.setHours(indiaHours, indiaMinutes);
 
-    // Create an object to store the times in the US time zones
-    const usTimes = {};
+  //   // Calculate the time differences for different US time zones
+  //   const timeZones = {
+  //     EST: -9.5, // 9 hours 30 minutes behind IST
+  //     CST: -10.5, // 10 hours 30 minutes behind IST
+  //     MST: -11.5, // 11 hours 30 minutes behind IST
+  //     PST: -12.5, // 12 hours 30 minutes behind IST
+  //   };
 
-    for (const [zone, diff] of Object.entries(timeZones)) {
-      const usTime = new Date(indiaDate.getTime() + diff * 60 * 60 * 1000);
-      const hours = usTime.getHours().toString().padStart(2, "0");
-      const minutes = usTime.getMinutes().toString().padStart(2, "0");
+  //   // Create an object to store the times in the US time zones
+  //   const usTimes = {};
 
-      // Formatting the time as "HH:MM"
-      usTimes[zone] = `${hours}:${minutes}`;
-    }
+  //   for (const [zone, diff] of Object.entries(timeZones)) {
+  //     const usTime = new Date(indiaDate.getTime() + diff * 60 * 60 * 1000);
+  //     const hours = usTime.getHours().toString().padStart(2, "0");
+  //     const minutes = usTime.getMinutes().toString().padStart(2, "0");
 
-    return usTimes;
-  }
+  //     // Formatting the time as "HH:MM"
+  //     usTimes[zone] = `${hours}:${minutes}`;
+  //   }
 
-  // Example usage:
-  const indiaTime = "16:17"; // 4:00 PM IST
-  const usTimes = getUSTimeFromIST(indiaTime);
+  //   return usTimes;
+  // }
 
-  console.log("in india");
-  console.log("Current Time in india :: 04:20PM");
-  console.log(usTimes);
-  /*
-  Output will be something like:
-  {
-    EST: "06:30",
-    CST: "05:30",
-    MST: "04:30",
-    PST: "03:30"
-  }
-  */
+  // // Example usage:
+  // const indiaTime = "16:17"; // 4:00 PM IST
+  // const usTimes = getUSTimeFromIST(indiaTime);
 
-  // JSON data of countries and their timezones
-  const countryTimeZones = [
-    { name: "India", timezone: "Asia/Kolkata" },
-    { name: "United States", timezone: "America/New_York" },
-    { name: "Germany", timezone: "Europe/Berlin" },
-    { name: "Australia", timezone: "Australia/Sydney" },
-    { name: "Japan", timezone: "Asia/Tokyo" },
-    // Add all other countries and their timezones here
-  ];
+  // console.log("in india");
+  // console.log("Current Time in india :: 04:20PM");
+  // console.log(usTimes);
+  // /*
+  // Output will be something like:
+  // {
+  //   EST: "06:30",
+  //   CST: "05:30",
+  //   MST: "04:30",
+  //   PST: "03:30"
+  // }
+  // */
 
-  // Function to convert IST to user’s timezone
-  function convertISTToUserTime(adminTimeIST, userCountry) {
-    // Convert admin's hardcoded IST time to a moment object
-    const istTime = moment.tz(adminTimeIST, "Asia/Kolkata");
+  // // JSON data of countries and their timezones
+  // const countryTimeZones = [
+  //   { name: "India", timezone: "Asia/Kolkata" },
+  //   { name: "United States", timezone: "America/New_York" },
+  //   { name: "Germany", timezone: "Europe/Berlin" },
+  //   { name: "Australia", timezone: "Australia/Sydney" },
+  //   { name: "Japan", timezone: "Asia/Tokyo" },
+  //   // Add all other countries and their timezones here
+  // ];
 
-    // Find the user's timezone from the country
-    const userCountryData = countryTimeZones.find(
-      (country) => country.name === userCountry
-    );
+  // // Function to convert IST to user’s timezone
+  // function convertISTToUserTime(adminTimeIST, userCountry) {
+  //   // Convert admin's hardcoded IST time to a moment object
+  //   const istTime = moment.tz(adminTimeIST, "Asia/Kolkata");
 
-    if (userCountryData) {
-      const userTimeZone = userCountryData.timezone;
+  //   // Find the user's timezone from the country
+  //   const userCountryData = countryTimeZones.find(
+  //     (country) => country.name === userCountry
+  //   );
 
-      // Convert IST time to the user's timezone
-      const userTime = istTime.clone().tz(userTimeZone);
-      return userTime.format("YYYY-MM-DD hh:mm A");
+  //   if (userCountryData) {
+  //     const userTimeZone = userCountryData.timezone;
+
+  //     // Convert IST time to the user's timezone
+  //     const userTime = istTime.clone().tz(userTimeZone);
+  //     return userTime.format("YYYY-MM-DD hh:mm A");
+  //   } else {
+  //     // Handle the case where the user's country is not found
+  //     return "Country not found!";
+  //   }
+  // }
+
+  // // Example usage:
+  // const adminSetTimeIST = "2024-08-24 16:00"; // Admin set time in IST
+
+  // const users = [
+  //   { name: "User A", country: "India" },
+  //   { name: "User B", country: "United States" },
+  //   { name: "User C", country: "Germany" },
+  // ];
+
+  // // Convert and display time for each user based on their country
+  // users.forEach((user) => {
+  //   const userLocalTime = convertISTToUserTime(adminSetTimeIST, user.country);
+  //   console.log(
+  //     `${user.name} in ${user.country} sees the time: ${userLocalTime}`
+  //   );
+  // });
+
+  // FOR GAME DESCRIPTION
+
+  const { accesstoken } = useSelector((state) => state.user);
+  const { loading, locations } = useSelector((state) => state.location);
+
+  useEffect(() => {
+    dispatch(getAllLocations(accesstoken));
+  }, [dispatch]);
+
+  useEffect(() => {
+    setFilteredData(locations); // Update filteredData whenever locations change
+  }, [locations]);
+
+  // FOR UPDATING
+  const [showProgressBar, setProgressBar] = useState(false);
+  const updateGameDescription = async () => {
+    if (!titleValue) {
+      showErrorToast("Enter Game Title");
+    } else if (!discriptionValue) {
+      showErrorToast("Enter Game Discription");
     } else {
-      // Handle the case where the user's country is not found
-      return "Country not found!";
+      setProgressBar(true);
+
+      try {
+        const url = `${UrlHelper.UPDATE_LOCATION_API}/${selectedLocation._id}`;
+        const { data } = await axios.put(
+          url,
+          {
+            locationTitle: titleValue,
+            locationDescription: discriptionValue,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accesstoken}`,
+            },
+          }
+        );
+
+        console.log("datat :: " + data);
+
+        showSuccessToast(data.message);
+        setProgressBar(false);
+        backHandlerCGD();
+        setSelectedLocation(null);
+        dispatch(getAllLocations(accesstoken));
+        setTitle("")
+        setDescription("")
+
+        // navigation.reset({
+        //   index: 0,
+        //   routes: [{name: 'AdminDashboard'}],
+        // });
+      } catch (error) {
+        showErrorToast("Something went wrong");
+        setProgressBar(false);
+        console.log(error);
+      }
     }
-  }
-
-  // Example usage:
-  const adminSetTimeIST = "2024-08-24 16:00"; // Admin set time in IST
-
-  const users = [
-    { name: "User A", country: "India" },
-    { name: "User B", country: "United States" },
-    { name: "User C", country: "Germany" },
-  ];
-
-  // Convert and display time for each user based on their country
-  users.forEach((user) => {
-    const userLocalTime = convertISTToUserTime(adminSetTimeIST, user.country);
-    console.log(
-      `${user.name} in ${user.country} sees the time: ${userLocalTime}`
-    );
-  });
+  };
 
   return (
     <div className="gameDescriptionContainer">
       {/** SEARCH CONTATINER */}
 
-      {!selectedLocation && (
-        <div className="alSearchContainer">
-          <div className="searchIconContainer">
-            <CiSearch color={COLORS.background} size={"2.5rem"} />
-          </div>
+      {showGD && (
+        <>
+          {loading ? (
+            <LoadingComponent />
+          ) : (
+            <>
+              <div className="alSearchContainer">
+                <div className="searchIconContainer">
+                  <CiSearch color={COLORS.background} size={"2.5rem"} />
+                </div>
 
-          <input
-            className="al-search-input"
-            placeholder="Search"
-            label="Search"
-            onChange={handleSearch}
-          />
-        </div>
+                <input
+                  className="al-search-input"
+                  placeholder="Search"
+                  label="Search"
+                  onChange={handleSearch}
+                />
+              </div>
+
+              <div className="allLocationMainContainer">
+                {/** CONTENT */}
+                {filteredData.map((item, index) => (
+                  <div
+                    key={index}
+                    className="allContentContainer-al"
+                    onClick={() => selectingLocation(item)}
+                  >
+                    <label className="allContentContainerLocationL">
+                      {item.lotlocation}
+                    </label>
+                    <label className="allContentContainerLimitL">
+                      Max {item.maximumRange}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </>
       )}
 
-      {!selectedLocation && (
-        <div className="allLocationMainContainer">
-          {/** CONTENT */}
-          {locationdata.map((item, index) => (
-            <div
-              key={index}
-              className="allContentContainer-al"
-              onClick={() => selectingLocation(item)}
-            >
-              <label className="allContentContainerLocationL">
-                {item.name}
-              </label>
-              <label className="allContentContainerLimitL">
-                Max {item.limit}
-              </label>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {selectedLocation && (
+      {showCGD && selectedLocation && (
         <div className="allLocationMainContainer">
           {/** TOP NAVIGATION CONTATINER */}
           <div className="alCreatLocationTopContainer">
@@ -189,7 +281,7 @@ function GameDescription() {
             </div>
             <div className="alCreatLocationTopContaineCL">
               <label className="alCreatLocationTopContainerlabel">
-                {selectedLocation.name}
+                {selectedLocation.lotlocation}
               </label>
             </div>
           </div>
@@ -225,9 +317,14 @@ function GameDescription() {
           </div>
 
           {/** SUBMIT CONTATINER */}
-          <div className="alBottomContainer">
-            <label className="alBottomContainerlabel">Submit</label>
-          </div>
+
+          {showProgressBar ? (
+            <LoadingComponent />
+          ) : (
+            <div className="alBottomContainer" onClick={updateGameDescription}>
+              <label className="alBottomContainerlabel">Submit</label>
+            </div>
+          )}
         </div>
       )}
     </div>

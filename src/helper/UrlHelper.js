@@ -1,6 +1,7 @@
 // import {server} from '../redux/store';
 
 export const server = "https://adminbackend-lyyx.onrender.com/api/v1/"
+export const servername = "https://adminbackend-lyyx.onrender.com"
 
 const LOGIN_API = server + 'user/login';
 const USER_PROFILE_API = server + 'user/profile';
