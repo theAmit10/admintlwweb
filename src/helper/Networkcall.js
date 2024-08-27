@@ -150,7 +150,6 @@ export const sincelotAdminApi = createApi({
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accesstoken}`,
-          'Content-Type': 'multipart/form-data',
         },
         body,
       }),
@@ -246,7 +245,6 @@ export const sincelotAdminApi = createApi({
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accesstoken}`,
-          'Content-Type': 'multipart/form-data',
         },
         body,
       }),

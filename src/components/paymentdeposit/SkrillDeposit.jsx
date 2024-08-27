@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./SkrillDeposit.css";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import COLORS from "../../assets/constants/colors";
@@ -8,6 +8,14 @@ import { FaCopy } from "react-icons/fa";
 import { locationdata } from "../alllocation/AllLocation";
 import { PiSubtitles } from "react-icons/pi";
 import { IoDocumentText } from "react-icons/io5";
+import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
+import { useSelector } from "react-redux";
+import { useCreateSkrillAccountMutation, useDeleteSkrillAccountMutation } from "../../helper/Networkcall";
+import axios from "axios";
+import UrlHelper from "../../helper/UrlHelper";
+import { LoadingComponent } from "../helper/LoadingComponent";
+import { NodataFound } from "../helper/NodataFound";
+import CircularProgressBar from "../helper/CircularProgressBar";
 
 export const SkrillDeposit = ({ selectingPaymentType }) => {
   const goToPreviousPage = () => {
@@ -19,7 +27,7 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
     navigator.clipboard
       .writeText(stringToCopy)
       .then(() => {
-        alert("Text copied to clipboard!");
+        showSuccessToast("Text Copied");
       })
       .catch((err) => {
         console.error("Failed to copy text: ", err);
@@ -39,7 +47,7 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
     setShowU(true);
   };
 
-  const [address, setaddress] = useState('');
+  const [address, setaddress] = useState("");
 
   const [imageSource, setImageSource] = useState(null);
 
@@ -51,6 +59,106 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
       console.log(err);
     }
   };
+
+  // FOR ALL SKRILL ACCOUNT
+  const { accesstoken, user } = useSelector((state) => state.user);
+
+  const [
+    deleteSkrillAccount,
+    { isLoading: deleteIsLoading, isError: deleteIsError },
+  ] = useDeleteSkrillAccountMutation();
+
+  useEffect(() => {
+    allTheDepositData();
+  }, []);
+
+  const [loadingAllData, setLoadingAllData] = useState(false);
+  const [allDepositdata, setAllDepositData] = useState([]);
+
+  const [seletedItem, setSelectedItem] = useState("");
+
+  const allTheDepositData = async () => {
+    try {
+      setLoadingAllData(true);
+      const { data } = await axios.get(UrlHelper.ALL_SKRILL_API, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accesstoken}`,
+        },
+      });
+
+      console.log("datat :: " + JSON.stringify(data));
+      setAllDepositData(data.payments);
+
+      setLoadingAllData(false);
+    } catch (error) {
+      setLoadingAllData(false);
+      showErrorToast("Something went wrong");
+      console.log(error);
+    }
+  };
+
+  // FOR DELETING DATA
+
+  const deletingData = async (item) => {
+    console.log("Deleting Data");
+    setSelectedItem(item._id);
+
+    const res = await deleteSkrillAccount({
+      accesstoken: accesstoken,
+      id: item._id,
+    }).unwrap();
+
+    allTheDepositData();
+    showSuccessToast(res.message);
+  };
+
+
+  // FOR CREATING SKRILL ACCOUNT
+
+
+  const [createSkrillAccount, {isLoading, error}] =
+    useCreateSkrillAccountMutation();
+
+  const submitCreateRequest = async () => {
+    if (!address) {
+      showErrorToast('Enter address')
+      return;
+    } else {
+      try {
+        const body = {
+          address,
+        };
+
+        console.log('JSON BODY :: ', JSON.stringify(body));
+
+        const res = await createSkrillAccount({
+          accesstoken: accesstoken,
+          body: body,
+        }).unwrap();
+
+        showSuccessToast(res.message);
+        allTheDepositData();
+        backHandlerShowCreateUpi();
+        setaddress("");
+
+      } catch (error) {
+        console.log('Error during deposit:', error);
+        showErrorToast("Something went wrong")
+        // if (error.response) {
+        //   Toast.show({type: 'error', text1: error.response.data});
+        // } else if (error.request) {
+        //   Toast.show({
+        //     type: 'error',
+        //     text1: 'Request was made, but no response was received',
+        //   });
+        // } else {
+        //   Toast.show({type: 'error', text1: error.message});
+        // }
+      }
+    }
+  };
+
 
   return (
     <div className="upicontiner">
@@ -72,51 +180,84 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
           </div>
           {/** TOP NAVIGATION CONTATINER */}
 
-          <div className="upipdMainContainer">
-            {locationdata.map((item, index) => (
-              <div className="upipdContentContainer">
-                {/** TOP */}
-                <div className="uCCTopC">
-                  <div className="hdContenContainerIcon">
-                    <img
-                      src={images.skrill}
-                      color={COLORS.background}
-                      size={"2.5rem"}
-                    />
-                  </div>
+          {loadingAllData ? (
+            <LoadingComponent />
+          ) : allDepositdata.length === 0 ? (
+            <NodataFound title={"No data available"} />
+          ) : (
+            <>
+              <div className="upipdMainContainer">
+                {allDepositdata.map((item, index) => (
+                  <div 
+                  key={item._id}
+                  className="upipdContentContainer">
+                    {/** TOP */}
+                    <div className="uCCTopC">
+                      <div className="hdContenContainerIcon">
+                        <img
+                          src={images.skrill}
+                          color={COLORS.background}
+                          size={"2.5rem"}
+                        />
+                      </div>
 
-                  <label className="pdB">Skrill 1</label>
+                      <label className="pdB">Skrill {item.paymentId}</label>
 
-                  <div className="copyCon">
-                    <MdDelete color={COLORS.background} size={"2.5rem"} />
-                  </div>
-                </div>
-                {/** TOP */}
+                      {deleteIsLoading ? (
+                            seletedItem === item._id ? (
+                              <CircularProgressBar />
+                            ) : (
+                              <div
+                                onClick={() => deletingData(item)}
+                                className="copyCon"
+                              >
+                                <MdDelete
+                                  color={COLORS.background}
+                                  size={"2.5rem"}
+                                />
+                              </div>
+                            )
+                          ) : (
+                            <div
+                              className="copyCon"
+                              onClick={() => deletingData(item)}
+                            >
+                              <MdDelete
+                                color={COLORS.background}
+                                size={"2.5rem"}
+                              />
+                            </div>
+                          )}
+                    </div>
+                    {/** TOP */}
 
-                {/** TOP */}
-                <div className="uCCMidC">
-                  <div className="uCCTopFC">
-                    <label className="pdSB">Address</label>
+                    {/** TOP */}
+                    <div className="uCCMidC">
+                      <div className="uCCTopFC">
+                        <label className="pdSB">Address</label>
+                      </div>
+                      <div className="uCCTopSC">
+                        <label className="pdR">{item.address}</label>
+                      </div>
+                      <div
+                        onClick={() => handleCopyClick(item.address)}
+                        className="copyCon"
+                      >
+                        <FaCopy color={COLORS.background} size={"2rem"} />
+                      </div>
+                    </div>
+                    {/** TOP */}
                   </div>
-                  <div className="uCCTopSC">
-                    <label className="pdR">Aron@skrill.com</label>
-                  </div>
-                  <div
-                    onClick={() => handleCopyClick("copy me")}
-                    className="copyCon"
-                  >
-                    <FaCopy color={COLORS.background} size={"2rem"} />
-                  </div>
-                </div>
-                {/** TOP */}
-
+                ))}
               </div>
-            ))}
-          </div>
 
-          <div className="alBottomContainer" onClick={settingShowCreateUpi}>
-            <label className="alBottomContainerlabel">Create new Skrill</label>
-          </div>
+              <div className="alBottomContainer" onClick={settingShowCreateUpi}>
+                <label className="alBottomContainerlabel">
+                  Create new Skrill
+                </label>
+              </div>
+            </>
+          )}
         </>
       )}
 
@@ -156,15 +297,15 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
                 onChange={(e) => setaddress(e.target.value)}
               />
             </div>
-
-         
-        
-
           </div>
 
-          <div className="alBottomContainer" onClick={settingShowCreateUpi}>
-            <label className="alBottomContainerlabel">Submit</label>
-          </div>
+          {isLoading ? (
+            <LoadingComponent />
+          ) : (
+            <div className="alBottomContainer" onClick={submitCreateRequest}>
+              <label className="alBottomContainerlabel">Submit</label>
+            </div>
+          )}
         </>
       )}
     </div>
