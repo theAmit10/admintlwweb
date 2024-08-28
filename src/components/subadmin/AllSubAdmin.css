@@ -28,6 +28,11 @@
     width: 90%;
 }
 
+.roleContainer:hover{
+    border: 2px solid var(--green); /* Change border color on hover */
+    cursor: pointer;
+}
+
 .asdccontainer{
     flex: 1;
     display: flex;

@@ -16,6 +16,7 @@ const ALL_RESULT_API = server + 'result/allresult';
 const RESULT_API = server + 'result/searchresult';
 const USER_PROFILE_PIC_API = server + 'user/updateprofilepic';
 const UPDATE_USER_PROFILE_API = server + 'user/updateprofile';
+const UPDATE_SUBADMIN_ROLE_API = server + 'user/updaterole';
 const CHANGE_PASSWORD_API = server + 'user/changepassword';
 
 // All User modification api
@@ -160,4 +161,5 @@ const CREATE_CRYPTO_API = server + 'result/addcryptopayment';
   CREATE_PAYPAL_API,
   CREATE_SKRILL_API,
   CREATE_CRYPTO_API,
+  UPDATE_SUBADMIN_ROLE_API
 };
