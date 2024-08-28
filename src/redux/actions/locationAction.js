@@ -1,5 +1,6 @@
 import axios from 'axios';
 import UrlHelper from '../../helper/UrlHelper';
+import { showSuccessToast } from '../../components/helper/showErrorToast';
 
 
 // Gettting All Locations
@@ -88,6 +89,7 @@ export const createLocation = (accesstoken, lotlocation,maximumRange,maximumNumb
     );
 
     console.log('Data :: ' + data.message);
+    showSuccessToast(data.message)
 
     dispatch({
       type: 'createLocationSuccess',
