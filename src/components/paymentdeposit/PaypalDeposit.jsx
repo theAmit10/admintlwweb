@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./PayPalDeposit.css";
+import "./PaypalDeposit.css";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import COLORS from "../../assets/constants/colors";
 import images from "../../assets/constants/images";
