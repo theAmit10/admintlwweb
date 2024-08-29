@@ -60,7 +60,7 @@ function Balancesheet() {
             </div>
           </div>
 
-          {data.balancesheet.map((item, index) => (
+          {data?.balancesheet?.map((item, index) => (
             <div key={index} className="allContentContainer-bs">
               <div className="bContentContainerMain">
                 <div className="dHeaderContainerLabelContainer">
@@ -71,9 +71,9 @@ function Balancesheet() {
                 </div>
                 <div className="dHeaderContainerLabelContainer">
                   <label className="dHeaderContainerLabel">
-                    {item?.activityType === "Bet"
-                      ? "Game Wallet"
-                      : "Withdrawal wallet"}
+                    {item?.activityType === "Winning"
+                      ? "Withdrawal wallet" 
+                      : "Game Wallet"}
                   </label>
                 </div>
                 <div className="dHeaderContainerLabelContainer">

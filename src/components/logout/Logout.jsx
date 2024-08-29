@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useGetLogoutQuery } from "../../helper/Networkcall";
 import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
+import { LoadingComponent } from "../helper/LoadingComponent";
 
 function Logout({ selectedComponent, handleComponentClick }) {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ function Logout({ selectedComponent, handleComponentClick }) {
 
   const noHandler = () => {
     console.log("NO");
-    handleComponentClick("dashboard")
+    handleComponentClick("dashboard");
   };
 
   const { data, error, isLoading } = useGetLogoutQuery(accesstoken);
@@ -59,25 +60,31 @@ function Logout({ selectedComponent, handleComponentClick }) {
         <label className="alCLLabel">Are you sure?</label>
       </div>
 
-      <div
-        onClick={yesHandler}
-        className="alBottomContainer"
-        style={{
-          cursor: "pointer",
-        }}
-      >
-        <label className="alBottomContainerlabel">Yes</label>
-      </div>
+      {isLoading ? (
+        <LoadingComponent />
+      ) : (
+        <>
+          <div
+            onClick={yesHandler}
+            className="alBottomContainer"
+            style={{
+              cursor: "pointer",
+            }}
+          >
+            <label className="alBottomContainerlabel">Yes</label>
+          </div>
 
-      <div
-        onClick={noHandler}
-        className="alBottomContainer"
-        style={{
-          cursor: "pointer",
-        }}
-      >
-        <label className="alBottomContainerlabel">No</label>
-      </div>
+          <div
+            onClick={noHandler}
+            className="alBottomContainer"
+            style={{
+              cursor: "pointer",
+            }}
+          >
+            <label className="alBottomContainerlabel">No</label>
+          </div>
+        </>
+      )}
     </div>
   );
 }

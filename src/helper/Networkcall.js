@@ -449,6 +449,17 @@ export const sincelotAdminApi = createApi({
       }),
     }),
 
+    // GET ALL THE RESULT
+    getAllResultWeb: builder.query({
+      query: ({accessToken,locationid}) => ({
+        url: `result/allresultwithtime?locationid=${locationid}`,
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    }),
+
 
 
     // ######## END #########
@@ -492,6 +503,7 @@ export const {
   useGetNextResultQuery,
   useGetAllPlayHomeQuery,
   useCreateRegisterMutation,
-  useGetLogoutQuery
+  useGetLogoutQuery,
+  useGetAllResultWebQuery
 
 } = sincelotAdminApi;

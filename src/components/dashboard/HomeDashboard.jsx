@@ -30,6 +30,7 @@ import {
 import CircularProgressBar from "../helper/CircularProgressBar";
 import { all } from "axios";
 import { getDateAccordingToLocationAndTime } from "../../redux/actions/dateAction";
+import { LoadingComponent } from "../helper/LoadingComponent";
 
 export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
   const [timeVisible, setTimeVisible] = useState(true);
@@ -303,9 +304,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
       <div className="hdLocationContainer">
         <div className="hdLocationContainerLeft">
           {allLocationIsLoading ? (
-            <div className="cPB">
-              <CircularProgressBar />
-            </div>
+            <LoadingComponent/>
           ) : (
             allLocationData?.locationData.map((item, index) => (
               <div
@@ -338,9 +337,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
         {/** RIGHT */}
         <div className="hdLocationContainerRight">
           {selectedLocation === null ? (
-            <div className="cPB">
-              <CircularProgressBar />
-            </div>
+             <LoadingComponent/>
           ) : (
             timeVisible && (
               <div className="hdLocationContainerRightTimeContainer">
@@ -380,9 +377,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
           )}
 
           {selectedLocation === null && selectedTime === null && loadingdate ? (
-            <div className="NC">
-              <CircularProgressBar />
-            </div>
+             <LoadingComponent/>
           ) : (
             dateVisible && (
               <div className="hdLocationContainerRightTimeContainer">

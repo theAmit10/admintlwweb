@@ -333,7 +333,7 @@ function GameDescription() {
 
 export default GameDescription;
 
-const cd = [
+const countrytimezone = [
   { name: "Afghanistan", timezone: "Asia/Kabul" },
   { name: "Albania", timezone: "Europe/Tirane" },
   { name: "Algeria", timezone: "Africa/Algiers" },

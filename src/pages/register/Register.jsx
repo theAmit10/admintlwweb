@@ -23,6 +23,7 @@ import {
 } from "../../components/helper/showErrorToast";
 import { useNavigate } from "react-router-dom";
 import { FaPhoneAlt } from "react-icons/fa";
+import { ToastContainer } from "react-toastify";
 
 function Register() {
   const [name, setName] = useState("");
@@ -514,6 +515,8 @@ function Register() {
           )}
         </div>
       </div>
+
+      <ToastContainer/>
     </div>
   );
 }

@@ -84,7 +84,6 @@ function Admindashboard() {
 
   console.log(loading, user);
 
-
   return (
     <div className="adminDashboardContainer">
       {/** TOP CONTAINER */}
@@ -97,10 +96,24 @@ function Admindashboard() {
           </div>
           <div className="top-left-right-d">
             <div className="userimagecontainer">
-              <img
+              {/* <img
                 src={images.user}
                 alt="Profile Picture"
                 className="userprofileimg"
+              /> */}
+
+              <img
+                src={
+                  user?.avatar?.url
+                    ? `${serverName}/uploads/${user?.avatar.url}`
+                    : images.user
+                }
+                alt="Profile Picture"
+                className="userprofileimg"
+                onError={(e) => {
+                  e.target.onerror = null; // Prevents looping
+                  e.target.src = images.user; // Fallback to default image on error
+                }}
               />
             </div>
           </div>
@@ -114,20 +127,23 @@ function Admindashboard() {
           </div>
           <div className="top-right-right-d">
             <div
-             onClick={() => handleComponentClick("allcountry")}
-            className="iconcontainertop">
+              onClick={() => handleComponentClick("allcountry")}
+              className="iconcontainertop"
+            >
               <TbWorld color={COLORS.background} size={"3rem"} />
             </div>
 
             <div
               onClick={() => handleComponentClick("notification")}
-            className="iconcontainertop">
+              className="iconcontainertop"
+            >
               <IoIosNotifications color={COLORS.background} size={"3rem"} />
             </div>
 
             <div
-            onClick={() => handleComponentClick("dashboard")}
-            className="iconcontainertop">
+              onClick={() => handleComponentClick("dashboard")}
+              className="iconcontainertop"
+            >
               <FaHome color={COLORS.background} size={"3rem"} />
             </div>
           </div>
@@ -173,8 +189,6 @@ function Admindashboard() {
             </div>
             <label className="adLContenContainerLabel">All Location</label>
           </div>
-
-         
 
           <div
             className="adLContenContainer"
@@ -346,7 +360,6 @@ function Admindashboard() {
             <label className="adLContenContainerLabel">Balance Sheet</label>
           </div>
 
-
           <div
             className="adLContenContainer"
             key={"allcountry"}
@@ -393,7 +406,7 @@ function Admindashboard() {
             }}
           >
             <div className="adLContenContainerIcon">
-              <RiLockPasswordFill  color={COLORS.white_s} size={"2.5rem"} />
+              <RiLockPasswordFill color={COLORS.white_s} size={"2.5rem"} />
             </div>
             <label className="adLContenContainerLabel">Change Password</label>
           </div>
@@ -451,10 +464,12 @@ function Admindashboard() {
           {selectedComponent === "aboutus" && <Aboutus />}
           {selectedComponent === "balancesheet" && <Balancesheet />}
           {selectedComponent === "changepassword" && <ChangePassword />}
-          {selectedComponent === "logout" && <Logout
-           selectedComponent={selectedComponent}
-           handleComponentClick={handleComponentClick}
-          />}
+          {selectedComponent === "logout" && (
+            <Logout
+              selectedComponent={selectedComponent}
+              handleComponentClick={handleComponentClick}
+            />
+          )}
           {selectedComponent === "notification" && <Notification />}
           {selectedComponent === "pushnotification" && <PushNotification />}
           {selectedComponent === "allcountry" && <AllCountry />}

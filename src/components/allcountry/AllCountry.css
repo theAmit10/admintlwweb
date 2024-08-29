@@ -41,6 +41,13 @@
     align-items: center;
 }
 
+.cnlabel{
+    color: var(--background);
+    font-family: "MR";
+    font-size: 2rem;
+    align-self: center;
+}
+
 .countryV{
     flex: 1;
     display: flex;

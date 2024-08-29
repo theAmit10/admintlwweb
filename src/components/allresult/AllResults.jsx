@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./AllResults.css";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import COLORS from "../../assets/constants/colors";
 import { locationdata } from "../alllocation/AllLocation";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  useGetAllLocationWithTimeQuery,
+  useGetAllResultWebQuery,
+} from "../../helper/Networkcall";
+import { LoadingComponent } from "../helper/LoadingComponent";
+import { NodataFound } from "../helper/NodataFound";
 
 const resultdata = {
   success: true,
@@ -1681,6 +1688,50 @@ const resultdata = {
 };
 
 export const AllResults = () => {
+  const dispatch = useDispatch();
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const { accesstoken, user } = useSelector((state) => state.user);
+
+  // GETTING ALL THE LOCATION
+
+  const {
+    data: alllocation,
+    error: alllocationError,
+    isLoading: allocationIsLoading,
+  } = useGetAllLocationWithTimeQuery(accesstoken);
+
+  const {
+    data: allresult,
+    error: allresultError,
+    isLoading: allresultIsLoading,
+  } = useGetAllResultWebQuery({
+    accessToken: accesstoken,
+    locationid: selectedItem?._id,
+  });
+
+  useEffect(() => {
+    if (!allocationIsLoading && alllocation) {
+      setSelectedItem(alllocation?.locationData[0]);
+      console.log("Calling allresult");
+      console.log(allocationIsLoading, allresult);
+    }
+  }, [allocationIsLoading, alllocation]);
+
+  useEffect(() => {
+    if (alllocation) {
+      console.log("Calling allresult only:: " + allresultIsLoading);
+      console.log(allocationIsLoading, allresult);
+    }
+  }, [allresult, selectedItem]);
+
+  const getAllResultForOtherLocation = (item) => {
+    console.log("GETTING RESULT...");
+    setSelectedItem(item);
+    console.log("allresult :: " + allresultIsLoading);
+    console.log(JSON.stringify(selectedItem));
+  };
+
   return (
     <div className="alContainer">
       {/** TOP NAVIGATION CONTATINER */}
@@ -1689,51 +1740,74 @@ export const AllResults = () => {
           <label className="alCreatLocationTopContainerlabel">All Result</label>
         </div>
       </div>
-      <div className="PLContainerMain">
-        <div className="ARLC">
-          {locationdata.map((item, index) => (
-            <div className="ARLocConC">
+      {allocationIsLoading ? (
+        <LoadingComponent />
+      ) : (
+        <div className="PLContainerMain">
+          <div className="ARLC">
+            {alllocation?.locationData?.map((item, index) => (
               <div
-                className="PLLLocContainer"
-                style={{
-                  background:
-                    index % 2 === 0
-                      ? "linear-gradient(90deg, #1993FF, #0F5899)"
-                      : "linear-gradient(90deg, #7EC630, #3D6017)",
-                }}
+                key={index}
+                onClick={() => getAllResultForOtherLocation(item)}
+                className="ARLocConC"
               >
-                <label className="locLabel">{item.name}</label>
-                <label className="limitLabel">Max {item.limit}</label>
+                <div
+                  className="PLLLocContainer"
+                  style={{
+                    background:
+                      index % 2 === 0
+                        ? "linear-gradient(90deg, #1993FF, #0F5899)"
+                        : "linear-gradient(90deg, #7EC630, #3D6017)",
+                    borderColor:
+                      selectedItem?._id === item._id
+                        ? COLORS.blue
+                        : "transparent", // Use transparent for no border
+                    borderWidth: "2px",
+                    borderStyle:
+                      selectedItem?._id === item._id ? "solid" : "none", // Apply border style conditionally
+                  }}
+                >
+                  <label className="locLabel">{item.name}</label>
+                  <label className="limitLabel">Max {item.limit}</label>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        {/** ALL RESULT MAIN */}
-        <div className="ARMC">
-          {resultdata.results.map((item, index) => (
-            <div className="ARMCContent">
-              <div className="ARMCContentTC">
-                <label className="pdR"> {item.lottime.lottime}</label>
-              </div>
-              <div className="ARMCContentDC">
-                {item.dates.map((dateitem, dateindex) => (
-                  <div className="ARMCContentDConC">
-                    <div className="ARMCContentDConCDate">
-                      <label className="pdR">{dateitem.lotdate.lotdate}</label>
-                    </div>
-                    <div className="ARMCContentDConCResult">
-                      <label className="pdR">
-                        {dateitem.results[0].resultNumber}
-                      </label>
-                    </div>
+          {/** ALL RESULT MAIN */}
+          <div className="ARMC">
+            {allresultIsLoading ? (
+              <LoadingComponent />
+            ) : allresult?.results?.length === 0 ? (
+              <NodataFound title={"No data available"} />
+            ) : (
+              allresult?.results.map((item, index) => (
+                <div className="ARMCContent" key={index}>
+                  <div className="ARMCContentTC">
+                    <label className="pdR"> {item.lottime.lottime}</label>
                   </div>
-                ))}
-              </div>
-            </div>
-          ))}
+                  <div className="ARMCContentDC">
+                    {item.dates.map((dateitem, dateindex) => (
+                      <div className="ARMCContentDConC" key={dateindex}>
+                        <div className="ARMCContentDConCDate">
+                          <label className="pdR">
+                            {dateitem.lotdate.lotdate}
+                          </label>
+                        </div>
+                        <div className="ARMCContentDConCResult">
+                          <label className="pdR">
+                            {dateitem.results[0].resultNumber}
+                          </label>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
