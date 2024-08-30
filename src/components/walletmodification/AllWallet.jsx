@@ -26,6 +26,7 @@ import {
 } from "../helper/showErrorToast";
 import UrlHelper from "../../helper/UrlHelper";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
 
 export const AllWallet = () => {
   const [showPN, setShowPN] = useState(true);
@@ -311,6 +312,8 @@ export const AllWallet = () => {
           )}
         </div>
       )}
+         <ToastContainer/>
     </div>
+ 
   );
 };

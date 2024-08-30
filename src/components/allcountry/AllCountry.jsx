@@ -114,12 +114,10 @@ function AllCountry() {
 
   console.log("Curriencies ::" + JSON.stringify(data));
 
-  useEffect(
-    useCallback(() => {
-      // Refetch the data when the screen is focused
-      refetch();
-    }, [refetch])
-  );
+  
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   // FOR DELETING DATA
 
@@ -195,11 +193,11 @@ function AllCountry() {
   };
 
   const selectingCountryWithTimezone = (item) => {
-    console.log("Seleted country timezone")
-    console.log(item)
+    console.log("Seleted country timezone");
+    console.log(item);
     setSeletedCountryTimezone(item);
-    setcountryname(item.name)
-    settimezone(item.timezone)
+    setcountryname(item.name);
+    settimezone(item.timezone);
     setShowTimezone(false);
   };
 
@@ -484,7 +482,9 @@ function AllCountry() {
                 <PiSubtitles color={COLORS.background} size={"2.5rem"} />
               </div>
 
-              <label className="cnlabel">{countryname === "" ?  "Select a country" : countryname }</label>
+              <label className="cnlabel">
+                {countryname === "" ? "Select a country" : countryname}
+              </label>
             </div>
 
             {/** SYMBOL */}

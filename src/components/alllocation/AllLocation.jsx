@@ -33,7 +33,6 @@ import moment from "moment";
 import { getDateAccordingToLocationAndTime } from "../../redux/actions/dateAction";
 import { getResultAccordingToLocationTimeDate } from "../../redux/actions/resultAction";
 
-
 export const locationdata = [
   {
     id: "1",
@@ -1295,7 +1294,17 @@ function AllLocation() {
           {allLocationIsLoading ? (
             <LoadingComponent />
           ) : filteredDataL.length === 0 ? (
-            <NodataFound title={"No data available"} />
+            <>
+              <NodataFound title={"No data available"} />
+              <div
+                className="alBottomContainer"
+                onClick={settingCreateLocation}
+              >
+                <label className="alBottomContainerlabel">
+                  Create Location
+                </label>
+              </div>
+            </>
           ) : (
             <>
               <div className="allLocationMainContainer">

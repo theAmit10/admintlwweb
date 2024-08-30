@@ -34,6 +34,7 @@ function Register() {
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [userDeviceToken, setUserDeviceToken] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("Select country");
+  const [selectedCountryOrg, setSelectedCountryOrg] = useState(null);
   const [signupwith, setsignupwith] = useState("");
   const [showRegiter, setShowRegister] = useState(false);
   const [showCountry, setShowCountry] = useState(false);
@@ -53,6 +54,7 @@ function Register() {
 
   const selectingContryContainer = (item) => {
     setSelectedCountry(item.countryname);
+    setSelectedCountryOrg(item);
     setShowCountry(false);
     setShowRegister(true);
   };
@@ -131,6 +133,9 @@ function Register() {
         console.log("devicetoken :: " + userDeviceToken);
 
         showSuccessToast("Processing");
+        console.log("currecy ::" +selectedCountry)
+        console.log("currecy id ::" +selectedCountry._id)
+        console.log("currecy selectedCountryOrg id ::" +selectedCountryOrg._id)
 
         try {
           const body = {
@@ -138,7 +143,7 @@ function Register() {
             email: email,
             password: password,
             role: selectedRole,
-            country: selectedCountry._id,
+            country: selectedCountryOrg._id,
           };
 
           const res = await createRegister({
@@ -186,6 +191,7 @@ function Register() {
             body,
           }).unwrap();
 
+          showSuccessToast("Please login now");
           console.log("datat :: " + res);
           navigation("/login");
         } catch (error) {

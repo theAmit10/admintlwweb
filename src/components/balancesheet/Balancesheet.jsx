@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./Balancesheet.css";
 import COLORS from "../../assets/constants/colors";
 import { useSelector } from "react-redux";
@@ -18,6 +18,10 @@ function Balancesheet() {
   const formatDateTime = (dateTimeString) => {
     return moment(dateTimeString).format("MMMM DD, YYYY hh:mm A");
   };
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   return (
     <div className="gameDescriptionContainer">

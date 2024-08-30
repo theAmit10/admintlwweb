@@ -106,7 +106,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
   } = useGetAllLocationWithTimeQuery(accesstoken);
 
   useEffect(() => {
-    if (allLocationData) {
+    if (allLocationData && allLocationData?.locationData?.length !== 0) {
       if (selectedLocation === null) {
         setSelectedLocation(allLocationData.locationData[0]);
       }

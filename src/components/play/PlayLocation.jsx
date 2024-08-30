@@ -188,7 +188,9 @@ export const PlayLocation = () => {
   };
 
   useEffect(() => {
-    setFilteredData(data?.locationData); // Update filteredData whenever locations change
+    if (data) {
+      setFilteredData(data?.locationData); // Update filteredData whenever locations change
+    }
   }, [data]);
 
   // ###############

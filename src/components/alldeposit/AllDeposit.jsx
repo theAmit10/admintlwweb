@@ -17,6 +17,7 @@ import { NodataFound } from "../helper/NodataFound";
 import { AlertModal } from "../helper/AlertModal";
 import { ImageAlertModal } from "../helper/ImageAlertModal";
 import { servername } from "../../helper/UrlHelper";
+import { ToastContainer } from "react-toastify";
 
 export const multiplyStringNumbers = (str1, str2) => {
   // Convert the strings to numbers
@@ -58,12 +59,9 @@ export const AllDeposit = () => {
     { isLoading: updateStatusIsLoading, error: updateStatusError },
   ] = useUpdateDepositPaymentStatusMutation();
 
-  useEffect(
-    useCallback(() => {
-      // Refetch the data when the screen is focused
-      refetch();
-    }, [refetch])
-  );
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   const formatDateTime = (dateTimeString) => {
     return moment(dateTimeString).format("MMMM DD, YYYY hh:mm A");
@@ -357,6 +355,7 @@ export const AllDeposit = () => {
           </div>
         </>
       )}
+      <ToastContainer/>
     </div>
   );
 };

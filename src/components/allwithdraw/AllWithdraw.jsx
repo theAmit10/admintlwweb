@@ -74,7 +74,7 @@ export const AllWithdraw = () => {
   };
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && data) {
       console.log("USE Effect running");
       setFilteredData(data.withdrawals);
     }
@@ -208,7 +208,7 @@ export const AllWithdraw = () => {
 
       {isLoading ? (
         <LoadingComponent />
-      ) : filteredData.length === 0 ? (
+      ) : filteredData?.length === 0 ? (
         <NodataFound title={"No data found"} />
       ) : (
         <>
