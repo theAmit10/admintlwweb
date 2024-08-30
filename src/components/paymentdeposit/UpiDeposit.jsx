@@ -213,6 +213,7 @@ export const UpiDeposit = ({ selectingPaymentType }) => {
                               src={images.upi}
                               color={COLORS.background}
                               size={"2.5rem"}
+                              className="paymenticon"
                             />
                           </div>
 

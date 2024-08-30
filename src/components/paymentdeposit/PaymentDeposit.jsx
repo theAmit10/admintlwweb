@@ -68,7 +68,8 @@ function PaymentDeposit() {
                   <img
                     src={images.upi}
                     color={COLORS.background}
-                    size={"2.5rem"}
+                    size={"1rem"}
+                    className="paymenticon"
                   />
                 </div>
               </div>
@@ -124,6 +125,7 @@ function PaymentDeposit() {
                     src={images.paypal}
                     color={COLORS.background}
                     size={"2.5rem"}
+                    className="paymenticon"
                   />
                 </div>
               </div>
@@ -151,6 +153,7 @@ function PaymentDeposit() {
                     src={images.skrill}
                     color={COLORS.background}
                     size={"2.5rem"}
+                    className="paymenticon"
                   />
                 </div>
               </div>
@@ -178,6 +181,7 @@ function PaymentDeposit() {
                     src={images.crypto}
                     color={COLORS.background}
                     size={"2.5rem"}
+                    className="paymenticon"
                   />
                 </div>
               </div>

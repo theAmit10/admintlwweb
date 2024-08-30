@@ -196,6 +196,7 @@ export const PayPalDeposit = ({ selectingPaymentType }) => {
                           src={images.paypal}
                           color={COLORS.background}
                           size={"2.5rem"}
+                          className="paymenticon"
                         />
                       </div>
 

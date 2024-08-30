@@ -205,6 +205,7 @@ export const CryptoDeposit = ({ selectingPaymentType }) => {
                           src={images.crypto}
                           color={COLORS.background}
                           size={"2.5rem"}
+                          className="paymenticon"
                         />
                       </div>
 

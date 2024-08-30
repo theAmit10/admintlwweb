@@ -231,6 +231,7 @@ export const BankDeposit = ({ selectingPaymentType }) => {
                           src={images.bank}
                           color={COLORS.background}
                           size={"2.5rem"}
+                          className="paymenticon"
                         />
                       </div>
 

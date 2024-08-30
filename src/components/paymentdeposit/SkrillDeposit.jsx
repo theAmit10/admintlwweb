@@ -198,6 +198,7 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
                           src={images.skrill}
                           color={COLORS.background}
                           size={"2.5rem"}
+                          className="paymenticon"
                         />
                       </div>
 
