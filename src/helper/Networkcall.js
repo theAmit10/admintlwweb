@@ -471,6 +471,17 @@ export const sincelotAdminApi = createApi({
       }),
     }),
 
+      // FOR GETTING USERS SINGLE USER PLAY HISTORY
+      getSingleUserPlayHistory: builder.query({
+        query: ({accesstoken, userId}) => ({
+          url: 'result/singleuserplayhistory/' + userId,
+          method: 'get',
+          headers: {
+            Authorization: `Bearer ${accesstoken}`,
+          },
+        }),
+      }),
+
 
 
     // ######## END #########
@@ -516,6 +527,7 @@ export const {
   useCreateRegisterMutation,
   useGetLogoutQuery,
   useGetAllResultWebQuery,
-  useGetAdminNotificationQuery
+  useGetAdminNotificationQuery,
+  useGetSingleUserPlayHistoryQuery
 
 } = sincelotAdminApi;

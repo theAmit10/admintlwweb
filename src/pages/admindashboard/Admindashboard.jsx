@@ -32,6 +32,7 @@ import Promotion from "../../components/promotion/Promotion";
 import { AllSubAdmin } from "../../components/subadmin/AllSubAdmin";
 import { UpdateProfile } from "../../components/updateprofile/UpdateProfile";
 import PaymentDeposit from "../../components/paymentdeposit/PaymentDeposit";
+import Historyc from "../../components/history/Historyc";
 import { PlayLocation } from "../../components/play/PlayLocation";
 import { AllUser } from "../../components/alluser/AllUser";
 import { NewUser } from "../../components/newuser/NewUser";
@@ -485,6 +486,7 @@ function Admindashboard() {
           {selectedComponent === "alluser" && <AllUser />}
           {selectedComponent === "newuser" && <NewUser />}
           {selectedComponent === "allresults" && <AllResults />}
+          {selectedComponent === "history" && <Historyc />}
         </div>
       </div>
 

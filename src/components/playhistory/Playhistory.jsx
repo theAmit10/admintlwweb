@@ -1,0 +1,165 @@
+import React, { useCallback, useEffect, useState } from "react";
+import "./Playhistory.css";
+import { PiHandDepositBold } from "react-icons/pi";
+import { PiHandWithdrawFill } from "react-icons/pi";
+import COLORS from "../../assets/constants/colors";
+import FONT from "../../assets/constants/fonts";
+import { FaRegCheckCircle } from "react-icons/fa";
+import { FaRegPlayCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  useGetPlayHistoryQuery,
+  useGetSingleUserPlayHistoryQuery,
+} from "../../helper/Networkcall";
+import CircularProgressBar from "../helper/CircularProgressBar";
+import { LoadingComponent } from "../helper/LoadingComponent";
+import { IoArrowBackCircleOutline } from "react-icons/io5";
+
+function Playhistory({ userdata, backHanndlerForPlayHistory }) {
+  const navigation = useNavigate();
+  const dispatch = useDispatch();
+  const { accesstoken, user } = useSelector((state) => state.user);
+  const [expandedItems, setExpandedItems] = useState({});
+
+  const {
+    data: historyapidatas,
+    error,
+    isLoading,
+    refetch,
+  } = useGetSingleUserPlayHistoryQuery({
+    accesstoken: accesstoken,
+    userId: userdata.userId,
+  });
+
+  useEffect(
+    useCallback(() => {
+      // Refetch the data when the screen is focused
+      refetch();
+    }, [refetch])
+  );
+
+  const getPlaynumbersString = (playbets) => {
+    // Map the array to extract playnumber and join them with ', '
+    return playbets.map((playbet) => playbet.playnumber).join(" , ");
+  };
+
+  const calculateTotalAmount = (playbets) => {
+    // Use reduce to accumulate the total amount
+    return playbets.reduce((total, playbet) => total + playbet.amount, 0);
+  };
+
+  const formatDate = (dateString) => {
+    // Split the date string into parts
+    const [day, month, year] = dateString.split("-");
+
+    // Create a Date object from the parts
+    const date = new Date(`${year}-${month}-${day}`);
+
+    // Use Intl.DateTimeFormat to format the date
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+      date
+    );
+
+    return formattedDate;
+  };
+
+  console.log(isLoading, historyapidatas);
+
+  return (
+    <div className="history-main-container-org">
+      {/** TITLE CONTAINER */}
+      <div className="alCreatLocationTopContainer">
+        <div
+          className="searchIconContainer"
+          onClick={backHanndlerForPlayHistory}
+        >
+          <IoArrowBackCircleOutline color={COLORS.white_s} size={"2.5rem"} />
+        </div>
+        <div className="alCreatLocationTopContaineCL">
+          <label className="alCreatLocationTopContainerlabel">
+            Play History
+          </label>
+        </div>
+      </div>
+      {/** CONTENT CONTAINER */}
+      <div className="h-content-container">
+        {/** CONTENT */}
+
+        {isLoading ? (
+          <LoadingComponent />
+        ) : (
+          historyapidatas.playbets.map((item, index) => (
+            <div className="h-content-org">
+              {/** FIRST CONTAINER */}
+              <div className="h-content-first-history">
+                <div className="iconcontainertop">
+                  <FaRegPlayCircle color={COLORS.background} size={"3rem"} />
+                </div>
+              </div>
+              {/** SECOND CONTAINER */}
+              <div className="h-content-second">
+                <div className="h-content-second-content-container-top">
+                  <label className="h-content-second-content-container-top-amount">
+                    Amount :{" "}
+                  </label>
+                  <label className="h-content-second-content-container-top-amount-val">
+                    {calculateTotalAmount(item.playnumbers)}{" "}
+                    {user.country.countrycurrencysymbol}
+                  </label>
+                </div>
+                <div className="h-content-second-content-container-bottom">
+                  <label className="h-content-second-content-container-top-date">
+                    {formatDate(item.lotdate.lotdate)}
+                  </label>
+                </div>
+              </div>
+              {/** THIRD CONTAINER */}
+              <div className="h-content-third">
+                <div className="h-content-third-content-container-top">
+                  <label className="h-content-third-content-container-top-payment">
+                    Location
+                  </label>
+                </div>
+                <div className="h-content-third-content-container-bottom">
+                  <label className="h-content-third-content-container-top-payment-val">
+                    {item.lotlocation.lotlocation}
+                  </label>
+                </div>
+              </div>
+              {/** FOURTH CONTAINER */}
+              <div className="h-content-fourth">
+                <div className="h-content-third-content-container-top">
+                  <label className="h-content-third-content-container-top-payment">
+                    Time
+                  </label>
+                </div>
+                <div className="h-content-third-content-container-bottom">
+                  <label className="h-content-third-content-container-top-payment-val">
+                    {item.lottime.lottime}
+                  </label>
+                </div>
+              </div>
+              {/** FIFTH CONTAINER */}
+              <div className="h-content-fifth">
+                <div className="h-content-third-content-container-top">
+                  <label className="h-content-third-content-container-top-payment">
+                    Number
+                  </label>
+                </div>
+                <div className="h-content-third-content-container-bottom">
+                  <label className="h-content-third-content-container-top-payment-val">
+                    {getPlaynumbersString(item.playnumbers)}
+                  </label>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default Playhistory;

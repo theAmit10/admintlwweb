@@ -21,8 +21,12 @@ import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
 import UrlHelper from "../../helper/UrlHelper";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
+import { FaHistory } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
+import Historyc from "../history/Historyc";
+import Playhistory from "../playhistory/Playhistory";
 
-export const AllUser = () => {
+export const AllUser = ({ selectedComponent, handleComponentClick }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [amount, setAmount] = useState("");
   const [titleValue, setTitle] = useState("");
@@ -35,6 +39,8 @@ export const AllUser = () => {
   const [showEditWT, setShowEditWT] = useState(false);
   const [showEditUI, setShowEditUI] = useState(false);
   const [showEditN, setShowEditN] = useState(false);
+  const [showhistory, setShowHistory] = useState(false);
+  const [showPlayhistory, setShowPlayHistory] = useState(false);
 
   const settingEditSA = (item) => {
     setShowSA(false);
@@ -57,6 +63,8 @@ export const AllUser = () => {
     setShowEditWT(false);
     setShowEditUI(false);
     setShowEditN(false);
+    setShowHistory(false);
+    setShowPlayHistory(false);
   };
 
   const settingForWalletTwo = () => {
@@ -66,6 +74,8 @@ export const AllUser = () => {
     setShowEditWT(true);
     setShowEditUI(false);
     setShowEditN(false);
+    setShowHistory(false);
+    setShowPlayHistory(false);
   };
 
   const settingForUserId = () => {
@@ -75,6 +85,52 @@ export const AllUser = () => {
     setShowEditWT(false);
     setShowEditUI(true);
     setShowEditN(false);
+    setShowHistory(false);
+    setShowPlayHistory(false);
+  };
+
+  const settingForHistory = () => {
+    setShowSA(false);
+    setShowEditSA(false);
+    setShowEditWO(false);
+    setShowEditWT(false);
+    setShowEditUI(false);
+    setShowEditN(false);
+    setShowHistory(true);
+    setShowPlayHistory(false);
+  };
+
+  const backHanndlerForHistory = () => {
+    setShowSA(false);
+    setShowEditSA(true);
+    setShowEditWO(false);
+    setShowEditWT(false);
+    setShowEditUI(false);
+    setShowEditN(false);
+    setShowHistory(false);
+    setShowPlayHistory(false);
+  };
+
+  const settingForPlayHistory = () => {
+    setShowSA(false);
+    setShowEditSA(false);
+    setShowEditWO(false);
+    setShowEditWT(false);
+    setShowEditUI(false);
+    setShowEditN(false);
+    setShowHistory(false);
+    setShowPlayHistory(true);
+  };
+
+  const backHanndlerForPlayHistory = () => {
+    setShowSA(false);
+    setShowEditSA(true);
+    setShowEditWO(false);
+    setShowEditWT(false);
+    setShowEditUI(false);
+    setShowEditN(false);
+    setShowHistory(false);
+    setShowPlayHistory(false);
   };
 
   const settingForNotication = () => {
@@ -84,6 +140,8 @@ export const AllUser = () => {
     setShowEditWT(false);
     setShowEditUI(false);
     setShowEditN(true);
+    setShowHistory(false);
+    setShowPlayHistory(false);
   };
 
   const backHanndlerWalletOne = () => {
@@ -93,6 +151,8 @@ export const AllUser = () => {
     setShowEditWT(false);
     setShowEditUI(false);
     setShowEditN(false);
+    setShowHistory(false);
+    setShowPlayHistory(false);
   };
 
   const backHanndlerUserId = () => {
@@ -102,6 +162,8 @@ export const AllUser = () => {
     setShowEditWT(false);
     setShowEditUI(false);
     setShowEditN(false);
+    setShowHistory(false);
+    setShowPlayHistory(false);
   };
 
   const [walletVisibiltyO, setWalletVisibilityO] = useState(true);
@@ -493,6 +555,48 @@ export const AllUser = () => {
                 </div>
               </div>
             </div>
+
+            {/** PLAY HISTORY  */}
+            <div className="hdAllContainerContent" onClick={settingForPlayHistory}>
+              <div className="hdAllContainerContentTop">
+                <label className="hdAllContainerContentTopBoldLabel">
+                  Play History
+                </label>
+                <div className="hdContenContainerIcon">
+                  <FaUserCircle color={COLORS.background} size={"2.5rem"} />
+                </div>
+              </div>
+              <div className="hdAllContainerContentBottom">
+                <label className="hdAllContainerContentTopRegularLabel">
+                  User's play history
+                </label>
+                <div className="hdContenContainerIcon">
+                  <FaHistory color={COLORS.background} size={"2.5rem"} />
+                </div>
+              </div>
+            </div>
+
+            {/** HISTORY  */}
+            <div className="hdAllContainerContent" onClick={settingForHistory}>
+              <div className="hdAllContainerContentTop">
+                <label className="hdAllContainerContentTopBoldLabel">
+                  Histroy
+                </label>
+                <div className="hdContenContainerIcon">
+                  <FaUserCircle color={COLORS.background} size={"2.5rem"} />
+                </div>
+              </div>
+              <div className="hdAllContainerContentBottom">
+                <label className="hdAllContainerContentTopRegularLabel">
+                  User's transaction history
+                </label>
+                <div className="hdContenContainerIcon">
+                  <FaHistory color={COLORS.background} size={"2.5rem"} />
+                </div>
+              </div>
+            </div>
+
+            {/** END */}
           </div>
         </div>
       )}
@@ -830,7 +934,15 @@ export const AllUser = () => {
         ))}
       {/** FOR NOTIFICATION */}
 
-      <ToastContainer/>
+      {/** HISTORY */}
+      {showhistory && <Historyc userdata={singleuser} backHanndlerForHistory={backHanndlerForHistory} />}
+
+      {/** PLAY HISTORY */}
+      {
+        showPlayhistory && <Playhistory userdata={singleuser} backHanndlerForPlayHistory={backHanndlerForPlayHistory}/>
+      }
+
+      <ToastContainer />
     </div>
   );
 };
