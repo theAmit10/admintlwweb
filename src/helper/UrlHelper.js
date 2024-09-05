@@ -30,6 +30,8 @@ const CREATE_LOCATION_API = server + 'result/addlotlocation';
 const UPDATE_LOCATION_API = server + 'result/updatelotlocation';
 const DELETE_LOCATION_API = server + 'result/removelotlocation';
 
+const NOTIFICATION_ADMIN_API = server + 'user/';
+
 
 // Creating through Admin FOR TIME
 const CREATE_TIME_API = server + 'result/addlottime';
@@ -161,5 +163,6 @@ const CREATE_CRYPTO_API = server + 'result/addcryptopayment';
   CREATE_PAYPAL_API,
   CREATE_SKRILL_API,
   CREATE_CRYPTO_API,
-  UPDATE_SUBADMIN_ROLE_API
+  UPDATE_SUBADMIN_ROLE_API,
+  NOTIFICATION_ADMIN_API
 };

@@ -1,50 +1,60 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Notification.css";
 import COLORS from "../../assets/constants/colors";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CiSearch } from "react-icons/ci";
 import { CiEdit } from "react-icons/ci";
-import { MdDelete } from "react-icons/md";
 import { locationdata } from "../alllocation/AllLocation";
 import { IoArrowBackCircleOutline, IoSnow } from "react-icons/io5";
 import { PiSubtitles } from "react-icons/pi";
 import { IoDocumentText } from "react-icons/io5";
+import { loadAllNotification } from "../../redux/actions/userAction";
+import { LoadingComponent } from "../helper/LoadingComponent";
+import { NodataFound } from "../helper/NodataFound";
+import { useGetAdminNotificationQuery } from "../../helper/Networkcall";
+import UrlHelper from "../../helper/UrlHelper";
+import axios from "axios";
+import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
+import { MdDelete } from "react-icons/md";
 
 function Notification() {
-  const [filteredData, setFilteredData] = useState([]);
   const dispatch = useDispatch();
+  const { accesstoken, notifications, loadingNotification } = useSelector(
+    (state) => state.user
+  );
 
-  const handleSearch = (e) => {
-    const text = e.target.value;
-    const filtered = abouts.filter((item) =>
-      item.aboutTitle.toLowerCase().includes(text.toLowerCase())
-    );
-    setFilteredData(filtered);
-  };
+  useEffect(() => {
+    dispatch(loadAllNotification(accesstoken));
+  }, [dispatch]);
 
-  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedItem, setSelectedItem] = useState("");
+  const [showProgressBar, setProgressBar] = useState(false);
 
-  const selectingLocation = (item) => {
-    setSelectedLocation(item);
-  };
+  const deleteLocationHandler = async (item) => {
+    console.log("Item clicked :: " + item._id);
+    setProgressBar(true);
+    setSelectedItem(item._id);
 
-  const backhandlerSelectedLocation = () => {
-    setSelectedLocation(null);
-  };
+    try {
+      const url = `${UrlHelper.DELETE_NOTIFICATION_API}/${item._id}`;
+      const { data } = await axios.delete(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accesstoken}`,
+        },
+      });
 
-  //  FOR CREATING AND UPDATING
+      console.log("datat :: " + data);
 
-  const [titleValue, setTitle] = useState("");
-  const [discriptionValue, setDescription] = useState("");
-
-  const [showCreateAbout, setShowCrateAbout] = useState(false);
-
-  const settingShowCreateAboutUs = () => {
-    setShowCrateAbout(true);
-  };
-
-  const backHandlerCreateAboutUs = () => {
-    setShowCrateAbout(false);
+      showSuccessToast(data.message);
+      setProgressBar(false);
+      dispatch(loadAllNotification(accesstoken));
+    } catch (error) {
+      setProgressBar(false);
+      console.log(error?.response?.data?.message);
+      showErrorToast("Something went wrong");
+      console.log(error);
+    }
   };
 
   return (
@@ -60,14 +70,45 @@ function Notification() {
 
       <div className="allLocationMainContainer">
         {/** CONTENT */}
-        {locationdata.map((item, index) => (
-          <div key={index} className="allContentContainer-about">
-            <label className="allContentContainerLocationL">{item.name}</label>
-            <label className="allContentContainerLimitL">
-              Max {item.limit}
-            </label>
-          </div>
-        ))}
+        {loadingNotification ? (
+          <LoadingComponent />
+        ) : notifications && notifications.length == 0 ? (
+          <NodataFound title={"No data found"} />
+        ) : (
+          notifications?.map((item, index) => (
+            <div key={index} className="allContentContainer-about" style={{
+              display: 'flex',
+              alignItems : 'center',
+              justifyContent: 'center'
+            }}>
+              <label className="allContentContainerLocationL">
+                {item.title}
+              </label>
+              <label className="allContentContainerLimitL">
+                {item.description}
+              </label>
+              <div className="bcd" style={{
+                flex:1,
+                width: '90%',
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignContent: 'flex-end'
+              }}>
+              {selectedItem === item._id ? (
+                <LoadingComponent />
+              ) : (
+                <div
+                  className="allContentContainerIconContainer"
+                  onClick={() => deleteLocationHandler(item)}
+                >
+                  <MdDelete color={COLORS.background} size={"2.5rem"} />
+                </div>
+              )}
+              </div>
+            
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

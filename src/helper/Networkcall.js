@@ -460,6 +460,17 @@ export const sincelotAdminApi = createApi({
       }),
     }),
 
+     // GET ALL ADMIN NOTIFICATION
+     getAdminNotification: builder.query({
+      query: ({accesstoken,id}) => ({
+        url: `${UrlHelper.NOTIFICATION_ADMIN_API}${id}/notifications`,
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accesstoken}`,
+        },
+      }),
+    }),
+
 
 
     // ######## END #########
@@ -504,6 +515,7 @@ export const {
   useGetAllPlayHomeQuery,
   useCreateRegisterMutation,
   useGetLogoutQuery,
-  useGetAllResultWebQuery
+  useGetAllResultWebQuery,
+  useGetAdminNotificationQuery
 
 } = sincelotAdminApi;

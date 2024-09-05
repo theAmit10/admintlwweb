@@ -31,6 +31,7 @@ import CircularProgressBar from "../helper/CircularProgressBar";
 import { all } from "axios";
 import { getDateAccordingToLocationAndTime } from "../../redux/actions/dateAction";
 import { LoadingComponent } from "../helper/LoadingComponent";
+import { PiHandDepositFill, PiHandWithdrawFill } from "react-icons/pi";
 
 export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
   const [timeVisible, setTimeVisible] = useState(true);
@@ -124,7 +125,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
     setSelectedTime(item);
     setTimeVisible(false);
     setDateVisible(true);
-    console.log()
+    console.log();
     dispatch(
       getDateAccordingToLocationAndTime(
         accesstoken,
@@ -177,53 +178,58 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
           </div>
         ) : null}
 
-        {/** NEW USERS */}
+        {/** DEPOSIT */}
+
         {user && user.role === "admin" ? (
           <div
             className="hdAllContainerContent"
-            onClick={() => handleComponentClick("newuser")}
+            onClick={() => handleComponentClick("alldeposit")}
           >
             <div className="hdAllContainerContentTop">
               <label className="hdAllContainerContentTopBoldLabel">
-                New Users
+                All Deposit
               </label>
-              <label className="hdAllContainerContentTopBoldLabel">
-                {allonedayusers.length}
-              </label>
+              {/* <label className="hdAllContainerContentTopBoldLabel">
+                {allPlay?.plays.length}
+              </label> */}
             </div>
             <div className="hdAllContainerContentBottom">
               <label className="hdAllContainerContentTopRegularLabel">
-                Total Number of New Users in Last 24h
+                All deposit data
               </label>
               <div className="hdContenContainerIcon">
-                <GrUserNew color={COLORS.background} size={"2.5rem"} />
+                <PiHandDepositFill color={COLORS.background} size={"2.5rem"} />
               </div>
             </div>
           </div>
         ) : null}
 
-        {/** LOCATION */}
-        <div
-          className="hdAllContainerContent"
-          onClick={() => handleComponentClick("alllocation")}
-        >
-          <div className="hdAllContainerContentTop">
-            <label className="hdAllContainerContentTopBoldLabel">
-              Locations
-            </label>
-            <label className="hdAllContainerContentTopBoldLabel">
-              {locations.length}
-            </label>
-          </div>
-          <div className="hdAllContainerContentBottom">
-            <label className="hdAllContainerContentTopRegularLabel">
-              Total Number of Locations
-            </label>
-            <div className="hdContenContainerIcon">
-              <IoLocationSharp color={COLORS.background} size={"2.5rem"} />
+        {/** WITHDRAW */}
+
+        {user && user.role === "admin" ? (
+          <div
+            className="hdAllContainerContent"
+            onClick={() => handleComponentClick("withdraw")}
+          >
+            <div className="hdAllContainerContentTop">
+              <label className="hdAllContainerContentTopBoldLabel">
+                All Withdraw
+              </label>
+              {/* <label className="hdAllContainerContentTopBoldLabel">
+                {allPlay?.plays.length}
+              </label> */}
+            </div>
+            <div className="hdAllContainerContentBottom">
+              <label className="hdAllContainerContentTopRegularLabel">
+                All Withdraw data
+              </label>
+              <div className="hdContenContainerIcon">
+                <PiHandWithdrawFill color={COLORS.background} size={"2.5rem"} />
+              </div>
             </div>
           </div>
-        </div>
+        ) : null}
+
         {/** RESULT */}
         <div
           className="hdAllContainerContent"
@@ -270,6 +276,54 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
           </div>
         ) : null}
 
+        {/** LOCATION */}
+        <div
+          className="hdAllContainerContent"
+          onClick={() => handleComponentClick("alllocation")}
+        >
+          <div className="hdAllContainerContentTop">
+            <label className="hdAllContainerContentTopBoldLabel">
+              Locations
+            </label>
+            <label className="hdAllContainerContentTopBoldLabel">
+              {locations.length}
+            </label>
+          </div>
+          <div className="hdAllContainerContentBottom">
+            <label className="hdAllContainerContentTopRegularLabel">
+              Total Number of Locations
+            </label>
+            <div className="hdContenContainerIcon">
+              <IoLocationSharp color={COLORS.background} size={"2.5rem"} />
+            </div>
+          </div>
+        </div>
+
+        {/** NEW USERS */}
+        {user && user.role === "admin" ? (
+          <div
+            className="hdAllContainerContent"
+            onClick={() => handleComponentClick("newuser")}
+          >
+            <div className="hdAllContainerContentTop">
+              <label className="hdAllContainerContentTopBoldLabel">
+                New Users
+              </label>
+              <label className="hdAllContainerContentTopBoldLabel">
+                {allonedayusers.length}
+              </label>
+            </div>
+            <div className="hdAllContainerContentBottom">
+              <label className="hdAllContainerContentTopRegularLabel">
+                Total Number of New Users in Last 24h
+              </label>
+              <div className="hdContenContainerIcon">
+                <GrUserNew color={COLORS.background} size={"2.5rem"} />
+              </div>
+            </div>
+          </div>
+        ) : null}
+
         {/** SUB ADMIN */}
 
         {user && user.role === "admin" && !isLoading ? (
@@ -304,7 +358,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
       <div className="hdLocationContainer">
         <div className="hdLocationContainerLeft">
           {allLocationIsLoading ? (
-            <LoadingComponent/>
+            <LoadingComponent />
           ) : (
             allLocationData?.locationData.map((item, index) => (
               <div
@@ -337,7 +391,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
         {/** RIGHT */}
         <div className="hdLocationContainerRight">
           {selectedLocation === null ? (
-             <LoadingComponent/>
+            <LoadingComponent />
           ) : (
             timeVisible && (
               <div className="hdLocationContainerRightTimeContainer">
@@ -377,7 +431,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
           )}
 
           {selectedLocation === null && selectedTime === null && loadingdate ? (
-             <LoadingComponent/>
+            <LoadingComponent />
           ) : (
             dateVisible && (
               <div className="hdLocationContainerRightTimeContainer">
@@ -463,12 +517,15 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
 
                     <div className="hdLocationContainerRightTimeContainerContentContainer-resultleft">
                       {results.length === 0 ? (
-                        <label className="hdLocationContainerLeftContentNameLabel" style={{marginBottom: "2rem"}}>
+                        <label
+                          className="hdLocationContainerLeftContentNameLabel"
+                          style={{ marginBottom: "2rem" }}
+                        >
                           Comming soon
                         </label>
                       ) : (
                         <label className="hdLocationContainerRightTimeContainerContentContainer-resultleft-number">
-                           {results[0].resultNumber}
+                          {results[0].resultNumber}
                         </label>
                       )}
                       <label className="hdLocationContainerRightTimeContainerContentContainer-resultleft-date">

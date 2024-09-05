@@ -202,7 +202,10 @@ function Admindashboard() {
             }}
           >
             <div className="adLContenContainerIcon">
-              <FaPlay color={COLORS.white_s} size={"2.5rem"} />
+              <img src={images.play} style={{
+                height: '4rem',
+                width: '4rem',
+              }} size={"2.5rem"} />
             </div>
             <label className="adLContenContainerLabel">Play</label>
           </div>
@@ -255,7 +258,7 @@ function Admindashboard() {
             <div className="adLContenContainerIcon">
               <MdPayments color={COLORS.white_s} size={"2.5rem"} />
             </div>
-            <label className="adLContenContainerLabel">Payment</label>
+            <label className="adLContenContainerLabel">Payment Opt.</label>
           </div>
 
           <div
@@ -275,7 +278,7 @@ function Admindashboard() {
             <label className="adLContenContainerLabel">Wallet</label>
           </div>
 
-          <div
+          {/* <div
             className="adLContenContainer"
             key={"createresult"}
             onClick={() => handleComponentClick("createresult")}
@@ -290,7 +293,7 @@ function Admindashboard() {
               <GiTrophy color={COLORS.white_s} size={"2.5rem"} />
             </div>
             <label className="adLContenContainerLabel">Create Result</label>
-          </div>
+          </div> */}
 
           <div
             className="adLContenContainer"
@@ -357,7 +360,7 @@ function Admindashboard() {
             <div className="adLContenContainerIcon">
               <FaBalanceScale color={COLORS.white_s} size={"2.5rem"} />
             </div>
-            <label className="adLContenContainerLabel">Balance Sheet</label>
+            <label className="adLContenContainerLabel">Transaction History</label>
           </div>
 
           <div

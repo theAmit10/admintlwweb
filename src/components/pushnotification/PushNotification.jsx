@@ -24,6 +24,7 @@ import {
   loadAllUsers,
 } from "../../redux/actions/userAction";
 import { NodataFound } from "../helper/NodataFound";
+import { MdDelete } from "react-icons/md";
 
 export const PushNotification = () => {
   const [showPN, setShowPN] = useState(true);
@@ -223,6 +224,35 @@ export const PushNotification = () => {
   useEffect(() => {
     setFilteredData(allusers); // Update filteredData whenever locations change
   }, [allusers]);
+
+  // FOR DELETING NOTIFICATION
+
+  const deleteLocationHandler = async (item) => {
+    console.log("Item clicked :: " + item._id);
+    setProgressBar(true);
+    setSelectedItem(item._id);
+
+    try {
+      const url = `${UrlHelper.DELETE_NOTIFICATION_API}/${item._id}`;
+      const { data } = await axios.delete(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accesstoken}`,
+        },
+      });
+
+      console.log("datat :: " + data);
+
+      showSuccessToast(data.message);
+      setProgressBar(false);
+      dispatch(loadAllNotification(accesstoken));
+    } catch (error) {
+      setProgressBar(false);
+      console.log(error?.response?.data?.message);
+      showErrorToast("Something went wrong");
+      console.log(error);
+    }
+  };
 
   return (
     <div className="pn-containter">
@@ -515,13 +545,42 @@ export const PushNotification = () => {
           ) : (
             <div className="allNotificataionContainerContent">
               {notifications.map((item, index) => (
-                <div key={index} className="allContentContainer-about">
+                <div
+                  key={index}
+                  className="allContentContainer-about"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
                   <label className="allContentContainerLocationL">
                     {item.title}
                   </label>
                   <label className="allContentContainerLimitL">
                     {item.description}
                   </label>
+                  <div
+                    className="bcd"
+                    style={{
+                      flex: 1,
+                      width: "90%",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      alignContent: "flex-end",
+                    }}
+                  >
+                    {selectedItem === item._id ? (
+                      <LoadingComponent />
+                    ) : (
+                      <div
+                        className="allContentContainerIconContainer"
+                        onClick={() => deleteLocationHandler(item)}
+                      >
+                        <MdDelete color={COLORS.background} size={"2.5rem"} />
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

@@ -147,11 +147,15 @@ function AllCountry() {
       showErrorToast("Enter currency value compared to INR");
     } else if (isNaN(countrycurrencyvaluecomparedtoinr)) {
       showErrorToast("Enter valid currency value");
-    } else {
+    } else if (!countrycurrencysymbol) {
+      showErrorToast("Enter currency name");
+    }
+     else {
       console.log("Update Currency Running");
       try {
         const formData = {
           countrycurrencyvaluecomparedtoinr: countrycurrencyvaluecomparedtoinr,
+          countrycurrencysymbol: countrycurrencysymbol
         };
 
         console.log("FORM DATA :: " + JSON.stringify(formData));
@@ -226,7 +230,7 @@ function AllCountry() {
       return;
     }
     if (!countrycurrencysymbol) {
-      showErrorToast("Enter country symbol");
+      showErrorToast("Enter currency name");
       return;
     }
     if (!countrycurrencyvaluecomparedtoinr) {
@@ -488,7 +492,7 @@ function AllCountry() {
             </div>
 
             {/** SYMBOL */}
-            <label className="alCLLabel">Country symbol</label>
+            <label className="alCLLabel">Currency name</label>
             <div className="alSearchContainer">
               <div className="searchIconContainer">
                 <IoDocumentText color={COLORS.background} size={"2.5rem"} />
@@ -496,7 +500,7 @@ function AllCountry() {
 
               <input
                 className="al-search-input"
-                placeholder="Enter country symbol"
+                placeholder="Enter currency name"
                 value={countrycurrencysymbol}
                 onChange={(e) => setcountrycurrencysymbol(e.target.value)}
               />
@@ -583,6 +587,25 @@ function AllCountry() {
               value={countrycurrencyvaluecomparedtoinr}
               onChange={(e) =>
                 setcountrycurrencyvaluecomparedtoinr(e.target.value)
+              }
+            />
+          </div>
+
+           {/** currency name */}
+           <label className="alCLLabel">
+            {seletedItem.countrycurrencysymbol} Currency name
+          </label>
+          <div className="alSearchContainer">
+            <div className="searchIconContainer">
+              <IoDocumentText color={COLORS.background} size={"2.5rem"} />
+            </div>
+
+            <input
+              className="al-search-input"
+              placeholder="Enter Currency name"
+              value={countrycurrencysymbol}
+              onChange={(e) =>
+                setcountrycurrencysymbol(e.target.value)
               }
             />
           </div>

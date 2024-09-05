@@ -21,6 +21,8 @@ import { getResultAccordingToLocationTimeDate } from "../../redux/actions/result
 import axios from "axios";
 import UrlHelper from "../../helper/UrlHelper";
 import { ToastContainer } from "react-toastify";
+import { IoIosMenu } from "react-icons/io";
+import SortingOptions from "../helper/SortingOptions";
 
 export const PlayLocation = () => {
   const [showPL, setShowPL] = useState(true);
@@ -280,6 +282,32 @@ export const PlayLocation = () => {
   }, [dataPlayGame, isLoadingPlayGame, shouldFetch]);
 
   console.log("Data Play Game:", dataPlayGame);
+
+  const [showSorting, setShowSorting] = useState(false);
+
+  const sortByAmount = (order = 'asc') => {
+    const sortedData = [...filteredDataPG].sort((a, b) => {
+      return order === 'asc' ? a.amount - b.amount : b.amount - a.amount;
+    });
+    setFilteredDataPG(sortedData);
+  };
+
+  const sortByWinningAmount = (order = 'asc') => {
+    const sortedData = [...filteredDataPG].sort((a, b) => {
+      const winningAmountA = a.users.reduce(
+        (acc, user) => acc + user.winningamount,
+        0,
+      );
+      const winningAmountB = b.users.reduce(
+        (acc, user) => acc + user.winningamount,
+        0,
+      );
+      return order === 'asc'
+        ? winningAmountA - winningAmountB
+        : winningAmountB - winningAmountA;
+    });
+    setFilteredDataPG(sortedData);
+  };
 
   // ###############
   // Play INSIGHTS
@@ -689,7 +717,27 @@ export const PlayLocation = () => {
               >
                 {selectedDate.lotdate}
               </label>
+              <div
+               onClick={() => setShowSorting(!showSorting)}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginRight : '1rem'
+                }}
+              >
+                <IoIosMenu color={COLORS.white_s} size={"2.5rem"} />
+              </div>
             </div>
+
+            {showSorting && (
+                <SortingOptions
+                  sortByAmount={sortByAmount}
+                  sortByWinningAmount={sortByWinningAmount}
+                  onClose={() => setShowSorting(false)} // Close sorting options
+                />
+              )}
 
             {filteredDataPG.length === 0 ? (
               <NodataFound title={"No data found"} />
@@ -908,15 +956,13 @@ export const PlayLocation = () => {
 
                 <div className="PLPIContentCTop">
                   <label className="pdB">
-                  {getLowestAmount(playinsightdata)}
+                    {getLowestAmount(playinsightdata)}
                   </label>
                   <label className="pdB">
-                  {getPlaynumberOfLowestAmount(playinsightdata)}
+                    {getPlaynumberOfLowestAmount(playinsightdata)}
                   </label>
                 </div>
               </div>
-
-             
 
               {loadingResult ? (
                 <LoadingComponent />
