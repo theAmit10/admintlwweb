@@ -113,6 +113,21 @@ export const PlayLocation = () => {
     setShowD(false);
   };
 
+  const backhandlerPlayZone = () => {
+    setShowPL(false);
+    setShowPL(false);
+    setShowPlay(false);
+    setShowD(true);
+  };
+
+  const backhandlerGameInsights = () => {
+    setShowPL(false);
+    setShowPL(false);
+    setShowPlayInsight(false);
+    setShowD(false);
+    setShowPlay(true);
+  };
+
   const [filteredData, setFilteredData] = useState([]);
   const dispatch = useDispatch();
 
@@ -649,7 +664,10 @@ export const PlayLocation = () => {
           <div className="PLContainerMain">
             {/** TOP NAVIGATION CONTATINER */}
             <div className="alCreatLocationTopContainer">
-              <div className="searchIconContainer" onClick={backhandlerPlay}>
+              <div
+                className="searchIconContainer"
+                onClick={backhandlerPlayZone}
+              >
                 <IoArrowBackCircleOutline
                   color={COLORS.white_s}
                   size={"2.5rem"}
@@ -827,7 +845,10 @@ export const PlayLocation = () => {
         <div className="PLContainerMain">
           {/** TOP NAVIGATION CONTATINER */}
           <div className="alCreatLocationTopContainer">
-            <div className="searchIconContainer" onClick={backhandlerDate}>
+            <div
+              className="searchIconContainer"
+              onClick={backhandlerGameInsights}
+            >
               <IoArrowBackCircleOutline
                 color={COLORS.white_s}
                 size={"2.5rem"}
@@ -847,7 +868,7 @@ export const PlayLocation = () => {
                 paddingRight: "1rem",
               }}
             >
-              24-09-2024{" "}
+              {selectedDate.lotdate}
             </label>
           </div>
 
@@ -860,33 +881,42 @@ export const PlayLocation = () => {
 
               <div className="PLPIContentC">
                 <label className="pdR">Total amount on bet</label>
-                <label className="pdB">
-                  {" "}
-                  {getTotalAmount(playinsightdata)} INR
-                </label>
+                <label className="pdB">{getTotalAmount(playinsightdata)}</label>
               </div>
 
               <div className="PLPIContentC">
-                <label className="pdR">
-                  {" "}
-                  Most bet on number :{" "}
-                  {getPlaynumberOfLargestAmount(playinsightdata)}
-                </label>
-                <label className="pdB">
-                  {getLargestAmount(playinsightdata)} INR
-                </label>
+                <div className="PLPIContentCTop">
+                  <label className="pdR">Highest bet amount</label>
+                  <label className="pdR">On number</label>
+                </div>
+
+                <div className="PLPIContentCTop">
+                  <label className="pdB">
+                    {getLargestAmount(playinsightdata)}
+                  </label>
+                  <label className="pdB">
+                    {getPlaynumberOfLargestAmount(playinsightdata)}
+                  </label>
+                </div>
               </div>
 
               <div className="PLPIContentC">
-                <label className="pdR">
-                  {" "}
-                  Least bet on number :{" "}
+                <div className="PLPIContentCTop">
+                  <label className="pdR">Lowest bet amount</label>
+                  <label className="pdR">On number</label>
+                </div>
+
+                <div className="PLPIContentCTop">
+                  <label className="pdB">
+                  {getLowestAmount(playinsightdata)}
+                  </label>
+                  <label className="pdB">
                   {getPlaynumberOfLowestAmount(playinsightdata)}
-                </label>
-                <label className="pdB">
-                  {getLowestAmount(playinsightdata)} INR
-                </label>
+                  </label>
+                </div>
               </div>
+
+             
 
               {loadingResult ? (
                 <LoadingComponent />
