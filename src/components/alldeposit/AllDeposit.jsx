@@ -18,6 +18,7 @@ import { AlertModal } from "../helper/AlertModal";
 import { ImageAlertModal } from "../helper/ImageAlertModal";
 import { servername } from "../../helper/UrlHelper";
 import { ToastContainer } from "react-toastify";
+import { AllUser } from "../alluser/AllUser";
 
 export const multiplyStringNumbers = (str1, str2) => {
   // Convert the strings to numbers
@@ -51,7 +52,6 @@ export const AllDeposit = () => {
 
   const { isLoading, data, isError, refetch } =
     useGetAllDepositQuery(accesstoken);
-  
 
   // FOR UPDATING PAYMENT STATUS
   const [
@@ -191,171 +191,209 @@ export const AllDeposit = () => {
   const handleOpenAlert = () => setIsAlertOpen(true);
   const handleCloseAlert = () => setIsAlertOpen(false);
 
+  // FOR USER DETIALS
+
+  const [showUserDetail, setShowUserDetails] = useState(false);
+  const [showDeposit, setShowDeposit] = useState(true);
+  const [userdata, setUserData] = useState(null)
+
+
+  const settingDeposit = (item) => { 
+    setShowDeposit(false);
+    setUserData(item)
+    setShowUserDetails(true);
+    
+  };
+
+  const backhandlerDeposit = () => {
+    setShowUserDetails(false);
+    setShowDeposit(true);
+  };
+
   return (
-    <div className="allDepositContainer">
-      {/** SEARCH CONTATINER */}
-      <div className="alSearchContainer">
-        <div className="searchIconContainer">
-          <CiSearch color={COLORS.background} size={"2.5rem"} />
-        </div>
+    <>
+      {showDeposit && (
+        <div className="allDepositContainer">
+          {/** SEARCH CONTATINER */}
+          <div className="alSearchContainer">
+            <div className="searchIconContainer">
+              <CiSearch color={COLORS.background} size={"2.5rem"} />
+            </div>
 
-        <input
-          className="al-search-input"
-          placeholder="Search user ID"
-          label="Search"
-          onChange={handleSearch}
-        />
-      </div>
-      {isLoading ? (
-        <LoadingComponent />
-      ) : filteredData.length === 0 ? (
-        <NodataFound title={"No data found"} />
-      ) : (
-        <>
-          <div className="dHeaderContainer">
-            <div className="dHeaderContainerLabelContainer">
-              <label className="dHeaderContainerLabel">UserID</label>
-            </div>
-            <div className="dHeaderContainerLabelContainer">
-              <label className="dHeaderContainerLabel">Transaction ID</label>
-            </div>
-            <div className="dHeaderContainerLabelContainer">
-              <label className="dHeaderContainerLabel">Payment method</label>
-            </div>
-            <div className="dHeaderContainerLabelContainer">
-              <label className="dHeaderContainerLabel">Receipt</label>
-            </div>
-            <div className="dHeaderContainerLabelContainer">
-              <label className="dHeaderContainerLabel">Amount</label>
-            </div>
-            <div
-              className="dHeaderContainerLabelContainer"
-              style={{ flex: 2, justifyContent: "center" }}
-            >
-              <label className="dHeaderContainerLabel">Action</label>
-            </div>
+            <input
+              className="al-search-input"
+              placeholder="Search user ID"
+              label="Search"
+              onChange={handleSearch}
+            />
           </div>
-
-          <div className="allLocationMainContainer">
-            {filteredData.map((item, index) => (
-              <div key={index} className="dContentContainer">
+          {isLoading ? (
+            <LoadingComponent />
+          ) : filteredData.length === 0 ? (
+            <NodataFound title={"No data found"} />
+          ) : (
+            <>
+              <div className="dHeaderContainer">
                 <div className="dHeaderContainerLabelContainer">
-                  <label className="dHeaderContainerLabel">{item.userId}</label>
+                  <label className="dHeaderContainerLabel">UserID</label>
                 </div>
                 <div className="dHeaderContainerLabelContainer">
                   <label className="dHeaderContainerLabel">
-                    {item.transactionId}
+                    Transaction ID
                   </label>
                 </div>
                 <div className="dHeaderContainerLabelContainer">
                   <label className="dHeaderContainerLabel">
-                    {" "}
-                    {item.paymentType}
+                    Payment method
                   </label>
+                </div>
+                <div className="dHeaderContainerLabelContainer">
+                  <label className="dHeaderContainerLabel">Receipt</label>
+                </div>
+                <div className="dHeaderContainerLabelContainer">
+                  <label className="dHeaderContainerLabel">Amount</label>
                 </div>
                 <div
                   className="dHeaderContainerLabelContainer"
-                  onClick={handleOpenAlert}
+                  style={{ flex: 2, justifyContent: "center" }}
                 >
-                  <label
-                    className="dHeaderContainerLabel"
-                    style={{ cursor: "pointer" }}
-                  >
-                    Show Receipt
-                  </label>
-                </div>
-                <div className="dHeaderContainerLabelContainer">
-                  <label className="dHeaderContainerLabel">
-                    {multiplyStringNumbers(
-                      item.amount,
-                      item.currency !== undefined
-                        ? item.currency.countrycurrencyvaluecomparedtoinr
-                        : 1
-                    )}{" "}
-                    INR
-                  </label>
-                </div>
-                <div
-                  className="dHeaderContainerLabelContainer"
-                  style={{ flex: 2, justifyContent: "center", gap: "1rem" }}
-                >
-                  {updateStatusIsLoading && item._id === selectedItemId ? (
-                    <LoadingComponent />
-                  ) : (
-                    <>
-                      {/** FOR ACCEPTING */}
-
-                      <AlertModal
-                        isOpen={alertVisibleAccepted}
-                        onClose={closeAlertAccepted}
-                        onConfirm={handleYesAccepted} // Pass handleYesAccepted to run when "Yes" is clicked
-                      />
-                      {/** FOR CANCELLING */}
-                      <AlertModal
-                        isOpen={alertVisibleRejected}
-                        onClose={closeAlertRejected}
-                        onConfirm={handleYesRejected}
-                      />
-                      <ImageAlertModal
-                        isOpen={isAlertOpen}
-                        onClose={handleCloseAlert}
-                        imageUrl={`${servername}/uploads/deposit/${item.receipt}`}
-                      />
-                      {item.paymentStatus === "Pending" && (
-                        <div
-                          className="allContentContainerIconContainer"
-                          onClick={() => showAlertAccepted(item)}
-                        >
-                          <CiCircleCheck
-                            color={COLORS.background}
-                            size={"2.5rem"}
-                          />
-                        </div>
-                      )}
-
-                      {item.paymentStatus === "Pending" ? (
-                        <label
-                          className="dHeaderContainerLabel"
-                          style={{ color: COLORS.orange }}
-                        >
-                          {item.paymentStatus}
-                        </label>
-                      ) : item.paymentStatus === "Completed" ? (
-                        <label
-                          className="dHeaderContainerLabel"
-                          style={{ color: COLORS.green }}
-                        >
-                          {item.paymentStatus}
-                        </label>
-                      ) : (
-                        <label
-                          className="dHeaderContainerLabel"
-                          style={{ color: COLORS.red }}
-                        >
-                          {item.paymentStatus}
-                        </label>
-                      )}
-
-                      {item.paymentStatus === "Pending" && (
-                        <div
-                          className="allContentContainerIconContainer"
-                          onClick={() => showAlertRejected(item)}
-                        >
-                          <MdOutlineCancel
-                            color={COLORS.background}
-                            size={"2.5rem"}
-                          />
-                        </div>
-                      )}
-                    </>
-                  )}
+                  <label className="dHeaderContainerLabel">Action</label>
                 </div>
               </div>
-            ))}
-          </div>
-        </>
+
+              <div className="allLocationMainContainer">
+                {filteredData.map((item, index) => (
+                  <div key={index} className="dContentContainer">
+                    <div className="dHeaderContainerLabelContainer"
+                    onClick={() => settingDeposit(item)}
+                    >
+                      <label className="dHeaderContainerLabel">
+                        {item.userId}
+                      </label>
+                    </div>
+                    <div className="dHeaderContainerLabelContainer">
+                      <label className="dHeaderContainerLabel">
+                        {item.transactionId}
+                      </label>
+                    </div>
+                    <div className="dHeaderContainerLabelContainer">
+                      <label className="dHeaderContainerLabel">
+                        {" "}
+                        {item.paymentType}
+                      </label>
+                    </div>
+                    <div
+                      className="dHeaderContainerLabelContainer"
+                      onClick={handleOpenAlert}
+                    >
+                      <label
+                        className="dHeaderContainerLabel"
+                        style={{ cursor: "pointer" }}
+                      >
+                        Show Receipt
+                      </label>
+                    </div>
+                    <div className="dHeaderContainerLabelContainer">
+                      <label className="dHeaderContainerLabel">
+                        {multiplyStringNumbers(
+                          item.amount,
+                          item.currency !== undefined
+                            ? item.currency.countrycurrencyvaluecomparedtoinr
+                            : 1
+                        )}{" "}
+                        
+                      </label>
+                    </div>
+                    <div
+                      className="dHeaderContainerLabelContainer"
+                      style={{ flex: 2, justifyContent: "center", gap: "1rem" }}
+                    >
+                      {updateStatusIsLoading && item._id === selectedItemId ? (
+                        <LoadingComponent />
+                      ) : (
+                        <>
+                          {/** FOR ACCEPTING */}
+
+                          <AlertModal
+                            isOpen={alertVisibleAccepted}
+                            onClose={closeAlertAccepted}
+                            onConfirm={handleYesAccepted} // Pass handleYesAccepted to run when "Yes" is clicked
+                          />
+                          {/** FOR CANCELLING */}
+                          <AlertModal
+                            isOpen={alertVisibleRejected}
+                            onClose={closeAlertRejected}
+                            onConfirm={handleYesRejected}
+                          />
+                          <ImageAlertModal
+                            isOpen={isAlertOpen}
+                            onClose={handleCloseAlert}
+                            imageUrl={`${servername}/uploads/deposit/${item.receipt}`}
+                          />
+                          {item.paymentStatus === "Pending" && (
+                            <div
+                              className="allContentContainerIconContainer"
+                              onClick={() => showAlertAccepted(item)}
+                            >
+                              <CiCircleCheck
+                                color={COLORS.background}
+                                size={"2.5rem"}
+                              />
+                            </div>
+                          )}
+
+                          {item.paymentStatus === "Pending" ? (
+                            <label
+                              className="dHeaderContainerLabel"
+                              style={{ color: COLORS.orange }}
+                            >
+                              {item.paymentStatus}
+                            </label>
+                          ) : item.paymentStatus === "Completed" ? (
+                            <label
+                              className="dHeaderContainerLabel"
+                              style={{ color: COLORS.green }}
+                            >
+                              {item.paymentStatus}
+                            </label>
+                          ) : (
+                            <label
+                              className="dHeaderContainerLabel"
+                              style={{ color: COLORS.red }}
+                            >
+                              {item.paymentStatus}
+                            </label>
+                          )}
+
+                          {item.paymentStatus === "Pending" && (
+                            <div
+                              className="allContentContainerIconContainer"
+                              onClick={() => showAlertRejected(item)}
+                            >
+                              <MdOutlineCancel
+                                color={COLORS.background}
+                                size={"2.5rem"}
+                              />
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+          <ToastContainer />
+        </div>
       )}
-      <ToastContainer/>
-    </div>
+
+      {showUserDetail && (
+        <AllUser
+          userdata={userdata}
+          backhandlerDeposit={backhandlerDeposit}
+        />
+      )}
+    </>
   );
 };

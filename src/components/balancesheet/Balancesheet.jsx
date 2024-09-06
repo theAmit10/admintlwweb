@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./Balancesheet.css";
 import COLORS from "../../assets/constants/colors";
 import { useSelector } from "react-redux";
@@ -22,6 +22,14 @@ function Balancesheet() {
   useEffect(() => {
     refetch();
   }, [refetch]);
+
+  const [expandedItems, setExpandedItems] = useState({});
+  const toggleItem = (id) => {
+    setExpandedItems((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
   return (
     <div className="gameDescriptionContainer">
@@ -50,9 +58,6 @@ function Balancesheet() {
                 <label className="dHeaderContainerLabel">Wallet</label>
               </div>
               <div className="dHeaderContainerLabelContainer">
-                <label className="dHeaderContainerLabel">Created At</label>
-              </div>
-              <div className="dHeaderContainerLabelContainer">
                 <label className="dHeaderContainerLabel">Withdrawal Bal</label>
               </div>
               <div className="dHeaderContainerLabelContainer">
@@ -65,44 +70,86 @@ function Balancesheet() {
           </div>
 
           {data?.balancesheet?.map((item, index) => (
-            <div key={index} className="allContentContainer-bs">
+            <div
+              key={item._id}
+              className="allContentContainer-bs"
+              style={{
+                minHeight: expandedItems[item._id] ? "20rem" : "5rem",
+              }}
+              onClick={() => toggleItem(item._id)}
+            >
               <div className="bContentContainerMain">
                 <div className="dHeaderContainerLabelContainer">
                   <label className="dHeaderContainerLabel">
                     {item?.paymentProcessType === "Credit" ? "+" : "-"}{" "}
-                    {item?.amount} INR
+                    {item?.amount}
                   </label>
                 </div>
                 <div className="dHeaderContainerLabelContainer">
                   <label className="dHeaderContainerLabel">
                     {item?.activityType === "Winning"
-                      ? "Withdrawal wallet" 
+                      ? "Withdrawal wallet"
                       : "Game Wallet"}
                   </label>
                 </div>
                 <div className="dHeaderContainerLabelContainer">
                   <label className="dHeaderContainerLabel">
-                    {formatDateTime(item?.createdAt)}
+                    {" "}
+                    {item?.withdrawalbalance}
                   </label>
                 </div>
                 <div className="dHeaderContainerLabelContainer">
                   <label className="dHeaderContainerLabel">
                     {" "}
-                    {item?.withdrawalbalance} INR
+                    {item?.gamebalance}
                   </label>
                 </div>
                 <div className="dHeaderContainerLabelContainer">
                   <label className="dHeaderContainerLabel">
-                    {" "}
-                    {item?.gamebalance} INR
-                  </label>
-                </div>
-                <div className="dHeaderContainerLabelContainer">
-                  <label className="dHeaderContainerLabel">
-                    {item?.totalbalance} INR
+                    {item?.totalbalance}
                   </label>
                 </div>
               </div>
+
+              {expandedItems[item._id] && (
+                <>
+                  <div
+                    className="wContentContainerMain"
+                    style={{ backgroundColor: COLORS.green }}
+                  >
+                    <div className="dHeaderContainerLabelContainer">
+                      <label className="dHeaderContainerLabel">User ID</label>
+                    </div>
+                    <div className="dHeaderContainerLabelContainer">
+                      <label className="dHeaderContainerLabel">
+                        ActivityType
+                      </label>
+                    </div>
+                    <div className="dHeaderContainerLabelContainer">
+                      <label className="dHeaderContainerLabel">
+                        Created At
+                      </label>
+                    </div>
+                  </div>
+                  <div className="bContentContainerMain">
+                    <div className="dHeaderContainerLabelContainer">
+                      <label className="dHeaderContainerLabel">
+                        {item.userId}
+                      </label>
+                    </div>
+                    <div className="dHeaderContainerLabelContainer">
+                      <label className="dHeaderContainerLabel">
+                        {item.activityType}
+                      </label>
+                    </div>
+                    <div className="dHeaderContainerLabelContainer">
+                      <label className="dHeaderContainerLabel">
+                        {formatDateTime(item?.createdAt)}
+                      </label>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>

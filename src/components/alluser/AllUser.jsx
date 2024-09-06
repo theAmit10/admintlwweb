@@ -26,7 +26,7 @@ import { FaUserCircle } from "react-icons/fa";
 import Historyc from "../history/Historyc";
 import Playhistory from "../playhistory/Playhistory";
 
-export const AllUser = ({ selectedComponent, handleComponentClick }) => {
+export const AllUser = ({ userdata, backhandlerDeposit }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [amount, setAmount] = useState("");
   const [titleValue, setTitle] = useState("");
@@ -41,6 +41,20 @@ export const AllUser = ({ selectedComponent, handleComponentClick }) => {
   const [showEditN, setShowEditN] = useState(false);
   const [showhistory, setShowHistory] = useState(false);
   const [showPlayhistory, setShowPlayHistory] = useState(false);
+  const dispatch = useDispatch();
+  const { accesstoken, singleuser, loadingSingleUser } = useSelector(
+    (state) => state.user
+  );
+
+  useEffect(() => {
+    if (userdata) {
+      console.log("userdata :: "+JSON.stringify(userdata))
+      dispatch(loadSingleUser(accesstoken, userdata.userId));
+      setShowSA(false);
+      setShowEditSA(true);
+      setSelectItem(userdata);
+    }
+  }, [userdata]);
 
   const settingEditSA = (item) => {
     setShowSA(false);
@@ -178,10 +192,6 @@ export const AllUser = ({ selectedComponent, handleComponentClick }) => {
 
   // FOR ALL USERS
 
-  const dispatch = useDispatch();
-  const { accesstoken, singleuser, loadingSingleUser } = useSelector(
-    (state) => state.user
-  );
   const { loadingAll, allusers } = useSelector((state) => state.user);
 
   const handleSearch = (e) => {
@@ -450,7 +460,20 @@ export const AllUser = ({ selectedComponent, handleComponentClick }) => {
 
       {showEditSA && (
         <div className="pnMainContainer">
-          <div className="alCreatLocationTopContainer">
+          {
+            userdata ? (<div className="alCreatLocationTopContainer">
+            <div className="searchIconContainer" onClick={backhandlerDeposit}>
+              <IoArrowBackCircleOutline
+                color={COLORS.white_s}
+                size={"2.5rem"}
+              />
+            </div>
+            <div className="alCreatLocationTopContaineCL">
+              <label className="alCreatLocationTopContainerlabel">
+                {selectItem.username}
+              </label>
+            </div>
+          </div>) : (<div className="alCreatLocationTopContainer">
             <div className="searchIconContainer" onClick={backHanndler}>
               <IoArrowBackCircleOutline
                 color={COLORS.white_s}
@@ -462,7 +485,8 @@ export const AllUser = ({ selectedComponent, handleComponentClick }) => {
                 {selectItem.name}
               </label>
             </div>
-          </div>
+          </div>)
+          }
           <div className="hdAllContainer" style={{ background: "transparent" }}>
             {/** WALLET ONE  */}
             <div
@@ -557,7 +581,10 @@ export const AllUser = ({ selectedComponent, handleComponentClick }) => {
             </div>
 
             {/** PLAY HISTORY  */}
-            <div className="hdAllContainerContent" onClick={settingForPlayHistory}>
+            <div
+              className="hdAllContainerContent"
+              onClick={settingForPlayHistory}
+            >
               <div className="hdAllContainerContentTop">
                 <label className="hdAllContainerContentTopBoldLabel">
                   Play History
@@ -935,12 +962,20 @@ export const AllUser = ({ selectedComponent, handleComponentClick }) => {
       {/** FOR NOTIFICATION */}
 
       {/** HISTORY */}
-      {showhistory && <Historyc userdata={singleuser} backHanndlerForHistory={backHanndlerForHistory} />}
+      {showhistory && (
+        <Historyc
+          userdata={singleuser}
+          backHanndlerForHistory={backHanndlerForHistory}
+        />
+      )}
 
       {/** PLAY HISTORY */}
-      {
-        showPlayhistory && <Playhistory userdata={singleuser} backHanndlerForPlayHistory={backHanndlerForPlayHistory}/>
-      }
+      {showPlayhistory && (
+        <Playhistory
+          userdata={singleuser}
+          backHanndlerForPlayHistory={backHanndlerForPlayHistory}
+        />
+      )}
 
       <ToastContainer />
     </div>
