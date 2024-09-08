@@ -130,21 +130,20 @@
     display: flex;
     background: linear-gradient(180deg, #0162AF, #011833);
     margin: 1rem;
-
+    
     border-radius: 1rem;
 }
 
 .hdLocationContainerRightTimeContainer{
     flex: 1;
     display: flex;
-  
     margin: 1rem;
     border-radius: 1rem;
     flex-direction: column;
 }
 .hdLocationContainerRightTimeContainerTop{
-    height: 5rem;
-  background-color: #011833;
+    min-height: 5rem;
+    background-color: #011833;
     margin: 1rem;
     border-radius: 1rem;
     display: flex;
@@ -154,13 +153,15 @@
     padding-right: 1rem;
 }
 .hdLocationContainerRightTimeContainerContentContainer{
-   flex: 1;
+    flex: 1;
     margin-left: 1rem;
     margin-right: 1rem;
     margin-bottom: 1rem;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    max-height: 35vh;
+    overflow-y: scroll;
 }
 
 .hdLocationContainerRightTimeContainerContentContainer-result{

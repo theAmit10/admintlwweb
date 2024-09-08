@@ -432,28 +432,48 @@ export const PlayLocation = () => {
   };
 
   // LOWEST BET AMOUNT ON A SPECIFIC NUMBER
-  const getLowestAmount = (data) => {
-    if (!data.playzone || !Array.isArray(data.playzone.playnumbers)) {
-      return null;
+ function getLowestAmount(playinsightdata) {
+    // Extract playnumbers array
+    const playnumbers = playinsightdata.playzone.playnumbers;
+    // const playnumbers = playinsightdata;
+  
+    // Find the minimum amount in the playnumbers list
+    const minAmount = Math.min(...playnumbers.map(p => p.amount));
+  
+    // Get all playnumbers with the minimum amount
+    const minAmountPlaynumbers = playnumbers.filter(p => p.amount === minAmount);
+  
+    // If there's more than one playnumber with the minimum amount, select one randomly
+    if (minAmountPlaynumbers.length > 1) {
+      const randomIndex = Math.floor(Math.random() * minAmountPlaynumbers.length);
+      return minAmountPlaynumbers[randomIndex].amount;
     }
-
-    return data.playzone.playnumbers.reduce((minAmount, playnumber) => {
-      return playnumber.amount < minAmount ? playnumber.amount : minAmount;
-    }, Infinity);
-  };
+  
+    // Otherwise, return the amount of the single minimum amount
+    return minAmountPlaynumbers[0].amount;
+  }
 
   // PLAYNUMBER ON WHICH LOWEST BET PLAYED
-  const getPlaynumberOfLowestAmount = (data) => {
-    if (!data.playzone || !Array.isArray(data.playzone.playnumbers)) {
-      return null;
+  function getPlaynumberOfLowestAmount(playinsightdata) {
+    // Extract playnumbers array
+    const playnumbers = playinsightdata.playzone.playnumbers;
+    // const playnumbers = playinsightdata;
+  
+    // Find the minimum amount in the playnumbers list
+    const minAmount = Math.min(...playnumbers.map(p => p.amount));
+  
+    // Get all playnumbers with the minimum amount
+    const minAmountPlaynumbers = playnumbers.filter(p => p.amount === minAmount);
+  
+    // If there's more than one playnumber with the minimum amount, select one randomly
+    if (minAmountPlaynumbers.length > 1) {
+      const randomIndex = Math.floor(Math.random() * minAmountPlaynumbers.length);
+      return minAmountPlaynumbers[randomIndex].playnumber;
     }
-
-    return data.playzone.playnumbers.reduce((minPlaynumber, playnumber) => {
-      return playnumber.amount < minPlaynumber.amount
-        ? playnumber
-        : minPlaynumber;
-    }, data.playzone.playnumbers[0]).playnumber;
-  };
+  
+    // Otherwise, return the playnumber of the single minimum amount
+    return minAmountPlaynumbers[0].playnumber;
+  }
 
   const { loadingResult, results } = useSelector((state) => state.result);
   const [filteredDataR, setFilteredDataR] = useState([]);
