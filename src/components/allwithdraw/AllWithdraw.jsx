@@ -99,10 +99,10 @@ export const AllWithdraw = () => {
 
     refetch();
 
-    if (!isLoading) {
-      console.log("USE running");
-      setFilteredData(data.deposits);
-    }
+    // if (!isLoading) {
+    //   console.log("USE running");
+    //   setFilteredData(data.deposits);
+    // }
 
     showSuccessToast(res.message);
   };
@@ -125,10 +125,10 @@ export const AllWithdraw = () => {
 
     refetch();
 
-    if (!isLoading) {
-      console.log("USE  running");
-      setFilteredData(data.deposits);
-    }
+    // if (!isLoading) {
+    //   console.log("USE  running");
+    //   setFilteredData(data.deposits);
+    // }
 
     showSuccessToast(res.message);
   };
@@ -235,7 +235,7 @@ export const AllWithdraw = () => {
           </div>
 
           <div className="allLocationMainContainer">
-            {filteredData.map((item, index) => (
+            {filteredData?.map((item, index) => (
               <div
                 className="wContentContainer"
                 key={index}
@@ -261,13 +261,15 @@ export const AllWithdraw = () => {
                   </div>
                   <div className="dHeaderContainerLabelContainer">
                     <label className="dHeaderContainerLabel">
-                      {multiplyStringNumbers(
-                        item.amount,
-                        item.currency !== undefined
-                          ? item.currency.countrycurrencyvaluecomparedtoinr
-                          : 1
-                      )}{" "}
-                      INR
+                    {item.convertedAmount
+                          ? item.convertedAmount
+                          : multiplyStringNumbers(
+                              item.amount,
+                              item.currency !== undefined
+                                ? item.currency
+                                    .countrycurrencyvaluecomparedtoinr
+                                : 1
+                            )}
                     </label>
                   </div>
 

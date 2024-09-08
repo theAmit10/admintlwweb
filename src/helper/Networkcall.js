@@ -482,6 +482,54 @@ export const sincelotAdminApi = createApi({
         }),
       }),
 
+       // GET ALL THE RESULT
+    getResultLocMonYear: builder.query({
+      query: ({accessToken,locationid,year,month}) => ({
+        url: `result/allresultlocmonyear?locationid=${locationid}&year=${year}&month=${month}`,
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    }),
+
+      // FOR ADDING APP LINK
+      addAppLink: builder.mutation({
+        query: ({accesstoken, body}) => ({
+          url: 'result/createapplink',
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accesstoken}`,
+            'Content-Type': 'application/json',
+          },
+          body,
+        }),
+      }),
+
+       // FOR GETTING ALL APP LINK
+       getAppLink: builder.query({
+        query: (accesstoken) => ({
+          url: 'result/getapplink',
+          method: 'get',
+          headers: {
+            Authorization: `Bearer ${accesstoken}`,
+          },
+        }),
+      }),
+
+       // FOR DELETE App
+    deleteAppLink: builder.mutation({
+      query: ({accesstoken,body}) => ({
+        url: `result/deleteapplink`,
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${accesstoken}`,
+        },
+        body
+      }),
+    }),
+
+
 
 
     // ######## END #########
@@ -528,6 +576,10 @@ export const {
   useGetLogoutQuery,
   useGetAllResultWebQuery,
   useGetAdminNotificationQuery,
-  useGetSingleUserPlayHistoryQuery
+  useGetSingleUserPlayHistoryQuery,
+  useGetResultLocMonYearQuery,
+  useAddAppLinkMutation,
+  useGetAppLinkQuery,
+  useDeleteAppLinkMutation
 
 } = sincelotAdminApi;

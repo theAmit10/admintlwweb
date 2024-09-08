@@ -796,7 +796,7 @@ export const PlayLocation = () => {
                         </div>
                         <div className="dHeaderContainerLabelContainer">
                           <label className="dHeaderContainerLabel">
-                            {item.amount}INR
+                            {item.amount}
                           </label>
                         </div>
                         <div
@@ -804,7 +804,7 @@ export const PlayLocation = () => {
                           style={{ flex: 2, justifyContent: "center" }}
                         >
                           <label className="dHeaderContainerLabel">
-                            {item.distributiveamount}INR
+                            {item.distributiveamount}
                           </label>
                         </div>
                       </div>
@@ -864,7 +864,7 @@ export const PlayLocation = () => {
                                   </div>
                                   <div className="dHeaderContainerLabelContainer">
                                     <label className="dHeaderContainerLabel">
-                                      {useritem?.amount}
+                                      {useritem?.convertedAmount ? useritem?.convertedAmount : useritem?.amount}
                                     </label>
                                   </div>
                                 </div>

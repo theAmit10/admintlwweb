@@ -45,6 +45,8 @@ import { LuLogOut } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loadProfile } from "../../redux/actions/userAction";
+import { MdGetApp } from "react-icons/md";
+import { AppLink } from "../../components/applink/AppLink";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);
@@ -204,9 +206,9 @@ function Admindashboard() {
           >
             <div className="adLContenContainerIcon">
               <img src={images.play} style={{
-                height: '4rem',
-                width: '4rem',
-              }} size={"2.5rem"} />
+                height: '5rem',
+                width: '5rem',
+              }}  />
             </div>
             <label className="adLContenContainerLabel">Play</label>
           </div>
@@ -417,6 +419,23 @@ function Admindashboard() {
 
           <div
             className="adLContenContainer"
+            key={"applink"}
+            onClick={() => handleComponentClick("applink")}
+            style={{
+              background:
+                selectedComponent === "applink"
+                  ? "linear-gradient(180deg, #7EC630, #3D6017)"
+                  : "linear-gradient(180deg, #011833, #011833)",
+            }}
+          >
+            <div className="adLContenContainerIcon">
+              <MdGetApp color={COLORS.white_s} size={"2.5rem"} />
+            </div>
+            <label className="adLContenContainerLabel">App Link</label>
+          </div>
+
+          <div
+            className="adLContenContainer"
             key={"aboutus"}
             onClick={() => handleComponentClick("aboutus")}
             style={{
@@ -487,6 +506,7 @@ function Admindashboard() {
           {selectedComponent === "newuser" && <NewUser />}
           {selectedComponent === "allresults" && <AllResults />}
           {selectedComponent === "history" && <Historyc />}
+          {selectedComponent === "applink" && <AppLink />}
         </div>
       </div>
 

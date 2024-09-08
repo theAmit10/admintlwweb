@@ -195,14 +195,12 @@ export const AllDeposit = () => {
 
   const [showUserDetail, setShowUserDetails] = useState(false);
   const [showDeposit, setShowDeposit] = useState(true);
-  const [userdata, setUserData] = useState(null)
+  const [userdata, setUserData] = useState(null);
 
-
-  const settingDeposit = (item) => { 
+  const settingDeposit = (item) => {
     setShowDeposit(false);
-    setUserData(item)
+    setUserData(item);
     setShowUserDetails(true);
-    
   };
 
   const backhandlerDeposit = () => {
@@ -264,8 +262,9 @@ export const AllDeposit = () => {
               <div className="allLocationMainContainer">
                 {filteredData.map((item, index) => (
                   <div key={index} className="dContentContainer">
-                    <div className="dHeaderContainerLabelContainer"
-                    onClick={() => settingDeposit(item)}
+                    <div
+                      className="dHeaderContainerLabelContainer"
+                      onClick={() => settingDeposit(item)}
                     >
                       <label className="dHeaderContainerLabel">
                         {item.userId}
@@ -295,13 +294,15 @@ export const AllDeposit = () => {
                     </div>
                     <div className="dHeaderContainerLabelContainer">
                       <label className="dHeaderContainerLabel">
-                        {multiplyStringNumbers(
-                          item.amount,
-                          item.currency !== undefined
-                            ? item.currency.countrycurrencyvaluecomparedtoinr
-                            : 1
-                        )}{" "}
-                        
+                        {item.convertedAmount
+                          ? item.convertedAmount
+                          : multiplyStringNumbers(
+                              item.amount,
+                              item.currency !== undefined
+                                ? item.currency
+                                    .countrycurrencyvaluecomparedtoinr
+                                : 1
+                            )}
                       </label>
                     </div>
                     <div
@@ -389,10 +390,7 @@ export const AllDeposit = () => {
       )}
 
       {showUserDetail && (
-        <AllUser
-          userdata={userdata}
-          backhandlerDeposit={backhandlerDeposit}
-        />
+        <AllUser userdata={userdata} backhandlerDeposit={backhandlerDeposit} />
       )}
     </>
   );
