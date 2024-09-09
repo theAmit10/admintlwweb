@@ -16,13 +16,15 @@ import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
 import { LoadingComponent } from "../helper/LoadingComponent";
 import { NodataFound } from "../helper/NodataFound";
 import { getDateAccordingToLocationAndTime } from "../../redux/actions/dateAction";
-import moment from "moment";
+
 import { getResultAccordingToLocationTimeDate } from "../../redux/actions/resultAction";
 import axios from "axios";
 import UrlHelper from "../../helper/UrlHelper";
 import { ToastContainer } from "react-toastify";
 import { IoIosMenu } from "react-icons/io";
 import SortingOptions from "../helper/SortingOptions";
+import moment from "moment";
+import 'moment-timezone'; 
 
 export const PlayLocation = () => {
   const [showPL, setShowPL] = useState(true);
@@ -34,6 +36,53 @@ export const PlayLocation = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [resultnumber, setresultnumber] = useState("");
   const [nextresult, setnextresult] = useState("");
+
+
+// function getNextTimeForHighlights(times) {
+//   // Check if there is only one time in the list
+//   if (times.length === 1) {
+//     return times[0];
+//   }
+
+//   // Get current time in IST timezone
+//   const currentISTTime = moment().tz('Asia/Kolkata').format('hh:mm A');
+
+//   // Sort times in ascending order to handle next time logic properly
+//   const sortedTimes = [...times].sort((a, b) => 
+//     moment(a.time, 'hh:mm A').diff(moment(b.time, 'hh:mm A'))
+//   );
+
+//   // Loop through sorted times to find the next available time
+//   for (let i = 0; i < sortedTimes.length; i++) {
+//     if (moment(currentISTTime, 'hh:mm A').isBefore(moment(sortedTimes[i].time, 'hh:mm A'))) {
+//       return sortedTimes[i];
+//     }
+//   }
+
+//   // If no future time found, or current time matches the last item, return the first item
+//   return sortedTimes[0];
+// }
+
+const getNextTimeForHighlights = (times) => {
+  if (times.length === 1) {
+    return times[0];
+  }
+
+  const currentISTTime = moment().tz('Asia/Kolkata').format('hh:mm A');
+  const sortedTimes = [...times].sort((a, b) =>
+    moment(a.time, 'hh:mm A').diff(moment(b.time, 'hh:mm A'))
+  );
+
+  for (let i = 0; i < sortedTimes.length; i++) {
+    if (moment(currentISTTime, 'hh:mm A').isBefore(moment(sortedTimes[i].time, 'hh:mm A'))) {
+      return sortedTimes[i];
+    }
+  }
+
+  return sortedTimes[0];
+};
+
+
 
   const settingShowDate = (loc, time) => {
     setShowPL(false);
@@ -605,44 +654,53 @@ export const PlayLocation = () => {
 
   return (
     <div className="PLContainer">
-      {showPL &&
-        (isLoading ? (
-          <LoadingComponent />
-        ) : filteredData.length === 0 ? (
-          <NodataFound title={"No data found"} />
-        ) : (
-          <div className="PLContainerMain">
-            {filteredData.map((item, index) => (
-              <div key={item._id} className="PLCotentContainer">
-                <div className="PLCotentContainerLeft">
-                  <div
-                    className="PLLLocContainer"
-                    style={{
-                      background:
-                        index % 2 === 0
-                          ? "linear-gradient(90deg, #1993FF, #0F5899)"
-                          : "linear-gradient(90deg, #7EC630, #3D6017)",
-                    }}
-                  >
-                    <label className="locLabel">{item.name}</label>
-                    <label className="limitLabel">Max {item.limit}</label>
-                  </div>
-                </div>
-                <div className="PLCotentContainerRight">
-                  {item.times.map((timedata, timeindex) => (
-                    <div
-                      key={timedata._id}
-                      className="PLRTimeContainer"
-                      onClick={() => settingShowDate(item, timedata)}
-                    >
-                      <label className="timeLabel">{timedata.time}</label>
-                    </div>
-                  ))}
-                </div>
+      
+{showPL &&
+  (isLoading ? (
+    <LoadingComponent />
+  ) : filteredData.length === 0 ? (
+    <NodataFound title={"No data found"} />
+  ) : (
+    <div className="PLContainerMain">
+      {filteredData.map((item, index) => {
+        // Calculate the next time for each item
+        const nextTime = getNextTimeForHighlights(item?.times);
+
+        return (
+          <div key={item._id} className="PLCotentContainer">
+            <div className="PLCotentContainerLeft">
+              <div
+                className="PLLLocContainer"
+                style={{
+                  background:
+                    index % 2 === 0
+                      ? "linear-gradient(90deg, #1993FF, #0F5899)"
+                      : "linear-gradient(90deg, #7EC630, #3D6017)",
+                }}
+              >
+                <label className="locLabel">{item.name}</label>
+                <label className="limitLabel">Max {item.limit}</label>
               </div>
-            ))}
+            </div>
+            <div className="PLCotentContainerRight">
+              {item.times.map((timedata, timeindex) => (
+                <div
+                  key={timedata._id}
+                  className="PLRTimeContainer"
+                  onClick={() => settingShowDate(item, timedata)}
+                  style={{
+                    border: timedata.time === nextTime.time ? '2px solid green' : 'none'
+                  }}
+                >
+                  <label className="timeLabel">{timedata.time}</label>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
+        );
+      })}
+    </div>
+  ))}
 
       {showD &&
         (loadingDates ? (

@@ -29,7 +29,7 @@ import { LoadingComponent } from "../helper/LoadingComponent";
 import { NodataFound } from "../helper/NodataFound";
 import CircularProgressBar from "../helper/CircularProgressBar";
 import { ToastContainer } from "react-toastify";
-import moment from "moment";
+import moment from 'moment-timezone';
 import { getDateAccordingToLocationAndTime } from "../../redux/actions/dateAction";
 import { getResultAccordingToLocationTimeDate } from "../../redux/actions/resultAction";
 
@@ -152,6 +152,54 @@ function AllLocation() {
     );
     setFilteredDataL(filtered);
   };
+
+
+
+function getNextTime(times) {
+  // Check if there is only one time in the list
+  if (times.length === 1) {
+    return times[0];
+  }
+
+  // Get current time in IST timezone
+  const currentISTTime = moment().tz('Asia/Kolkata').format('hh:mm A');
+
+  // Sort times in ascending order to handle next time logic properly
+  const sortedTimes = [...times].sort((a, b) => 
+    moment(a.time, 'hh:mm A').diff(moment(b.time, 'hh:mm A'))
+  );
+
+  // Loop through sorted times to find the next available time
+  for (let i = 0; i < sortedTimes.length; i++) {
+    if (moment(currentISTTime, 'hh:mm A').isBefore(moment(sortedTimes[i].time, 'hh:mm A'))) {
+      return sortedTimes[i];
+    }
+  }
+
+  // If no future time found, or current time matches the last item, return the first item
+  return sortedTimes[0];
+}
+
+// Example usage
+const times = [
+  { id: "11", time: "09:00 AM" },
+  { id: "12", time: "10:00 AM" },
+  { id: "13", time: "11:00 AM" },
+  { id: "14", time: "12:00 PM" },
+  { id: "15", time: "01:00 PM" },
+  { id: "16", time: "02:00 PM" },
+  { id: "17", time: "03:00 PM" },
+  { id: "18", time: "09:00 AM" },
+  { id: "19", time: "10:00 AM" },
+  { id: "20", time: "11:00 AM" },
+  { id: "21", time: "12:00 PM" },
+  { id: "22", time: "01:00 PM" },
+  { id: "23", time: "02:00 PM" },
+];
+
+console.log("Get time")
+console.log(getNextTime(times));
+
 
   const [isToggled, setIsToggled] = useState(false);
 
