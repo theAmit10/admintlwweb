@@ -83,8 +83,8 @@ function Register() {
 
   const handleSearch = (e) => {
     const text = e.target.value;
-    const filtered = abouts.filter((item) =>
-      item.aboutTitle.toLowerCase().includes(text.toLowerCase())
+    const filtered = currecylist?.currencies?.filter((item) =>
+      item.countryname.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredData(filtered);
   };
@@ -480,7 +480,7 @@ function Register() {
                   <CircularProgressBar />
                 </div>
               ) : (
-                currecylist.currencies.map((item, index) => (
+                filteredData.map((item, index) => (
                   <div
                     key={index}
                     className="alSearchContainer"

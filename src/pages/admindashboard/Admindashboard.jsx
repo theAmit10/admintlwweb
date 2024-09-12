@@ -47,6 +47,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadProfile } from "../../redux/actions/userAction";
 import { MdGetApp } from "react-icons/md";
 import { AppLink } from "../../components/applink/AppLink";
+import { serverName } from "../../redux/store";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);

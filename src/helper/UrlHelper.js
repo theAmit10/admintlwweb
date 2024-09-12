@@ -1,7 +1,12 @@
 // import {server} from '../redux/store';
 
-export const server = "https://adminbackend-lyyx.onrender.com/api/v1/"
-export const servername = "https://adminbackend-lyyx.onrender.com"
+// export const server = "https://adminbackend-lyyx.onrender.com/api/v1/"
+// export const servername = "https://adminbackend-lyyx.onrender.com"
+
+export const server = "https://jenny.worldgames55fhgfg7sd8fvgsd8f6gs8dfgdsfgds6onion.ru/api/v1/"
+export const servername = "https://jenny.worldgames55fhgfg7sd8fvgsd8f6gs8dfgdsfgds6onion.ru"
+
+
 
 const LOGIN_API = server + 'user/login';
 const USER_PROFILE_API = server + 'user/profile';

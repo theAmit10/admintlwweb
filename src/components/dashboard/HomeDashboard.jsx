@@ -430,7 +430,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
             )
           )}
 
-          {selectedLocation === null && selectedTime === null && loadingdate ? (
+          { loadingdate ? (
             <LoadingComponent />
           ) : (
             dateVisible && (
@@ -477,9 +477,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
             )
           )}
 
-          {selectedLocation === null &&
-          selectedTime === null &&
-          selectedDate === null &&
+          {
           loadingResult ? (
             <div className="NC">
               <CircularProgressBar />

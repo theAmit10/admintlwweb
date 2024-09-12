@@ -36,6 +36,7 @@ export const multiplyStringNumbers = (str1, str2) => {
 
 export const AllDeposit = () => {
   const [filteredData, setFilteredData] = useState([]);
+  const [selectedReceiptUrl, setSelectedReceiptUrl] = useState(null);
 
   const handleSearch = (e) => {
     const text = e.target.value;
@@ -188,7 +189,12 @@ export const AllDeposit = () => {
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
-  const handleOpenAlert = () => setIsAlertOpen(true);
+  // const handleOpenAlert = () => setIsAlertOpen(true);
+
+  const handleOpenAlert = (item) => {
+    setIsAlertOpen(true);
+    setSelectedReceiptUrl(`${servername}/uploads/deposit/${item.receipt}`);
+  };
   const handleCloseAlert = () => setIsAlertOpen(false);
 
   // FOR USER DETIALS
@@ -283,7 +289,7 @@ export const AllDeposit = () => {
                     </div>
                     <div
                       className="dHeaderContainerLabelContainer"
-                      onClick={handleOpenAlert}
+                      onClick={() => handleOpenAlert(item)}
                     >
                       <label
                         className="dHeaderContainerLabel"
@@ -292,6 +298,13 @@ export const AllDeposit = () => {
                         Show Receipt
                       </label>
                     </div>
+
+                    <ImageAlertModal
+                      isOpen={isAlertOpen}
+                      onClose={handleCloseAlert}
+                      imageUrl={selectedReceiptUrl} // Use the state holding the selected receipt URL
+                    />
+
                     <div className="dHeaderContainerLabelContainer">
                       <label className="dHeaderContainerLabel">
                         {item.convertedAmount
@@ -326,11 +339,7 @@ export const AllDeposit = () => {
                             onClose={closeAlertRejected}
                             onConfirm={handleYesRejected}
                           />
-                          <ImageAlertModal
-                            isOpen={isAlertOpen}
-                            onClose={handleCloseAlert}
-                            imageUrl={`${servername}/uploads/deposit/${item.receipt}`}
-                          />
+
                           {item.paymentStatus === "Pending" && (
                             <div
                               className="allContentContainerIconContainer"

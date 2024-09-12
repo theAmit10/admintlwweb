@@ -12,6 +12,8 @@ import {
 import { login } from "../../redux/actions/userAction";
 import { ToastContainer } from "react-toastify";
 import CircularProgressBar from "../../components/helper/CircularProgressBar";
+import { MdOutlineMail } from "react-icons/md";
+import { MdOutlinePassword } from "react-icons/md";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -113,10 +115,20 @@ function Login() {
     getUserAccessToken();
   }, []);
 
+  let [countVal, setCountVal] = useState(0);
+
+  const navigateToRegister = () => {
+    console.log('count :: ' + countVal);
+    setCountVal(countVal + 1);
+    if (countVal >= 5) {
+      navigation("/register");
+    }
+  };
+
   return (
     <div className="loginContainer">
       <div className="loginContainerLeft">
-        <label className="labelHeader">Hello,</label>
+        <label onClick={navigateToRegister} className="labelHeader">Hello,</label>
         <label className="labelHeader">Welcome</label>
         <label className="labelHeader">To</label>
         <label className="labelHeader">TheLionWorld</label>
@@ -144,7 +156,7 @@ function Login() {
             <label className="alCLLabel">Email</label>
             <div className="alSearchContainer">
               <div className="searchIconContainer">
-                <PiSubtitles color={COLORS.background} size={"2.5rem"} />
+                <MdOutlineMail color={COLORS.background} size={"2.5rem"} />
               </div>
 
               <input
@@ -159,7 +171,7 @@ function Login() {
             <label className="alCLLabel">Password</label>
             <div className="alSearchContainer">
               <div className="searchIconContainer">
-                <PiSubtitles color={COLORS.background} size={"2.5rem"} />
+                <MdOutlinePassword color={COLORS.background} size={"2.5rem"} />
               </div>
 
               <input
@@ -195,7 +207,7 @@ function Login() {
               </div>
             )}
 
-            <div className="lfContainer">
+            {/* <div className="lfContainer">
               <label className="alBottomContainerlabel">
                 Don’t have an account?{" "}
               </label>
@@ -205,7 +217,7 @@ function Login() {
               >
                 Sign up
               </label>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

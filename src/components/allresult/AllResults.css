@@ -102,7 +102,7 @@
   .ARMC{
     background: linear-gradient(180deg, #0162AF, #011833);
     width: 80vw;
-    height: 60vh;
+    height: 50vh;
     margin-left: 2rem;
     margin-right: 2rem;
     overflow-x: scroll;
@@ -234,4 +234,79 @@
     padding: 1.5rem;
     margin: 2rem;
     border-radius: 1rem;
+  }
+
+  .bottomSearcConAllResult{
+    height: 8rem;
+    background-color: var(--background);
+    margin: 1rem;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: row;
+
+  }
+
+  .bottomSearcConAllResultM{
+    flex: 1;
+    
+    background-color: var(--blue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem;
+    border-radius: 2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    cursor: pointer;
+  }
+
+  .bottomSearcConAllResultY{
+    flex: 1;
+    background-color: var(--blue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem;
+    border-radius: 2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    cursor: pointer;
+    
+  }
+
+  .bottomSearcConAllResultS{
+    flex: 0.5;
+    background-color: var(--green);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem;
+    border-radius: 2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    cursor: pointer;
+
+  }
+
+  .bottomSearcConAllResultD{
+    flex: 0.5;
+    background-color: var(--blue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem;
+    border-radius: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    cursor: pointer;
+  }
+
+  .msbLabel{
+    color: var(--white_s);
+    font-size: 1.5rem;
+    font-family: "MSB";
   }

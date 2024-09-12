@@ -60,7 +60,7 @@ function Logout({ selectedComponent, handleComponentClick }) {
         <label className="alCLLabel">Are you sure?</label>
       </div>
 
-      {isLoading ? (
+      {false ? (
         <LoadingComponent />
       ) : (
         <>

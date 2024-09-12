@@ -10,11 +10,14 @@ import { LoadingComponent } from "../helper/LoadingComponent";
 import { NodataFound } from "../helper/NodataFound";
 import COLORS from "../../assets/constants/colors";
 import FONT from "../../assets/constants/fonts";
-import { showErrorToast } from "../helper/showErrorToast";
+import { showErrorToast, showWarningToast } from "../helper/showErrorToast";
 import SelectYear from "../helper/SelectYear";
 import SelectMonth from "../helper/SelectMonth";
-import { IoArrowBackCircleOutline} from "react-icons/io5";
-import * as XLSX from 'xlsx';
+import { IoArrowBackCircleOutline } from "react-icons/io5";
+import * as XLSX from "xlsx";
+import { CiSearch } from "react-icons/ci";
+import { FaDownload } from "react-icons/fa6";
+import { MdArrowDropDownCircle } from "react-icons/md";
 
 export const AllResults = () => {
   const dispatch = useDispatch();
@@ -57,7 +60,7 @@ export const AllResults = () => {
     accessToken: accesstoken,
     locationid: selectedItem?._id,
     year: selectedYear,
-    month: selectedMonth.toLowerCase()
+    month: selectedMonth.toLowerCase(),
   });
 
   useEffect(() => {
@@ -71,15 +74,14 @@ export const AllResults = () => {
     if (alllocation) {
       console.log("Calling allresult only:: " + allresultIsLoading);
     }
-  }, [allresult, selectedItem,allocationIsLoading]);
+  }, [allresult, selectedItem, allocationIsLoading]);
 
   const getAllResultForOtherLocation = (item) => {
     setSelectedItem(item);
-    
   };
 
   const [showSearch, setShowSearch] = useState(true);
-  const [showResult, setShowResult] = useState(false);
+  const [showResult, setShowResult] = useState(true);
 
   const settingShowResult = () => {
     setShowResult(true);
@@ -91,9 +93,6 @@ export const AllResults = () => {
     setShowSearch(true);
   };
 
-
-
-
   const searchResultForMonth = async () => {
     if (!selectedItem) {
       showErrorToast("Please select a location");
@@ -103,59 +102,58 @@ export const AllResults = () => {
       showErrorToast("Please select a year");
     } else {
       settingShowResult();
+      showWarningToast("Processing");
     }
   };
 
- 
   const transformData = (data) => {
     if (!data || !data.length) return [];
-  
+
     // Headers
-    const headers = ['Lot Date', ...data.map(item => item.lottime.lottime)];
-  
+    const headers = ["Lot Date", ...data.map((item) => item.lottime.lottime)];
+
     // Create rows
-    const rows = data[0].dates.map(dateItem => {
+    const rows = data[0].dates.map((dateItem) => {
       const row = [dateItem.lotdate.lotdate];
-      data.forEach(item => {
-        const dateData = item.dates.find(d => d.lotdate.lotdate === dateItem.lotdate.lotdate);
+      data.forEach((item) => {
+        const dateData = item.dates.find(
+          (d) => d.lotdate.lotdate === dateItem.lotdate.lotdate
+        );
         row.push(dateData ? dateData.results[0]?.resultNumber || "N/A" : "N/A");
       });
       return row;
     });
-  
+
     // Combine headers and rows
     return [headers, ...rows];
   };
-  
-  
+
   const exportToExcel = (data) => {
     // Transform data
     const transformedData = transformData(data);
-  
+
     // Log transformed data
-    console.log('Transformed data:', transformedData);
-  
+    console.log("Transformed data:", transformedData);
+
     if (transformedData.length === 0) {
-      console.error('No data to export');
+      console.error("No data to export");
       return;
     }
-  
+
     // Create a new workbook and worksheet
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.aoa_to_sheet(transformedData);
-  
-    // Add the worksheet to the workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Results');
-  
-    // Generate and download the file
-    XLSX.writeFile(workbook, 'results.xlsx');
-  };
-  
 
+    // Add the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Results");
+
+    // Generate and download the file
+    XLSX.writeFile(workbook, "results.xlsx");
+  };
 
   return (
     <>
-      {showSearch && (
+      {false && (
         <div className="alContainer">
           {/* TOP NAVIGATION CONTATINER */}
           <div className="alCreatLocationTopContainer">
@@ -244,14 +242,8 @@ export const AllResults = () => {
         <div className="alContainer">
           {/* TOP NAVIGATION CONTATINER */}
           <div className="alCreatLocationTopContainer">
-          <div className="searchIconContainer" onClick={backHandlerShowResult}>
-              <IoArrowBackCircleOutline
-                color={COLORS.white_s}
-                size={"2.5rem"}
-              />
-            </div>
+        
             <div className="alCreatLocationTopContaineCL">
-          
               <label className="alCreatLocationTopContainerlabel">
                 All Result
               </label>
@@ -262,7 +254,7 @@ export const AllResults = () => {
             <LoadingComponent />
           ) : (
             <div className="PLContainerMain">
-              {/* <div className="ARLC">
+              <div className="ARLC">
                 {alllocation?.locationData?.map((item, index) => (
                   <div
                     key={index}
@@ -290,7 +282,7 @@ export const AllResults = () => {
                     </div>
                   </div>
                 ))}
-              </div> */}
+              </div>
 
               {/* ALL RESULT MAIN */}
               <div className="ARMC">
@@ -343,9 +335,56 @@ export const AllResults = () => {
                 )}
               </div>
 
-              <label className="submitTitle" onClick={() => exportToExcel(allresult.results)}>
-                Download
-              </label>
+              {showSelectYear && (
+                <SelectYear
+                  onClose={() => setShowSelectYear(false)}
+                  setSelectedYear={setSelectedYear}
+                />
+              )}
+
+              {showSelectMonth && (
+                <SelectMonth
+                  onClose={() => setShowSelectMonth(false)}
+                  setSelectedMonth={setSelectedMonth}
+                />
+              )}
+
+              <div className="bottomSearcConAllResult">
+                <div
+                  className="bottomSearcConAllResultM"
+                  onClick={() => setShowSelectYear(true)}
+                >
+                  <label className="msbLabel">{selectedYear}</label>
+                  <MdArrowDropDownCircle
+                    color={COLORS.white_s}
+                    size={"2.5rem"}
+                  />
+                </div>
+                <div
+                  className="bottomSearcConAllResultY"
+                  onClick={() => setShowSelectMonth(true)}
+                >
+                  <label className="msbLabel">{selectedMonth}</label>
+                  <MdArrowDropDownCircle
+                    color={COLORS.white_s}
+                    size={"2.5rem"}
+                  />
+                </div>
+                <div
+                  className="bottomSearcConAllResultS"
+                  onClick={searchResultForMonth}
+                >
+                  <CiSearch color={COLORS.white_s} size={"2rem"} />
+                  <label className="msbLabel">SEARCH</label>
+                </div>
+                <div
+                  className="bottomSearcConAllResultD"
+                  onClick={() => exportToExcel(allresult.results)}
+                >
+                  <FaDownload color={COLORS.white_s} size={"2rem"} />
+                  <label className="msbLabel">DOWNLOAD</label>
+                </div>
+              </div>
             </div>
           )}
         </div>
