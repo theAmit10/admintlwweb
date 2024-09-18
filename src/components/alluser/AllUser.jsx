@@ -256,8 +256,9 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
 
         dispatch(loadSingleUser(accesstoken, selectItem._id));
         setProgressBar(false);
-        backHanndlerWalletOne();
+        // backHanndlerWalletOne();
         setAmount("");
+        dispatch(loadSingleUser(accesstoken, selectItem._id));
       } catch (error) {
         setProgressBar(false);
         showErrorToast("Something went wrong");
@@ -293,7 +294,8 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
         showSuccessToast("User Wallet Updated Successfully");
         dispatch(loadSingleUser(accesstoken, selectItem._id));
         setProgressBar(false);
-        backHanndlerWalletOne();
+        // backHanndlerWalletOne();
+     
         setAmount("");
       } catch (error) {
         setProgressBar(false);
@@ -338,12 +340,21 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
 
       showSuccessToast(data.message);
       setAmount("");
-      backHanndlerUserId();
+      // backHanndlerUserId();
+      dispatch(loadSingleUser(accesstoken, selectItem._id));
+
       setLoadingUpdateUserId(false);
     } catch (error) {
       setLoadingUpdateUserId(false);
       console.log(" Err :: " + error);
-      showErrorToast("Something went Wrong");
+      console.log(" Err :: " + error.response.data.message);
+     
+      if(error.response.data.message)
+      {
+        showErrorToast(error.response.data.message);
+      }else{
+        showErrorToast("Something went Wrong");
+      }
     }
   };
 
@@ -367,6 +378,7 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
             title: titleValue,
             description: discriptionValue,
             devicetoken: singleuser?.devicetoken,
+            userId: singleuser._id
           },
           {
             headers: {
@@ -384,6 +396,7 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
         setLoadingSendNotification(false);
       } catch (error) {
         setLoadingSendNotification(false);
+        console.log(error.response.data.message)
         showErrorToast("Something went wrong");
         console.log(error);
       }
@@ -495,7 +508,7 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
             >
               <div className="hdAllContainerContentTop">
                 <label className="hdAllContainerContentTopBoldLabel">
-                  Wallet One
+                {singleuser.walletOne?.walletName}
                 </label>
                 <div className="hdContenContainerIcon">
                   <CiEdit color={COLORS.background} size={"2.5rem"} />
@@ -503,7 +516,7 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
               </div>
               <div className="hdAllContainerContentBottom">
                 <label className="hdAllContainerContentTopRegularLabel">
-                  Update wallet one balance
+                  Update {singleuser.walletOne?.walletName} balance
                 </label>
                 <div className="hdContenContainerIcon">
                   <FaWallet color={COLORS.background} size={"2.5rem"} />
@@ -518,7 +531,7 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
             >
               <div className="hdAllContainerContentTop">
                 <label className="hdAllContainerContentTopBoldLabel">
-                  Wallet Two
+                {singleuser.walletTwo?.walletName}
                 </label>
                 <div className="hdContenContainerIcon">
                   <CiEdit color={COLORS.background} size={"2.5rem"} />
@@ -526,7 +539,7 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
               </div>
               <div className="hdAllContainerContentBottom">
                 <label className="hdAllContainerContentTopRegularLabel">
-                  Update wallet one balance
+                  Update {singleuser.walletTwo?.walletName} balance
                 </label>
                 <div className="hdContenContainerIcon">
                   <FaWallet color={COLORS.background} size={"2.5rem"} />
@@ -538,7 +551,7 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
             <div className="hdAllContainerContent" onClick={settingForUserId}>
               <div className="hdAllContainerContentTop">
                 <label className="hdAllContainerContentTopBoldLabel">
-                  Uset ID
+                  User ID
                 </label>
                 <div className="hdContenContainerIcon">
                   <CiEdit color={COLORS.background} size={"2.5rem"} />
@@ -607,7 +620,7 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
             <div className="hdAllContainerContent" onClick={settingForHistory}>
               <div className="hdAllContainerContentTop">
                 <label className="hdAllContainerContentTopBoldLabel">
-                  Histroy
+                  Transaction History
                 </label>
                 <div className="hdContenContainerIcon">
                   <FaUserCircle color={COLORS.background} size={"2.5rem"} />
@@ -646,7 +659,7 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
               </div>
               <div className="alCreatLocationTopContaineCL">
                 <label className="alCreatLocationTopContainerlabel">
-                  Update Wallet One
+                  Update {singleuser.walletOne?.walletName}
                 </label>
               </div>
             </div>
@@ -746,7 +759,7 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
               </div>
               <div className="alCreatLocationTopContaineCL">
                 <label className="alCreatLocationTopContainerlabel">
-                  Update Wallet Two
+                  Update {singleuser.walletTwo?.walletName}
                 </label>
               </div>
             </div>

@@ -184,6 +184,7 @@ export const PushNotification = () => {
             title: titleValue,
             description: discriptionValue,
             devicetoken: userdata?.devicetoken,
+            userId: userdata._id
           },
           {
             headers: {

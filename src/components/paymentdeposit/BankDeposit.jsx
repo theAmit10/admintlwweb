@@ -218,7 +218,9 @@ export const BankDeposit = ({ selectingPaymentType }) => {
           {loadingAllData ? (
             <LoadingComponent />
           ) : allDepositdata.length === 0 ? (
-            <NodataFound title={"No data available"} />
+            <NodataFound
+              title={"This payment method is temporarily unavailable."}
+            />
           ) : (
             <>
               <div className="upipdMainContainer">
@@ -313,10 +315,9 @@ export const BankDeposit = ({ selectingPaymentType }) => {
                     </div>
                     {/** TOP */}
 
-                    {/** TOP */}
                     <div className="uCCMidC">
                       <div className="uCCTopFC">
-                        <label className="pdSB">IFSC code</label>
+                        <label className="pdSB">Swift code</label>
                       </div>
                       <div className="uCCTopSC">
                         <label className="pdR">{item.ifsccode}</label>
@@ -326,6 +327,34 @@ export const BankDeposit = ({ selectingPaymentType }) => {
                         className="copyCon"
                       >
                         <FaCopy color={COLORS.background} size={"2rem"} />
+                      </div>
+                    </div>
+
+                    {/** TOP */}
+                    <div className="uCCMidC">
+                      <div className="uCCTopFC">
+                        <label className="pdSB">Routing No. / IFSC code</label>
+                      </div>
+                      <div className="uCCTopSC">
+                        <label className="pdR">{item.ifsccode}</label>
+                      </div>
+                      <div
+                        onClick={() => handleCopyClick(item.ifsccode)}
+                        className="copyCon"
+                      >
+                        <FaCopy color={COLORS.background} size={"2rem"} />
+                      </div>
+                    </div>
+
+                    <div className="uCCBottomC">
+                      <div className="uCCTopFC">
+                        <label className="pdSB">Note</label>
+                      </div>
+                      <div className="uCCBottomSC">
+                        <label className="pdRBottom">
+                          this is to infrom that i am going to not send your
+                          amount because their is some missing.
+                        </label>
                       </div>
                     </div>
                     {/** TOP */}

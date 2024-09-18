@@ -20,6 +20,7 @@ import { multiplyStringNumbers } from "../alldeposit/AllDeposit";
 import { AlertModal } from "../helper/AlertModal";
 import { ImageAlertModal } from "../helper/ImageAlertModal";
 import { servername } from "../../helper/UrlHelper";
+import { AllUser } from "../alluser/AllUser";
 
 export const AllWithdraw = () => {
   const [filteredData, setFilteredData] = useState([]);
@@ -78,7 +79,7 @@ export const AllWithdraw = () => {
       console.log("USE Effect running");
       setFilteredData(data.withdrawals);
     }
-  }, [isLoading]);
+  }, [isLoading, data]);
 
   // FOR ACCEPTING
 
@@ -190,486 +191,529 @@ export const AllWithdraw = () => {
       });
   };
 
+  // FOR USER DETIALS
+
+  const [showUserDetail, setShowUserDetails] = useState(false);
+  const [showDeposit, setShowDeposit] = useState(true);
+  const [userdata, setUserData] = useState(null);
+
+  const settingDeposit = (item) => {
+    setShowDeposit(false);
+    setUserData(item);
+    setShowUserDetails(true);
+  };
+
+  const backhandlerDeposit = () => {
+    setShowUserDetails(false);
+    setShowDeposit(true);
+  };
+
   return (
-    <div className="allDepositContainer">
-      {/** SEARCH CONTATINER */}
-      <div className="alSearchContainer">
-        <div className="searchIconContainer">
-          <CiSearch color={COLORS.background} size={"2.5rem"} />
-        </div>
-
-        <input
-          className="al-search-input"
-          placeholder="Search UserId"
-          label="Search"
-          onChange={handleSearch}
-        />
-      </div>
-
-      {isLoading ? (
-        <LoadingComponent />
-      ) : filteredData?.length === 0 ? (
-        <NodataFound title={"No data found"} />
-      ) : (
-        <>
-          <div className="dHeaderContainer">
-            <div className="dHeaderContainerLabelContainer">
-              <label className="dHeaderContainerLabel">UserID</label>
-            </div>
-            <div className="dHeaderContainerLabelContainer">
-              <label className="dHeaderContainerLabel">Payment Details</label>
-            </div>
-            <div className="dHeaderContainerLabelContainer">
-              <label className="dHeaderContainerLabel">Payment method</label>
+    <>
+      {showDeposit && (
+        <div className="allDepositContainer">
+          {/** SEARCH CONTATINER */}
+          <div className="alSearchContainer">
+            <div className="searchIconContainer">
+              <CiSearch color={COLORS.background} size={"2.5rem"} />
             </div>
 
-            <div className="dHeaderContainerLabelContainer">
-              <label className="dHeaderContainerLabel">Amount</label>
-            </div>
-            <div
-              className="dHeaderContainerLabelContainer"
-              style={{ flex: 2, justifyContent: "center" }}
-            >
-              <label className="dHeaderContainerLabel">Action</label>
-            </div>
+            <input
+              className="al-search-input"
+              placeholder="Search UserId"
+              label="Search"
+              onChange={handleSearch}
+            />
           </div>
 
-          <div className="allLocationMainContainer">
-            {filteredData?.map((item, index) => (
-              <div
-                className="wContentContainer"
-                key={index}
-                style={{
-                  minHeight: expandedItems[index] ? "20rem" : "5rem",
-                }}
-                onClick={() => toggleItem(index)}
-              >
-                {/** MAIN CONTENT */}
-                <div className="wContentContainerMain">
-                  <div className="dHeaderContainerLabelContainer">
-                    <label className="dHeaderContainerLabel">
-                      {item.userId}
-                    </label>
-                  </div>
-                  <div className="dHeaderContainerLabelContainer">
-                    <label className="dHeaderContainerLabel">
-                      show details
-                    </label>
-                  </div>
-                  <div className="dHeaderContainerLabelContainer">
-                    <label className="dHeaderContainerLabel">UPI</label>
-                  </div>
-                  <div className="dHeaderContainerLabelContainer">
-                    <label className="dHeaderContainerLabel">
-                    {item.convertedAmount
-                          ? item.convertedAmount
-                          : multiplyStringNumbers(
-                              item.amount,
-                              item.currency !== undefined
-                                ? item.currency
-                                    .countrycurrencyvaluecomparedtoinr
-                                : 1
-                            )}
-                    </label>
-                  </div>
+          {isLoading ? (
+            <LoadingComponent />
+          ) : filteredData?.length === 0 ? (
+            <NodataFound title={"No data found"} />
+          ) : (
+            <>
+              <div className="dHeaderContainer">
+                <div className="dHeaderContainerLabelContainer">
+                  <label className="dHeaderContainerLabel">UserID</label>
+                </div>
+                <div className="dHeaderContainerLabelContainer">
+                  <label className="dHeaderContainerLabel">
+                    Payment Details
+                  </label>
+                </div>
+                <div className="dHeaderContainerLabelContainer">
+                  <label className="dHeaderContainerLabel">
+                    Payment method
+                  </label>
+                </div>
 
+                <div className="dHeaderContainerLabelContainer">
+                  <label className="dHeaderContainerLabel">Amount</label>
+                </div>
+                <div
+                  className="dHeaderContainerLabelContainer"
+                  style={{ flex: 2, justifyContent: "center" }}
+                >
+                  <label className="dHeaderContainerLabel">Action</label>
+                </div>
+              </div>
+
+              <div className="allLocationMainContainer">
+                {filteredData?.map((item, index) => (
                   <div
-                    className="dHeaderContainerLabelContainer"
-                    style={{ flex: 2, justifyContent: "center", gap: "1rem" }}
+                    className="wContentContainer"
+                    key={index}
+                    style={{
+                      minHeight: expandedItems[index] ? "20rem" : "5rem",
+                    }}
+                    onClick={() => toggleItem(index)}
                   >
-                    {updateStatusIsLoading && item._id === selectedItemId ? (
-                      <LoadingComponent />
-                    ) : (
-                      <>
-                        {/** FOR ACCEPTING */}
+                    {/** MAIN CONTENT */}
+                    <div className="wContentContainerMain">
+                      <div
+                        className="dHeaderContainerLabelContainer"
+                        onClick={() => settingDeposit(item)}
+                      >
+                        <label className="dHeaderContainerLabel">
+                          {item.userId}
+                        </label>
+                      </div>
+                      <div className="dHeaderContainerLabelContainer">
+                        <label className="dHeaderContainerLabel">
+                          show details
+                        </label>
+                      </div>
+                      <div className="dHeaderContainerLabelContainer">
+                        <label className="dHeaderContainerLabel">UPI</label>
+                      </div>
+                      <div className="dHeaderContainerLabelContainer">
+                        <label className="dHeaderContainerLabel">
+                          {item.convertedAmount
+                            ? item.convertedAmount
+                            : multiplyStringNumbers(
+                                item.amount,
+                                item.currency !== undefined
+                                  ? item.currency
+                                      .countrycurrencyvaluecomparedtoinr
+                                  : 1
+                              )}
+                        </label>
+                      </div>
 
-                        <AlertModal
-                          isOpen={alertVisibleAccepted}
-                          onClose={closeAlertAccepted}
-                          onConfirm={handleYesAccepted} // Pass handleYesAccepted to run when "Yes" is clicked
-                        />
-                        {/** FOR CANCELLING */}
-                        <AlertModal
-                          isOpen={alertVisibleRejected}
-                          onClose={closeAlertRejected}
-                          onConfirm={handleYesRejected}
-                        />
+                      <div
+                        className="dHeaderContainerLabelContainer"
+                        style={{
+                          flex: 2,
+                          justifyContent: "center",
+                          gap: "1rem",
+                        }}
+                      >
+                        {updateStatusIsLoading &&
+                        item._id === selectedItemId ? (
+                          <LoadingComponent />
+                        ) : (
+                          <>
+                            {/** FOR ACCEPTING */}
 
-                        {item.paymentStatus === "Pending" && (
-                          <div
-                            className="allContentContainerIconContainer"
-                            onClick={() => showAlertAccepted(item)}
-                          >
-                            <CiCircleCheck
-                              color={COLORS.background}
-                              size={"2.5rem"}
+                            <AlertModal
+                              isOpen={alertVisibleAccepted}
+                              onClose={closeAlertAccepted}
+                              onConfirm={handleYesAccepted} // Pass handleYesAccepted to run when "Yes" is clicked
                             />
+                            {/** FOR CANCELLING */}
+                            <AlertModal
+                              isOpen={alertVisibleRejected}
+                              onClose={closeAlertRejected}
+                              onConfirm={handleYesRejected}
+                            />
+
+                            {item.paymentStatus === "Pending" && (
+                              <div
+                                className="allContentContainerIconContainer"
+                                onClick={() => showAlertAccepted(item)}
+                              >
+                                <CiCircleCheck
+                                  color={COLORS.background}
+                                  size={"2.5rem"}
+                                />
+                              </div>
+                            )}
+
+                            {item.paymentStatus === "Pending" ? (
+                              <label
+                                className="dHeaderContainerLabel"
+                                style={{ color: COLORS.orange }}
+                              >
+                                {item.paymentStatus}
+                              </label>
+                            ) : item.paymentStatus === "Completed" ? (
+                              <label
+                                className="dHeaderContainerLabel"
+                                style={{ color: COLORS.green }}
+                              >
+                                {item.paymentStatus}
+                              </label>
+                            ) : (
+                              <label
+                                className="dHeaderContainerLabel"
+                                style={{ color: COLORS.red }}
+                              >
+                                {item.paymentStatus}
+                              </label>
+                            )}
+
+                            {item.paymentStatus === "Pending" && (
+                              <div
+                                className="allContentContainerIconContainer"
+                                onClick={() => showAlertRejected(item)}
+                              >
+                                <MdOutlineCancel
+                                  color={COLORS.background}
+                                  size={"2.5rem"}
+                                />
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    {/** payment CONTENT */}
+                    {expandedItems[index] && (
+                      <>
+                        {item.paymentType === "Upi" && (
+                          <div
+                            className="wContentContainerMain"
+                            style={{ backgroundColor: COLORS.green }}
+                          >
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                Payment Type
+                              </label>
+                            </div>
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                UPI Holder Name
+                              </label>
+                            </div>
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                UPI ID
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              style={{ flex: 2, justifyContent: "center" }}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                Remark
+                              </label>
+                            </div>
+                          </div>
+                        )}
+                        {item.paymentType === "Upi" && (
+                          <div className="wContentContainerMain">
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                UPI
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              onClick={() =>
+                                handleCopyClick(item.upiHolderName)
+                              }
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.upiHolderName}
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              onClick={() => handleCopyClick(item.upiId)}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.upiId}
+                              </label>
+                            </div>
+
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              style={{ flex: 2, justifyContent: "center" }}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.remark === "" ? "NA" : item.remark}
+                              </label>
+                            </div>
                           </div>
                         )}
 
-                        {item.paymentStatus === "Pending" ? (
-                          <label
-                            className="dHeaderContainerLabel"
-                            style={{ color: COLORS.orange }}
+                        {item.paymentType === "Bank" && (
+                          <div
+                            className="wContentContainerMain"
+                            style={{ backgroundColor: COLORS.green }}
                           >
-                            {item.paymentStatus}
-                          </label>
-                        ) : item.paymentStatus === "Completed" ? (
-                          <label
-                            className="dHeaderContainerLabel"
-                            style={{ color: COLORS.green }}
-                          >
-                            {item.paymentStatus}
-                          </label>
-                        ) : (
-                          <label
-                            className="dHeaderContainerLabel"
-                            style={{ color: COLORS.red }}
-                          >
-                            {item.paymentStatus}
-                          </label>
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                Bank Name
+                              </label>
+                            </div>
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                Holder Name
+                              </label>
+                            </div>
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                IFSC code
+                              </label>
+                            </div>
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                Account No.
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              style={{ flex: 2, justifyContent: "center" }}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                Remark
+                              </label>
+                            </div>
+                          </div>
+                        )}
+                        {item.paymentType === "Bank" && (
+                          <div className="wContentContainerMain">
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              onClick={() => handleCopyClick(item.bankName)}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.bankName}
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              onClick={() =>
+                                handleCopyClick(item.accountHolderName)
+                              }
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.accountHolderName}
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              onClick={() => handleCopyClick(item.bankIFSC)}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.bankIFSC}
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              onClick={() =>
+                                handleCopyClick(item.bankAccountNumber)
+                              }
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.bankAccountNumber}
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              style={{ flex: 2, justifyContent: "center" }}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.remark === "" ? "NA" : item.remark}
+                              </label>
+                            </div>
+                          </div>
                         )}
 
-                        {item.paymentStatus === "Pending" && (
+                        {item.paymentType === "Skrill" && (
                           <div
-                            className="allContentContainerIconContainer"
-                            onClick={() => showAlertRejected(item)}
+                            className="wContentContainerMain"
+                            style={{ backgroundColor: COLORS.green }}
                           >
-                            <MdOutlineCancel
-                              color={COLORS.background}
-                              size={"2.5rem"}
-                            />
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                Payment Type
+                              </label>
+                            </div>
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                Contact
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              style={{ flex: 2, justifyContent: "center" }}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                Remark
+                              </label>
+                            </div>
+                          </div>
+                        )}
+                        {item.paymentType === "Skrill" && (
+                          <div className="wContentContainerMain">
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                SKRILL
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              onClick={() =>
+                                handleCopyClick(item.skrillContact)
+                              }
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.skrillContact}
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              style={{ flex: 2, justifyContent: "center" }}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.remark === "" ? "NA" : item.remark}
+                              </label>
+                            </div>
+                          </div>
+                        )}
+
+                        {item.paymentType === "Paypal" && (
+                          <div
+                            className="wContentContainerMain"
+                            style={{ backgroundColor: COLORS.green }}
+                          >
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                Payment Type
+                              </label>
+                            </div>
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                Email address
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              style={{ flex: 2, justifyContent: "center" }}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                Remark
+                              </label>
+                            </div>
+                          </div>
+                        )}
+                        {item.paymentType === "Paypal" && (
+                          <div className="wContentContainerMain">
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                PAYPAL
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              onClick={() => handleCopyClick(item.paypalEmail)}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.paypalEmail}
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              style={{ flex: 2, justifyContent: "center" }}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.remark === "" ? "NA" : item.remark}
+                              </label>
+                            </div>
+                          </div>
+                        )}
+
+                        {item.paymentType === "Crypto" && (
+                          <div
+                            className="wContentContainerMain"
+                            style={{ backgroundColor: COLORS.green }}
+                          >
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                Payment Type
+                              </label>
+                            </div>
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                Wallet address
+                              </label>
+                            </div>
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                Network
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              style={{ flex: 2, justifyContent: "center" }}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                Remark
+                              </label>
+                            </div>
+                          </div>
+                        )}
+                        {item.paymentType === "Crypto" && (
+                          <div className="wContentContainerMain">
+                            <div className="dHeaderContainerLabelContainer">
+                              <label className="dHeaderContainerLabel">
+                                Crypto
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              onClick={() =>
+                                handleCopyClick(item.cryptoWalletAddress)
+                              }
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.cryptoWalletAddress}
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              onClick={() => handleCopyClick(item.networkType)}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.networkType}
+                              </label>
+                            </div>
+                            <div
+                              className="dHeaderContainerLabelContainer"
+                              style={{ flex: 2, justifyContent: "center" }}
+                            >
+                              <label className="dHeaderContainerLabel">
+                                {item.remark === "" ? "NA" : item.remark}
+                              </label>
+                            </div>
                           </div>
                         )}
                       </>
                     )}
                   </div>
-                </div>
-
-                {/** payment CONTENT */}
-                {expandedItems[index] && (
-                  <>
-                    {item.paymentType === "Upi" && (
-                      <div
-                        className="wContentContainerMain"
-                        style={{ backgroundColor: COLORS.green }}
-                      >
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            Payment Type
-                          </label>
-                        </div>
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            UPI Holder Name
-                          </label>
-                        </div>
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            UPI ID
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          style={{ flex: 2, justifyContent: "center" }}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            Remark
-                          </label>
-                        </div>
-                      </div>
-                    )}
-                    {item.paymentType === "Upi" && (
-                      <div className="wContentContainerMain">
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">UPI</label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          onClick={() => handleCopyClick(item.upiHolderName)}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.upiHolderName}
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          onClick={() => handleCopyClick(item.upiId)}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.upiId}
-                          </label>
-                        </div>
-
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          style={{ flex: 2, justifyContent: "center" }}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.remark === "" ? "NA" : item.remark}
-                          </label>
-                        </div>
-                      </div>
-                    )}
-
-                    {item.paymentType === "Bank" && (
-                      <div
-                        className="wContentContainerMain"
-                        style={{ backgroundColor: COLORS.green }}
-                      >
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            Bank Name
-                          </label>
-                        </div>
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            Holder Name
-                          </label>
-                        </div>
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            IFSC code
-                          </label>
-                        </div>
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            Account No.
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          style={{ flex: 2, justifyContent: "center" }}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            Remark
-                          </label>
-                        </div>
-                      </div>
-                    )}
-                    {item.paymentType === "Bank" && (
-                      <div className="wContentContainerMain">
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          onClick={() => handleCopyClick(item.bankName)}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.bankName}
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          onClick={() =>
-                            handleCopyClick(item.accountHolderName)
-                          }
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.accountHolderName}
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          onClick={() => handleCopyClick(item.bankIFSC)}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.bankIFSC}
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          onClick={() =>
-                            handleCopyClick(item.bankAccountNumber)
-                          }
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.bankAccountNumber}
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          style={{ flex: 2, justifyContent: "center" }}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.remark === "" ? "NA" : item.remark}
-                          </label>
-                        </div>
-                      </div>
-                    )}
-
-                    {item.paymentType === "Skrill" && (
-                      <div
-                        className="wContentContainerMain"
-                        style={{ backgroundColor: COLORS.green }}
-                      >
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            Payment Type
-                          </label>
-                        </div>
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            Contact
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          style={{ flex: 2, justifyContent: "center" }}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            Remark
-                          </label>
-                        </div>
-                      </div>
-                    )}
-                    {item.paymentType === "Skrill" && (
-                      <div className="wContentContainerMain">
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            SKRILL
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          onClick={() => handleCopyClick(item.skrillContact)}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.skrillContact}
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          style={{ flex: 2, justifyContent: "center" }}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.remark === "" ? "NA" : item.remark}
-                          </label>
-                        </div>
-                      </div>
-                    )}
-
-                    {item.paymentType === "Paypal" && (
-                      <div
-                        className="wContentContainerMain"
-                        style={{ backgroundColor: COLORS.green }}
-                      >
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            Payment Type
-                          </label>
-                        </div>
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            Email address
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          style={{ flex: 2, justifyContent: "center" }}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            Remark
-                          </label>
-                        </div>
-                      </div>
-                    )}
-                    {item.paymentType === "Paypal" && (
-                      <div className="wContentContainerMain">
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            PAYPAL
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          onClick={() => handleCopyClick(item.paypalEmail)}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.paypalEmail}
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          style={{ flex: 2, justifyContent: "center" }}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.remark === "" ? "NA" : item.remark}
-                          </label>
-                        </div>
-                      </div>
-                    )}
-
-                    {item.paymentType === "Crypto" && (
-                      <div
-                        className="wContentContainerMain"
-                        style={{ backgroundColor: COLORS.green }}
-                      >
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            Payment Type
-                          </label>
-                        </div>
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            Wallet address
-                          </label>
-                        </div>
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            Network
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          style={{ flex: 2, justifyContent: "center" }}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            Remark
-                          </label>
-                        </div>
-                      </div>
-                    )}
-                    {item.paymentType === "Crypto" && (
-                      <div className="wContentContainerMain">
-                        <div className="dHeaderContainerLabelContainer">
-                          <label className="dHeaderContainerLabel">
-                            Crypto
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          onClick={() =>
-                            handleCopyClick(item.cryptoWalletAddress)
-                          }
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.cryptoWalletAddress}
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          onClick={() => handleCopyClick(item.networkType)}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.networkType}
-                          </label>
-                        </div>
-                        <div
-                          className="dHeaderContainerLabelContainer"
-                          style={{ flex: 2, justifyContent: "center" }}
-                        >
-                          <label className="dHeaderContainerLabel">
-                            {item.remark === "" ? "NA" : item.remark}
-                          </label>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
+                ))}
               </div>
-            ))}
-          </div>
-        </>
+            </>
+          )}
+        </div>
       )}
-    </div>
+
+      {showUserDetail && (
+        <AllUser userdata={userdata} backhandlerDeposit={backhandlerDeposit} />
+      )}
+    </>
   );
 };

@@ -28,7 +28,7 @@ import UrlHelper from "../../helper/UrlHelper";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 
-export const AllWallet = () => {
+export const AllWallet = ({reloadKey}) => {
   const [showPN, setShowPN] = useState(true);
   const [showAU, setShowAU] = useState(false);
   const [showCreateAllUser, setShowCreateAllUser] = useState(false);
@@ -76,7 +76,7 @@ export const AllWallet = () => {
 
   useEffect(() => {
     dispatch(loadProfile(accesstoken));
-  }, [dispatch]);
+  }, [dispatch,reloadKey]);
 
   // FOR WALLET MODIFICATION
 

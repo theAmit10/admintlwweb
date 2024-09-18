@@ -65,32 +65,51 @@ function Playhistory({ userdata, backHanndlerForPlayHistory }) {
     return formattedDate;
   };
 
+  const toggleItem = (id) => {
+    setExpandedItems((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
   console.log(isLoading, historyapidatas);
 
   return (
     <div className="history-main-container-org">
-      {/** TITLE CONTAINER */}
-      <div className="alCreatLocationTopContainer">
-        <div
-          className="searchIconContainer"
-          onClick={backHanndlerForPlayHistory}
-        >
-          <IoArrowBackCircleOutline color={COLORS.white_s} size={"2.5rem"} />
-        </div>
-        <div className="alCreatLocationTopContaineCL">
-          <label className="alCreatLocationTopContainerlabel">
-            Play History
-          </label>
-        </div>
+    {/** TITLE CONTAINER */}
+    <div className="alCreatLocationTopContainer">
+    <div
+                className="searchIconContainer"
+                onClick={backHanndlerForPlayHistory}
+              >
+                <IoArrowBackCircleOutline
+                  color={COLORS.white_s}
+                  size={"2.5rem"}
+                />
+              </div>
+      <div className="alCreatLocationTopContaineCL">
+        <label className="alCreatLocationTopContainerlabel">
+          Play History
+        </label>
       </div>
-      {/** CONTENT CONTAINER */}
-      <div className="h-content-container">
-        {/** CONTENT */}
+    </div>
+    {/** CONTENT CONTAINER */}
+    <div className="h-content-container">
+      {/** CONTENT */}
 
-        {isLoading ? (
-          <LoadingComponent />
-        ) : (
-          historyapidatas.playbets.map((item, index) => (
+      {isLoading ? (
+        <LoadingComponent />
+      ) : (
+        historyapidatas.playbets.map((item, index) => (
+          <div
+            key={(item) => item._id.toString()}
+            onClick={() => toggleItem(item._id)}
+            style={{
+              minHeight: expandedItems[item._id] ? "40rem" : "8rem",
+              backgroundColor: COLORS.background,
+              borderRadius: "2rem",
+            }}
+          >
             <div className="h-content-org">
               {/** FIRST CONTAINER */}
               <div className="h-content-first-history">
@@ -102,7 +121,7 @@ function Playhistory({ userdata, backHanndlerForPlayHistory }) {
               <div className="h-content-second">
                 <div className="h-content-second-content-container-top">
                   <label className="h-content-second-content-container-top-amount">
-                    Amount :{" "}
+                  {`Amount : \u00A0`}
                   </label>
                   <label className="h-content-second-content-container-top-amount-val">
                     {calculateTotalAmount(item.playnumbers)}{" "}
@@ -141,24 +160,72 @@ function Playhistory({ userdata, backHanndlerForPlayHistory }) {
                   </label>
                 </div>
               </div>
-              {/** FIFTH CONTAINER */}
-              <div className="h-content-fifth">
+
+              <div className="h-content-fourth">
                 <div className="h-content-third-content-container-top">
                   <label className="h-content-third-content-container-top-payment">
-                    Number
+                  Total bets
                   </label>
                 </div>
                 <div className="h-content-third-content-container-bottom">
                   <label className="h-content-third-content-container-top-payment-val">
-                    {getPlaynumbersString(item.playnumbers)}
+                  {item.playnumbers.length}
                   </label>
                 </div>
               </div>
+
             </div>
-          ))
-        )}
-      </div>
+
+            {expandedItems[item._id] && (
+              <>
+                <div className="headerContainerPH">
+                  <div className="hcphFirst">
+                    <label className="h-content-third-content-container-top-payment-val">
+                      Number
+                    </label>
+                  </div>
+                  <div className="hcphSecond">
+                    <label className="h-content-third-content-container-top-payment-val">
+                      Amount
+                    </label>
+                  </div>
+                  <div className="hcphThird">
+                    <label className="h-content-third-content-container-top-payment-val">
+                      Win Amt.
+                    </label>
+                  </div>
+                </div>
+
+                <div className="contentContainerPHD">
+                  {item.playnumbers.map((pitem, pindex) => (
+                    <div
+                    key={pindex}
+                    className="contentContainerPHDC">
+                      <div className="hcphFirst">
+                        <label className="h-content-third-content-container-top-payment-val">
+                        {pitem.playnumber}
+                        </label>
+                      </div>
+                      <div className="hcphSecond">
+                        <label className="h-content-third-content-container-top-payment-val">
+                        {pitem.amount}
+                        </label>
+                      </div>
+                      <div className="hcphThird">
+                        <label className="h-content-third-content-container-top-payment-val">
+                        {pitem.winningamount}
+                        </label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        ))
+      )}
     </div>
+  </div>
   );
 }
 

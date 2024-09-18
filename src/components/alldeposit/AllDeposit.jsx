@@ -34,7 +34,7 @@ export const multiplyStringNumbers = (str1, str2) => {
   return num1 * num2;
 };
 
-export const AllDeposit = () => {
+export const AllDeposit = ({ reloadKey }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [selectedReceiptUrl, setSelectedReceiptUrl] = useState(null);
 
@@ -54,27 +54,29 @@ export const AllDeposit = () => {
   const { isLoading, data, isError, refetch } =
     useGetAllDepositQuery(accesstoken);
 
+  useEffect(() => {
+    refetch();
+  }, [reloadKey]);
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      console.log("USE Effect running");
+      console.log(data.deposits);
+      setFilteredData(data.deposits);
+    }
+  }, [isLoading,data,reloadKey]);
+
+
+
   // FOR UPDATING PAYMENT STATUS
   const [
     updateDepositPaymentStatus,
     { isLoading: updateStatusIsLoading, error: updateStatusError },
   ] = useUpdateDepositPaymentStatusMutation();
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
   const formatDateTime = (dateTimeString) => {
     return moment(dateTimeString).format("MMMM DD, YYYY hh:mm A");
   };
-
-  useEffect(() => {
-    if (!isLoading) {
-      console.log("USE Effect running");
-      console.log(data.deposits);
-      setFilteredData(data.deposits);
-    }
-  }, [isLoading]);
 
   // FOR ACCEPTING
 
@@ -94,12 +96,6 @@ export const AllDeposit = () => {
     }).unwrap();
 
     refetch();
-
-    if (!isLoading) {
-      console.log("USE running");
-      console.log(data.deposits);
-      setFilteredData(data.deposits);
-    }
 
     showSuccessToast(res.message);
   };
@@ -121,11 +117,6 @@ export const AllDeposit = () => {
     }).unwrap();
 
     refetch();
-
-    if (!isLoading) {
-      console.log("USE  running");
-      setFilteredData(data.deposits);
-    }
 
     showSuccessToast(res.message);
   };
@@ -170,22 +161,6 @@ export const AllDeposit = () => {
   };
 
   //  FOR SHOWING RECEIPT
-
-  const [alertVisibleReceipt, setAlertVisibleReceipt] = useState(false);
-
-  const showAlertReceipt = (item) => {
-    setAlertVisibleReceipt(true);
-  };
-
-  const closeAlertReceipt = () => {
-    setAlertVisibleReceipt(false);
-  };
-
-  const handleYesReceipt = () => {
-    // Handle the Yes action here
-    setAlertVisibleReceipt(false);
-    console.log("Yes pressed");
-  };
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 

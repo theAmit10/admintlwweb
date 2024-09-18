@@ -16,7 +16,7 @@ import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
 import UrlHelper from "../../helper/UrlHelper";
 import axios from "axios";
 
-function GameDescription() {
+function GameDescription({reloadKey}) {
   const [filteredData, setFilteredData] = useState([]);
 
   const [showGD, setShowGD] = useState(true);
@@ -167,7 +167,7 @@ function GameDescription() {
 
   useEffect(() => {
     dispatch(getAllLocations(accesstoken));
-  }, [dispatch]);
+  }, [dispatch,reloadKey]);
 
   useEffect(() => {
     setFilteredData(locations); // Update filteredData whenever locations change

@@ -200,7 +200,7 @@ export const UpiDeposit = ({ selectingPaymentType }) => {
           ) : (
             <>
               {allDepositdata.length === 0 ? (
-                <NodataFound title={"No data available"} />
+                <NodataFound title={"This payment method is temporarily unavailable."} />
               ) : (
                 <>
                   <div className="upipdMainContainer">
@@ -289,6 +289,19 @@ export const UpiDeposit = ({ selectingPaymentType }) => {
                             />
                           </div>
                         </div>
+
+                        <div className="uCCBottomC">
+                      <div className="uCCTopFC">
+                        <label className="pdSB">Note</label>
+                      </div>
+                      <div className="uCCBottomSC">
+                        <label className="pdRBottom">
+                          this is to infrom that i am going to not send your
+                          amount because their is some missing.
+                        </label>
+                      </div>
+                    </div>
+
                       </div>
                     ))}
                   </div>

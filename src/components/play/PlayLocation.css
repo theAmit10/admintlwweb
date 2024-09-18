@@ -100,6 +100,16 @@
     border-radius: 1rem;
   }
 
+  .PLRTimeContainer:hover {
+    border: 2px solid var(--green); /* Change border color on hover */
+    cursor: pointer;
+  }
+  
+  /* Add this class for the highlighted border */
+  .highlighted {
+    border: 0.3rem solid orange;
+  }
+
   .plBottomContainer{
     flex: 1;
     background: linear-gradient(180deg, #0162AF, #011833);

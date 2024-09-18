@@ -808,19 +808,58 @@ function AllLocation() {
   const { loading: loadingDates, dates } = useSelector((state) => state.date);
   const [filteredDataD, setFilteredDataD] = useState([]);
 
+  // const handleSearchD = (e) => {
+  //   const text = e.target.value;
+  //   if (dates) {
+  //     const filtered = dates.filter((item) =>
+  //       item.lotdate.toLowerCase().includes(text.toLowerCase())
+  //     );
+  //     setFilteredDataD(filtered);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (dates) {
+  //     setFilteredDataD(dates); // Update filteredData whenever locations change
+  //   }
+  // }, [dates]);
+
+
   const handleSearchD = (e) => {
     const text = e.target.value;
+  
+    // Get current date
+    const currentDate = moment().startOf('day');
+    // Get the next date
+    const nextDate = currentDate.clone().add(1, 'days');
+  
     if (dates) {
-      const filtered = dates.filter((item) =>
-        item.lotdate.toLowerCase().includes(text.toLowerCase())
-      );
+      const filtered = dates.filter((item) => {
+        const itemDate = moment(item.lotdate, 'DD-MM-YYYY'); // Parse lotdate with correct format
+  
+        // Exclude if the item.lotdate matches the next day
+        return (
+          !itemDate.isSame(nextDate, 'day') &&
+          item.lotdate.toLowerCase().includes(text.toLowerCase())
+        );
+      });
       setFilteredDataD(filtered);
     }
   };
 
+
   useEffect(() => {
     if (dates) {
-      setFilteredDataD(dates); // Update filteredData whenever locations change
+      const currentDate = moment().startOf('day');
+      const nextDate = currentDate.clone().add(1, 'days');
+  
+      // Filter out items where the lotdate is the next day
+      const filtered = dates.filter((item) => {
+        const itemDate = moment(item.lotdate, 'DD-MM-YYYY'); // Adjust format as needed
+        return !itemDate.isSame(nextDate, 'day');
+      });
+  
+      setFilteredDataD(filtered); // Update filteredData whenever dates change
     }
   }, [dates]);
 
@@ -1542,7 +1581,7 @@ function AllLocation() {
 
               <input
                 className="al-search-input"
-                placeholder="For example:  2 - 2x"
+                placeholder="For example:  2 - 2X"
                 value={rangeData}
                 onChange={(e) => setRangeData(e.target.value)}
               />
@@ -1557,7 +1596,7 @@ function AllLocation() {
 
               <input
                 className="al-search-input"
-                placeholder="For example:  2x"
+                placeholder="For example:  2X"
                 value={maximumReturn}
                 onChange={(e) => setmaximumReturn(e.target.value)}
               />

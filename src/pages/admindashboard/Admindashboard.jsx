@@ -48,13 +48,29 @@ import { loadProfile } from "../../redux/actions/userAction";
 import { MdGetApp } from "react-icons/md";
 import { AppLink } from "../../components/applink/AppLink";
 import { serverName } from "../../redux/store";
+import { showWarningToast } from "../../components/helper/showErrorToast";
+import { ToastContainer } from "react-toastify";
 
 function Admindashboard() {
   // const [selectedLocation, setSelectedLocation] = useState(locationdata[0]);
   const [selectedComponent, setSelectedComponent] = useState("dashboard");
+  // const handleComponentClick = (comp) => {
+  //   console.log("clicked");
+  //   setSelectedComponent(comp);
+  // };
+  const [reloadKey, setReloadKey] = useState(0); // Key to force re-render
+
   const handleComponentClick = (comp) => {
-    console.log("clicked");
-    setSelectedComponent(comp);
+    if (selectedComponent === comp) {
+      // If the same component is clicked, increment the reloadKey to force a reload
+      setReloadKey((prevKey) => prevKey + 1);
+      showWarningToast("processing :: "+reloadKey)
+    } else {
+      // Otherwise, set the selected component and reset the key
+      showWarningToast("processing :: "+reloadKey)
+      setSelectedComponent(comp);
+      setReloadKey(0);
+    }
   };
 
   const navigate = useNavigate();
@@ -480,36 +496,38 @@ function Admindashboard() {
               handleComponentClick={handleComponentClick}
             />
           )}
-          {selectedComponent === "alllocation" && <AllLocation />}
-          {selectedComponent === "createresult" && <AllLocation />}
-          {selectedComponent === "gamedescription" && <GameDescription />}
-          {selectedComponent === "alldeposit" && <AllDeposit />}
-          {selectedComponent === "withdraw" && <AllWithdraw />}
-          {selectedComponent === "aboutus" && <Aboutus />}
-          {selectedComponent === "balancesheet" && <Balancesheet />}
-          {selectedComponent === "changepassword" && <ChangePassword />}
+          {selectedComponent === "alllocation" && <AllLocation  reloadKey={reloadKey} />}
+          {selectedComponent === "createresult" && <AllLocation  reloadKey={reloadKey} />}
+          {selectedComponent === "gamedescription" && <GameDescription reloadKey={reloadKey}  />}
+          {selectedComponent === "alldeposit" && <AllDeposit reloadKey={reloadKey} />}
+          {selectedComponent === "withdraw" && <AllWithdraw reloadKey={reloadKey} />}
+          {selectedComponent === "aboutus" && <Aboutus reloadKey={reloadKey} />}
+          {selectedComponent === "balancesheet" && <Balancesheet reloadKey={reloadKey} />}
+          {selectedComponent === "changepassword" && <ChangePassword reloadKey={reloadKey} />}
           {selectedComponent === "logout" && (
             <Logout
               selectedComponent={selectedComponent}
               handleComponentClick={handleComponentClick}
             />
           )}
-          {selectedComponent === "notification" && <Notification />}
-          {selectedComponent === "pushnotification" && <PushNotification />}
-          {selectedComponent === "allcountry" && <AllCountry />}
-          {selectedComponent === "walletmod" && <AllWallet />}
-          {selectedComponent === "promotion" && <Promotion />}
-          {selectedComponent === "subadmin" && <AllSubAdmin />}
-          {selectedComponent === "updateprofile" && <UpdateProfile />}
-          {selectedComponent === "payment" && <PaymentDeposit />}
-          {selectedComponent === "play" && <PlayLocation />}
-          {selectedComponent === "alluser" && <AllUser />}
-          {selectedComponent === "newuser" && <NewUser />}
-          {selectedComponent === "allresults" && <AllResults />}
-          {selectedComponent === "history" && <Historyc />}
-          {selectedComponent === "applink" && <AppLink />}
+          {selectedComponent === "notification" && <Notification reloadKey={reloadKey} />}
+          {selectedComponent === "pushnotification" && <PushNotification reloadKey={reloadKey} />}
+          {selectedComponent === "allcountry" && <AllCountry key={reloadKey} />}
+          {selectedComponent === "walletmod" && <AllWallet reloadKey={reloadKey} />}
+          {selectedComponent === "promotion" && <Promotion reloadKey={reloadKey} />}
+          {selectedComponent === "subadmin" && <AllSubAdmin reloadKey={reloadKey}  />}
+          {selectedComponent === "updateprofile" && <UpdateProfile  reloadKey={reloadKey} />}
+          {selectedComponent === "payment" && <PaymentDeposit reloadKey={reloadKey} />}
+          {selectedComponent === "play" && <PlayLocation reloadKey={reloadKey} />}
+          {selectedComponent === "alluser" && <AllUser reloadKey={reloadKey} />}
+          {selectedComponent === "newuser" && <NewUser reloadKey={reloadKey} />}
+          {selectedComponent === "allresults" && <AllResults reloadKey={reloadKey} />}
+          {selectedComponent === "history" && <Historyc key={reloadKey} />}
+          {selectedComponent === "applink" && <AppLink reloadKey={reloadKey} />}
         </div>
       </div>
+
+      <ToastContainer/>
 
       {/** MAIN CONTENT CONTAINER END */}
     </div>

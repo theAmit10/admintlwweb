@@ -87,7 +87,9 @@ function Balancesheet() {
                 </div>
                 <div className="dHeaderContainerLabelContainer">
                   <label className="dHeaderContainerLabel">
-                    {item?.activityType === "Winning"
+                    {item.walletName
+                      ? item.walletName
+                      : item?.activityType === "Winning"
                       ? "Withdrawal wallet"
                       : "Game Wallet"}
                   </label>

@@ -16,11 +16,11 @@ import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
 import { ToastContainer } from "react-toastify";
 import { MdDelete } from "react-icons/md";
 
-export const AppLink = () => {
+export const AppLink = ({reloadKey} ) => {
   const [showAll, setShowAll] = useState(true);
   const [showAddAndroid, setShowAndroid] = useState(false);
   const [showAddIos, setShowAddIos] = useState(false);
-
+  const [reloadTrigger, setReloadTrigger] = useState(0);
   const [androidLink, setAndroidLink] = useState("");
   const [iosLink, setIosLink] = useState("");
   const [title, setTitle] = useState("App Link");
@@ -55,23 +55,36 @@ export const AppLink = () => {
   const { accesstoken } = useSelector((state) => state.user);
   const { data, isLoading, refetch } = useGetAppLinkQuery(accesstoken);
 
-  useEffect(() => {
-    refetch();
+  // useEffect(() => {
+  //   refetch();
+  // }, [refetch,reloadKey]);
 
-    console.log(androidLink);
-    console.log(iosLink);
-    console.log(data?.appLink?.iosLink);
-  }, []);
+  // useEffect(() => {
+  //   if (!isLoading && data) {
+  //     data?.appLink?.androidLink
+  //       ? setAndroidLink(data?.appLink?.androidLink)
+  //       : setAndroidLink("");
+
+  //     data?.appLink?.iosLink
+  //       ? setIosLink(data.appLink.iosLink)
+  //       : setIosLink("");
+  //   }
+  // }, [isLoading, data]);
+
+  useEffect(() => {
+    console.log("Reload Key changed:", reloadKey);
+    try {
+      refetch();
+    } catch (error) {
+      console.error("Error during refetch:", error);
+    }
+  }, [reloadKey, refetch]);
 
   useEffect(() => {
     if (!isLoading && data) {
-      data?.appLink?.androidLink
-        ? setAndroidLink(data?.appLink?.androidLink)
-        : setAndroidLink("");
-
-      data?.appLink?.iosLink
-        ? setIosLink(data.appLink.iosLink)
-        : setIosLink("");
+      console.log("Fetched data:", data);
+      setAndroidLink(data?.appLink?.androidLink || "");
+      setIosLink(data?.appLink?.iosLink || "");
     }
   }, [isLoading, data]);
 

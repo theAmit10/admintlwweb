@@ -24,7 +24,7 @@ import { ToastContainer } from "react-toastify";
 import { IoIosMenu } from "react-icons/io";
 import SortingOptions from "../helper/SortingOptions";
 import moment from "moment";
-import 'moment-timezone'; 
+import "moment-timezone";
 
 export const PlayLocation = () => {
   const [showPL, setShowPL] = useState(true);
@@ -37,52 +37,53 @@ export const PlayLocation = () => {
   const [resultnumber, setresultnumber] = useState("");
   const [nextresult, setnextresult] = useState("");
 
+  // function getNextTimeForHighlights(times) {
+  //   // Check if there is only one time in the list
+  //   if (times.length === 1) {
+  //     return times[0];
+  //   }
 
-// function getNextTimeForHighlights(times) {
-//   // Check if there is only one time in the list
-//   if (times.length === 1) {
-//     return times[0];
-//   }
+  //   // Get current time in IST timezone
+  //   const currentISTTime = moment().tz('Asia/Kolkata').format('hh:mm A');
 
-//   // Get current time in IST timezone
-//   const currentISTTime = moment().tz('Asia/Kolkata').format('hh:mm A');
+  //   // Sort times in ascending order to handle next time logic properly
+  //   const sortedTimes = [...times].sort((a, b) =>
+  //     moment(a.time, 'hh:mm A').diff(moment(b.time, 'hh:mm A'))
+  //   );
 
-//   // Sort times in ascending order to handle next time logic properly
-//   const sortedTimes = [...times].sort((a, b) => 
-//     moment(a.time, 'hh:mm A').diff(moment(b.time, 'hh:mm A'))
-//   );
+  //   // Loop through sorted times to find the next available time
+  //   for (let i = 0; i < sortedTimes.length; i++) {
+  //     if (moment(currentISTTime, 'hh:mm A').isBefore(moment(sortedTimes[i].time, 'hh:mm A'))) {
+  //       return sortedTimes[i];
+  //     }
+  //   }
 
-//   // Loop through sorted times to find the next available time
-//   for (let i = 0; i < sortedTimes.length; i++) {
-//     if (moment(currentISTTime, 'hh:mm A').isBefore(moment(sortedTimes[i].time, 'hh:mm A'))) {
-//       return sortedTimes[i];
-//     }
-//   }
+  //   // If no future time found, or current time matches the last item, return the first item
+  //   return sortedTimes[0];
+  // }
 
-//   // If no future time found, or current time matches the last item, return the first item
-//   return sortedTimes[0];
-// }
-
-const getNextTimeForHighlights = (times) => {
-  if (times.length === 1) {
-    return times[0];
-  }
-
-  const currentISTTime = moment().tz('Asia/Kolkata').format('hh:mm A');
-  const sortedTimes = [...times].sort((a, b) =>
-    moment(a.time, 'hh:mm A').diff(moment(b.time, 'hh:mm A'))
-  );
-
-  for (let i = 0; i < sortedTimes.length; i++) {
-    if (moment(currentISTTime, 'hh:mm A').isBefore(moment(sortedTimes[i].time, 'hh:mm A'))) {
-      return sortedTimes[i];
+  const getNextTimeForHighlights = (times) => {
+    if (times.length === 1) {
+      return times[0];
     }
-  }
 
-  return sortedTimes[0];
-};
+    const currentISTTime = moment().tz("Asia/Kolkata").format("hh:mm A");
+    const sortedTimes = [...times].sort((a, b) =>
+      moment(a.time, "hh:mm A").diff(moment(b.time, "hh:mm A"))
+    );
 
+    for (let i = 0; i < sortedTimes.length; i++) {
+      if (
+        moment(currentISTTime, "hh:mm A").isBefore(
+          moment(sortedTimes[i].time, "hh:mm A")
+        )
+      ) {
+        return sortedTimes[i];
+      }
+    }
 
+    return sortedTimes[0];
+  };
 
   const settingShowDate = (loc, time) => {
     setShowPL(false);
@@ -266,19 +267,56 @@ const getNextTimeForHighlights = (times) => {
   const { loading: loadingDates, dates } = useSelector((state) => state.date);
   const [filteredDataD, setFilteredDataD] = useState([]);
 
+  // const handleSearchD = (e) => {
+  //   const text = e.target.value;
+  //   if (dates) {
+  //     const filtered = dates.filter((item) =>
+  //       item.lotdate.toLowerCase().includes(text.toLowerCase())
+  //     );
+  //     setFilteredDataD(filtered);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (dates) {
+  //     setFilteredDataD(dates); // Update filteredData whenever locations change
+  //   }
+  // }, [dates]);
+
   const handleSearchD = (e) => {
     const text = e.target.value;
+
+    // Get current date
+    const currentDate = moment().startOf("day");
+    // Get the next date
+    const nextDate = currentDate.clone().add(1, "days");
+
     if (dates) {
-      const filtered = dates.filter((item) =>
-        item.lotdate.toLowerCase().includes(text.toLowerCase())
-      );
+      const filtered = dates.filter((item) => {
+        const itemDate = moment(item.lotdate, "DD-MM-YYYY"); // Parse lotdate with correct format
+
+        // Exclude if the item.lotdate matches the next day
+        return (
+          !itemDate.isSame(nextDate, "day") &&
+          item.lotdate.toLowerCase().includes(text.toLowerCase())
+        );
+      });
       setFilteredDataD(filtered);
     }
   };
 
   useEffect(() => {
     if (dates) {
-      setFilteredDataD(dates); // Update filteredData whenever locations change
+      const currentDate = moment().startOf("day");
+      const nextDate = currentDate.clone().add(1, "days");
+
+      // Filter out items where the lotdate is the next day
+      const filtered = dates.filter((item) => {
+        const itemDate = moment(item.lotdate, "DD-MM-YYYY"); // Adjust format as needed
+        return !itemDate.isSame(nextDate, "day");
+      });
+
+      setFilteredDataD(filtered); // Update filteredData whenever dates change
     }
   }, [dates]);
 
@@ -334,24 +372,24 @@ const getNextTimeForHighlights = (times) => {
 
   const [showSorting, setShowSorting] = useState(false);
 
-  const sortByAmount = (order = 'asc') => {
+  const sortByAmount = (order = "asc") => {
     const sortedData = [...filteredDataPG].sort((a, b) => {
-      return order === 'asc' ? a.amount - b.amount : b.amount - a.amount;
+      return order === "asc" ? a.amount - b.amount : b.amount - a.amount;
     });
     setFilteredDataPG(sortedData);
   };
 
-  const sortByWinningAmount = (order = 'asc') => {
+  const sortByWinningAmount = (order = "asc") => {
     const sortedData = [...filteredDataPG].sort((a, b) => {
       const winningAmountA = a.users.reduce(
         (acc, user) => acc + user.winningamount,
-        0,
+        0
       );
       const winningAmountB = b.users.reduce(
         (acc, user) => acc + user.winningamount,
-        0,
+        0
       );
-      return order === 'asc'
+      return order === "asc"
         ? winningAmountA - winningAmountB
         : winningAmountB - winningAmountA;
     });
@@ -481,23 +519,27 @@ const getNextTimeForHighlights = (times) => {
   };
 
   // LOWEST BET AMOUNT ON A SPECIFIC NUMBER
- function getLowestAmount(playinsightdata) {
+  function getLowestAmount(playinsightdata) {
     // Extract playnumbers array
     const playnumbers = playinsightdata.playzone.playnumbers;
     // const playnumbers = playinsightdata;
-  
+
     // Find the minimum amount in the playnumbers list
-    const minAmount = Math.min(...playnumbers.map(p => p.amount));
-  
+    const minAmount = Math.min(...playnumbers.map((p) => p.amount));
+
     // Get all playnumbers with the minimum amount
-    const minAmountPlaynumbers = playnumbers.filter(p => p.amount === minAmount);
-  
+    const minAmountPlaynumbers = playnumbers.filter(
+      (p) => p.amount === minAmount
+    );
+
     // If there's more than one playnumber with the minimum amount, select one randomly
     if (minAmountPlaynumbers.length > 1) {
-      const randomIndex = Math.floor(Math.random() * minAmountPlaynumbers.length);
+      const randomIndex = Math.floor(
+        Math.random() * minAmountPlaynumbers.length
+      );
       return minAmountPlaynumbers[randomIndex].amount;
     }
-  
+
     // Otherwise, return the amount of the single minimum amount
     return minAmountPlaynumbers[0].amount;
   }
@@ -507,19 +549,23 @@ const getNextTimeForHighlights = (times) => {
     // Extract playnumbers array
     const playnumbers = playinsightdata.playzone.playnumbers;
     // const playnumbers = playinsightdata;
-  
+
     // Find the minimum amount in the playnumbers list
-    const minAmount = Math.min(...playnumbers.map(p => p.amount));
-  
+    const minAmount = Math.min(...playnumbers.map((p) => p.amount));
+
     // Get all playnumbers with the minimum amount
-    const minAmountPlaynumbers = playnumbers.filter(p => p.amount === minAmount);
-  
+    const minAmountPlaynumbers = playnumbers.filter(
+      (p) => p.amount === minAmount
+    );
+
     // If there's more than one playnumber with the minimum amount, select one randomly
     if (minAmountPlaynumbers.length > 1) {
-      const randomIndex = Math.floor(Math.random() * minAmountPlaynumbers.length);
+      const randomIndex = Math.floor(
+        Math.random() * minAmountPlaynumbers.length
+      );
       return minAmountPlaynumbers[randomIndex].playnumber;
     }
-  
+
     // Otherwise, return the playnumber of the single minimum amount
     return minAmountPlaynumbers[0].playnumber;
   }
@@ -654,53 +700,51 @@ const getNextTimeForHighlights = (times) => {
 
   return (
     <div className="PLContainer">
-      
-{showPL &&
-  (isLoading ? (
-    <LoadingComponent />
-  ) : filteredData.length === 0 ? (
-    <NodataFound title={"No data found"} />
-  ) : (
-    <div className="PLContainerMain">
-      {filteredData.map((item, index) => {
-        // Calculate the next time for each item
-        const nextTime = getNextTimeForHighlights(item?.times);
+      {showPL &&
+        (isLoading ? (
+          <LoadingComponent />
+        ) : filteredData.length === 0 ? (
+          <NodataFound title={"No data found"} />
+        ) : (
+          <div className="PLContainerMain">
+            {filteredData.map((item, index) => {
+              // Calculate the next time for each item
+              const nextTime = getNextTimeForHighlights(item?.times);
 
-        return (
-          <div key={item._id} className="PLCotentContainer">
-            <div className="PLCotentContainerLeft">
-              <div
-                className="PLLLocContainer"
-                style={{
-                  background:
-                    index % 2 === 0
-                      ? "linear-gradient(90deg, #1993FF, #0F5899)"
-                      : "linear-gradient(90deg, #7EC630, #3D6017)",
-                }}
-              >
-                <label className="locLabel">{item.name}</label>
-                <label className="limitLabel">Max {item.limit}</label>
-              </div>
-            </div>
-            <div className="PLCotentContainerRight">
-              {item.times.map((timedata, timeindex) => (
-                <div
-                  key={timedata._id}
-                  className="PLRTimeContainer"
-                  onClick={() => settingShowDate(item, timedata)}
-                  style={{
-                    border: timedata.time === nextTime.time ? '2px solid green' : 'none'
-                  }}
-                >
-                  <label className="timeLabel">{timedata.time}</label>
+              return (
+                <div key={item._id} className="PLCotentContainer">
+                  <div className="PLCotentContainerLeft">
+                    <div
+                      className="PLLLocContainer"
+                      style={{
+                        background:
+                          index % 2 === 0
+                            ? "linear-gradient(90deg, #1993FF, #0F5899)"
+                            : "linear-gradient(90deg, #7EC630, #3D6017)",
+                      }}
+                    >
+                      <label className="locLabel">{item.name}</label>
+                      <label className="limitLabel">Max {item.limit}</label>
+                    </div>
+                  </div>
+                  <div className="PLCotentContainerRight">
+                    {item.times.map((timedata, timeindex) => (
+                      <div
+                        key={timedata._id}
+                        className={`PLRTimeContainer ${
+                          timedata.time === nextTime.time ? "highlighted" : ""
+                        }`}
+                        onClick={() => settingShowDate(item, timedata)}
+                      >
+                        <label className="timeLabel">{timedata.time}</label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
-        );
-      })}
-    </div>
-  ))}
+        ))}
 
       {showD &&
         (loadingDates ? (
@@ -796,13 +840,13 @@ const getNextTimeForHighlights = (times) => {
                 {selectedDate.lotdate}
               </label>
               <div
-               onClick={() => setShowSorting(!showSorting)}
+                onClick={() => setShowSorting(!showSorting)}
                 style={{
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
-                  marginRight : '1rem'
+                  marginRight: "1rem",
                 }}
               >
                 <IoIosMenu color={COLORS.white_s} size={"2.5rem"} />
@@ -810,12 +854,12 @@ const getNextTimeForHighlights = (times) => {
             </div>
 
             {showSorting && (
-                <SortingOptions
-                  sortByAmount={sortByAmount}
-                  sortByWinningAmount={sortByWinningAmount}
-                  onClose={() => setShowSorting(false)} // Close sorting options
-                />
-              )}
+              <SortingOptions
+                sortByAmount={sortByAmount}
+                sortByWinningAmount={sortByWinningAmount}
+                onClose={() => setShowSorting(false)} // Close sorting options
+              />
+            )}
 
             {filteredDataPG.length === 0 ? (
               <NodataFound title={"No data found"} />
@@ -942,7 +986,9 @@ const getNextTimeForHighlights = (times) => {
                                   </div>
                                   <div className="dHeaderContainerLabelContainer">
                                     <label className="dHeaderContainerLabel">
-                                      {useritem?.convertedAmount ? useritem?.convertedAmount : useritem?.amount}
+                                      {useritem?.convertedAmount
+                                        ? useritem?.convertedAmount
+                                        : useritem?.amount}
                                     </label>
                                   </div>
                                 </div>

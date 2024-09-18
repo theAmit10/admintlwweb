@@ -136,7 +136,7 @@ function Historyc({userdata,backHanndlerForHistory}) {
                 />
               </div>
         <div className="alCreatLocationTopContaineCL">
-          <label className="alCreatLocationTopContainerlabel">History</label>
+          <label className="alCreatLocationTopContainerlabel">Transaction History</label>
         </div>
       </div>
       {/** CONTENT CONTAINER */}
@@ -168,7 +168,7 @@ function Historyc({userdata,backHanndlerForHistory}) {
               <div className="h-content-second">
                 <div className="h-content-second-content-container-top">
                   <label className="h-content-second-content-container-top-amount">
-                    Amount :{" "}
+                  {`Amount : \u00A0`}
                   </label>
                   <label className="h-content-second-content-container-top-amount-val">
                     {" "}{item.amount} {user.country.countrycurrencysymbol}
@@ -184,7 +184,7 @@ function Historyc({userdata,backHanndlerForHistory}) {
               <div className="h-content-third">
                 <div className="h-content-third-content-container-top">
                   <label className="h-content-third-content-container-top-payment">
-                    Payment Method
+                    Payment {item.transactionType === "AdminUpdate" ? 'Type' : "Method"} 
                   </label>
                 </div>
                 <div className="h-content-third-content-container-bottom">
@@ -197,12 +197,12 @@ function Historyc({userdata,backHanndlerForHistory}) {
               <div className="h-content-fourth">
                 <div className="h-content-third-content-container-top">
                   <label className="h-content-third-content-container-top-payment">
-                    {item.transactionType === "Deposit" ? "Transaction ID" : ""}
+                    {item.transactionType === "Deposit" ? "Transaction ID" : "Transaction type"}
                   </label>
                 </div>
                 <div className="h-content-third-content-container-bottom">
                   <label className="h-content-third-content-container-top-payment-val">
-                    {item.transactionId}
+                    {item.transactionId ? item.transactionId :  item.transactionType}
                   </label>
                 </div>
               </div>
