@@ -10,12 +10,16 @@ import { PiSubtitles } from "react-icons/pi";
 import { IoDocumentText } from "react-icons/io5";
 import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
 import { useSelector } from "react-redux";
-import { useCreatePaypalAccountMutation, useDeletePaypalAccountMutation } from "../../helper/Networkcall";
+import {
+  useCreatePaypalAccountMutation,
+  useDeletePaypalAccountMutation,
+} from "../../helper/Networkcall";
 import axios from "axios";
 import UrlHelper from "../../helper/UrlHelper";
 import { LoadingComponent } from "../helper/LoadingComponent";
 import CircularProgressBar from "../helper/CircularProgressBar";
 import { NodataFound } from "../helper/NodataFound";
+import { ToastContainer } from "react-toastify";
 
 export const PayPalDeposit = ({ selectingPaymentType }) => {
   const goToPreviousPage = () => {
@@ -74,7 +78,7 @@ export const PayPalDeposit = ({ selectingPaymentType }) => {
   }, []);
 
   const [seletedItem, setSelectedItem] = useState("");
-
+  const [paymentnote, setpaymentnote] = useState("");
   const [loadingAllData, setLoadingAllData] = useState(false);
   const [allDepositdata, setAllDepositData] = useState([]);
 
@@ -114,23 +118,27 @@ export const PayPalDeposit = ({ selectingPaymentType }) => {
     showSuccessToast(res.message);
   };
 
-
   // CREATING PAYPAL ACCOUNT
 
-  const [createSkrillAccount, {isLoading, error}] =
+  const [createSkrillAccount, { isLoading, error }] =
     useCreatePaypalAccountMutation();
 
   const submitCreateRequest = async () => {
     if (!emailaddress) {
-      showErrorToast( 'Enter email address')
+      showErrorToast("Enter email address");
+      return;
+    }
+    if (!paymentnote) {
+      showErrorToast("Add payment note");
       return;
     } else {
       try {
         const body = {
           emailaddress,
+          paymentnote,
         };
 
-        console.log('JSON BODY :: ', JSON.stringify(body));
+        console.log("JSON BODY :: ", JSON.stringify(body));
 
         const res = await createSkrillAccount({
           accesstoken: accesstoken,
@@ -140,9 +148,10 @@ export const PayPalDeposit = ({ selectingPaymentType }) => {
         showSuccessToast(res.message);
         allTheDepositData();
         backHandlerShowCreateUpi();
-        setemailaddress("")
+        setemailaddress("");
+        setpaymentnote("");
       } catch (error) {
-        console.log('Error during deposit:', error);
+        console.log("Error during deposit:", error);
         showErrorToast("Something went wrong");
 
         // if (error.response) {
@@ -158,7 +167,6 @@ export const PayPalDeposit = ({ selectingPaymentType }) => {
       }
     }
   };
-
 
   return (
     <div className="upicontiner">
@@ -183,7 +191,9 @@ export const PayPalDeposit = ({ selectingPaymentType }) => {
           {loadingAllData ? (
             <LoadingComponent />
           ) : allDepositdata.length === 0 ? (
-            <NodataFound title={"This payment method is temporarily unavailable."} />
+            <NodataFound
+              title={"This payment method is temporarily unavailable."}
+            />
           ) : (
             <>
               <div className="upipdMainContainer">
@@ -248,23 +258,18 @@ export const PayPalDeposit = ({ selectingPaymentType }) => {
                         <label className="pdSB">Note</label>
                       </div>
                       <div className="uCCBottomSC">
-                        <label className="pdRBottom">
-                          this is to infrom that i am going to not send your
-                          amount because their is some missing.
-                        </label>
+                        <label className="pdRBottom">{item.paymentnote}</label>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-
-              <div className="alBottomContainer" onClick={settingShowCreateUpi}>
-                <label className="alBottomContainerlabel">
-                  Create new Paypal
-                </label>
-              </div>
             </>
           )}
+
+          <div className="alBottomContainer" onClick={settingShowCreateUpi}>
+            <label className="alBottomContainerlabel">Create new Paypal</label>
+          </div>
         </>
       )}
 
@@ -304,6 +309,21 @@ export const PayPalDeposit = ({ selectingPaymentType }) => {
                 onChange={(e) => setemailaddress(e.target.value)}
               />
             </div>
+
+            {/** PAYMENT NOTE */}
+            <label className="alCLLabel">Note</label>
+            <div className="alSearchContainer">
+              <div className="searchIconContainer">
+                <PiSubtitles color={COLORS.background} size={"2.5rem"} />
+              </div>
+
+              <input
+                className="al-search-input"
+                placeholder="Enter note"
+                value={paymentnote}
+                onChange={(e) => setpaymentnote(e.target.value)}
+              />
+            </div>
           </div>
 
           {isLoading ? (
@@ -315,6 +335,8 @@ export const PayPalDeposit = ({ selectingPaymentType }) => {
           )}
         </>
       )}
+
+<ToastContainer/>
     </div>
   );
 };

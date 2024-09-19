@@ -10,12 +10,16 @@ import { PiSubtitles } from "react-icons/pi";
 import { IoDocumentText } from "react-icons/io5";
 import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
 import { useSelector } from "react-redux";
-import { useCreateSkrillAccountMutation, useDeleteSkrillAccountMutation } from "../../helper/Networkcall";
+import {
+  useCreateSkrillAccountMutation,
+  useDeleteSkrillAccountMutation,
+} from "../../helper/Networkcall";
 import axios from "axios";
 import UrlHelper from "../../helper/UrlHelper";
 import { LoadingComponent } from "../helper/LoadingComponent";
 import { NodataFound } from "../helper/NodataFound";
 import CircularProgressBar from "../helper/CircularProgressBar";
+import { ToastContainer } from "react-toastify";
 
 export const SkrillDeposit = ({ selectingPaymentType }) => {
   const goToPreviousPage = () => {
@@ -48,7 +52,7 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
   };
 
   const [address, setaddress] = useState("");
-
+  const [paymentnote, setpaymentnote] = useState("");
   const [imageSource, setImageSource] = useState(null);
 
   const selectDoc = (e) => {
@@ -113,24 +117,27 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
     showSuccessToast(res.message);
   };
 
-
   // FOR CREATING SKRILL ACCOUNT
 
-
-  const [createSkrillAccount, {isLoading, error}] =
+  const [createSkrillAccount, { isLoading, error }] =
     useCreateSkrillAccountMutation();
 
   const submitCreateRequest = async () => {
     if (!address) {
-      showErrorToast('Enter address')
+      showErrorToast("Enter address");
+      return;
+    }
+    if (!paymentnote) {
+      showErrorToast("Add payment note");
       return;
     } else {
       try {
         const body = {
           address,
+          paymentnote,
         };
 
-        console.log('JSON BODY :: ', JSON.stringify(body));
+        console.log("JSON BODY :: ", JSON.stringify(body));
 
         const res = await createSkrillAccount({
           accesstoken: accesstoken,
@@ -141,10 +148,10 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
         allTheDepositData();
         backHandlerShowCreateUpi();
         setaddress("");
-
+        setpaymentnote("");
       } catch (error) {
-        console.log('Error during deposit:', error);
-        showErrorToast("Something went wrong")
+        console.log("Error during deposit:", error);
+        showErrorToast("Something went wrong");
         // if (error.response) {
         //   Toast.show({type: 'error', text1: error.response.data});
         // } else if (error.request) {
@@ -158,7 +165,6 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
       }
     }
   };
-
 
   return (
     <div className="upicontiner">
@@ -183,14 +189,14 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
           {loadingAllData ? (
             <LoadingComponent />
           ) : allDepositdata.length === 0 ? (
-            <NodataFound title={"This payment method is temporarily unavailable."} />
+            <NodataFound
+              title={"This payment method is temporarily unavailable."}
+            />
           ) : (
             <>
               <div className="upipdMainContainer">
                 {allDepositdata.map((item, index) => (
-                  <div 
-                  key={item._id}
-                  className="upipdContentContainer">
+                  <div key={item._id} className="upipdContentContainer">
                     {/** TOP */}
                     <div className="uCCTopC">
                       <div className="hdContenContainerIcon">
@@ -205,30 +211,27 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
                       <label className="pdB">Skrill {item.paymentId}</label>
 
                       {deleteIsLoading ? (
-                            seletedItem === item._id ? (
-                              <CircularProgressBar />
-                            ) : (
-                              <div
-                                onClick={() => deletingData(item)}
-                                className="copyCon"
-                              >
-                                <MdDelete
-                                  color={COLORS.background}
-                                  size={"2.5rem"}
-                                />
-                              </div>
-                            )
-                          ) : (
-                            <div
-                              className="copyCon"
-                              onClick={() => deletingData(item)}
-                            >
-                              <MdDelete
-                                color={COLORS.background}
-                                size={"2.5rem"}
-                              />
-                            </div>
-                          )}
+                        seletedItem === item._id ? (
+                          <CircularProgressBar />
+                        ) : (
+                          <div
+                            onClick={() => deletingData(item)}
+                            className="copyCon"
+                          >
+                            <MdDelete
+                              color={COLORS.background}
+                              size={"2.5rem"}
+                            />
+                          </div>
+                        )
+                      ) : (
+                        <div
+                          className="copyCon"
+                          onClick={() => deletingData(item)}
+                        >
+                          <MdDelete color={COLORS.background} size={"2.5rem"} />
+                        </div>
+                      )}
                     </div>
                     {/** TOP */}
 
@@ -253,23 +256,18 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
                         <label className="pdSB">Note</label>
                       </div>
                       <div className="uCCBottomSC">
-                        <label className="pdRBottom">
-                          this is to infrom that i am going to not send your
-                          amount because their is some missing.
-                        </label>
+                        <label className="pdRBottom">{item.paymentnote}</label>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-
-              <div className="alBottomContainer" onClick={settingShowCreateUpi}>
-                <label className="alBottomContainerlabel">
-                  Create new Skrill
-                </label>
-              </div>
             </>
           )}
+
+          <div className="alBottomContainer" onClick={settingShowCreateUpi}>
+            <label className="alBottomContainerlabel">Create new Skrill</label>
+          </div>
         </>
       )}
 
@@ -309,6 +307,21 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
                 onChange={(e) => setaddress(e.target.value)}
               />
             </div>
+
+             {/** PAYMENT NOTE */}
+             <label className="alCLLabel">Note</label>
+            <div className="alSearchContainer">
+              <div className="searchIconContainer">
+                <PiSubtitles color={COLORS.background} size={"2.5rem"} />
+              </div>
+
+              <input
+                className="al-search-input"
+                placeholder="Enter note"
+                value={paymentnote}
+                onChange={(e) => setpaymentnote(e.target.value)}
+              />
+            </div>
           </div>
 
           {isLoading ? (
@@ -320,6 +333,8 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
           )}
         </>
       )}
+
+      <ToastContainer/>
     </div>
   );
 };

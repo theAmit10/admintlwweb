@@ -17,7 +17,7 @@
   padding: 2rem;
   border-radius: 1rem;
   text-align: center;
-  width: 30rem;
+  width: 40rem;
   z-index: 1000;
 }
 
@@ -51,9 +51,10 @@
   }
   
   .textp{
-    font-family: "MR";
+    font-family: "MB";
     color: var(--white_s);
     font-size: 2rem;
+    margin: 1rem;
   }
 
   .imgconM{

@@ -11,7 +11,7 @@ import {
   useUpdateDepositPaymentStatusMutation,
 } from "../../helper/Networkcall";
 import moment from "moment";
-import { showSuccessToast } from "../helper/showErrorToast";
+import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
 import { LoadingComponent } from "../helper/LoadingComponent";
 import { NodataFound } from "../helper/NodataFound";
 import { AlertModal } from "../helper/AlertModal";
@@ -50,6 +50,17 @@ export const AllDeposit = ({ reloadKey }) => {
 
   const [selectedItemId, setSelectedItemId] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
+  // const [paymentUpdateNote,setpaymentUpdateNote] = useState("")
+  // const [imageSource, setImageSource] = useState(null);
+
+  const selectDoc = (e) => {
+    try {
+      console.log(e.target.files);
+      setImageSource(e.target.files[0]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const { isLoading, data, isError, refetch } =
     useGetAllDepositQuery(accesstoken);
@@ -64,9 +75,7 @@ export const AllDeposit = ({ reloadKey }) => {
       console.log(data.deposits);
       setFilteredData(data.deposits);
     }
-  }, [isLoading,data,reloadKey]);
-
-
+  }, [isLoading, data, reloadKey]);
 
   // FOR UPDATING PAYMENT STATUS
   const [
@@ -80,45 +89,195 @@ export const AllDeposit = ({ reloadKey }) => {
 
   // FOR ACCEPTING
 
-  const acceptingData = async (item) => {
+  const acceptingData = async (
+    item,
+    paymentUpdateNote,
+    imageSource,
+    amount
+  ) => {
     console.log("Accepting Data");
 
     setSelectedItem(item._id);
+    if (isNaN(amount)) {
+      showErrorToast("Enter valid amount");
+    }
+    else if (paymentUpdateNote && imageSource) {
+      const formData = new FormData();
+      formData.append("transactionId", item._id);
+      formData.append("paymentStatus", "Completed");
+      formData.append("paymentUpdateNote", paymentUpdateNote);
+      formData.append("amount", amount);
+      formData.append("paymentupdatereceipt", imageSource);
 
-    const body = {
-      transactionId: item._id,
-      paymentStatus: "Completed",
-    };
+      console.log("FORM DATA :: " + JSON.stringify(formData));
 
-    const res = await updateDepositPaymentStatus({
-      accesstoken: accesstoken,
-      body: body,
-    }).unwrap();
+      const res = await updateDepositPaymentStatus({
+        accesstoken: accesstoken,
+        body: formData,
+      }).unwrap();
 
-    refetch();
+      refetch();
 
-    showSuccessToast(res.message);
+      showSuccessToast(res.message);
+    } else if (paymentUpdateNote) {
+      const formData = new FormData();
+      formData.append("transactionId", item._id);
+      formData.append("paymentStatus", "Completed");
+      formData.append("amount", amount);
+      formData.append("paymentUpdateNote", paymentUpdateNote);
+
+      console.log("FORM DATA :: " + JSON.stringify(formData));
+
+      const res = await updateDepositPaymentStatus({
+        accesstoken: accesstoken,
+        body: formData,
+      }).unwrap();
+
+      refetch();
+
+      showSuccessToast(res.message);
+    } else if (imageSource) {
+      const formData = new FormData();
+      formData.append("transactionId", item._id);
+      formData.append("paymentStatus", "Completed");
+      formData.append("amount", amount);
+      formData.append("paymentupdatereceipt", imageSource);
+
+      console.log("FORM DATA :: " + JSON.stringify(formData));
+
+      const res = await updateDepositPaymentStatus({
+        accesstoken: accesstoken,
+        body: formData,
+      }).unwrap();
+
+      refetch();
+
+      showSuccessToast(res.message);
+    } else {
+      // const body = {
+      //   transactionId: item._id,
+      //   paymentStatus: "Completed",
+      // };
+
+      const formData = new FormData();
+      formData.append("transactionId", item._id);
+      formData.append("amount", amount);
+      formData.append("paymentStatus", "Completed");
+
+      console.log("FORM DATA :: " + JSON.stringify(formData));
+
+      const res = await updateDepositPaymentStatus({
+        accesstoken: accesstoken,
+        body: formData,
+      }).unwrap();
+
+      refetch();
+
+      showSuccessToast(res.message);
+    }
   };
 
   // FOR CANCELLING
 
-  const cancellingData = async (item) => {
+  const cancellingData = async (
+    item,
+    paymentUpdateNote,
+    imageSource,
+    amount
+  ) => {
     console.log("Cancelling Data");
     setSelectedItem(item._id);
+    if (isNaN(amount)) {
+      showErrorToast("Enter valid amount");
+    }
+    else if (paymentUpdateNote && imageSource) {
+      const formData = new FormData();
+      formData.append("transactionId", item._id);
+      formData.append("paymentStatus", "Cancelled");
+      formData.append("paymentUpdateNote", paymentUpdateNote);
+      formData.append("amount", amount);
+      formData.append("paymentupdatereceipt", imageSource);
 
-    const body = {
-      transactionId: item._id,
-      paymentStatus: "Cancelled",
-    };
+      console.log("FORM DATA :: " + JSON.stringify(formData));
 
-    const res = await updateDepositPaymentStatus({
-      accesstoken: accesstoken,
-      body: body,
-    }).unwrap();
+      const res = await updateDepositPaymentStatus({
+        accesstoken: accesstoken,
+        body: formData,
+      }).unwrap();
 
-    refetch();
+      refetch();
 
-    showSuccessToast(res.message);
+      showSuccessToast(res.message);
+    } else if (paymentUpdateNote) {
+      const formData = new FormData();
+      formData.append("transactionId", item._id);
+      formData.append("paymentStatus", "Cancelled");
+      formData.append("amount", amount);
+      formData.append("paymentUpdateNote", paymentUpdateNote);
+
+      console.log("FORM DATA :: " + JSON.stringify(formData));
+
+      const res = await updateDepositPaymentStatus({
+        accesstoken: accesstoken,
+        body: formData,
+      }).unwrap();
+
+      refetch();
+
+      showSuccessToast(res.message);
+    } else if (imageSource) {
+      const formData = new FormData();
+      formData.append("transactionId", item._id);
+      formData.append("paymentStatus", "Cancelled");
+      formData.append("amount", amount);
+      formData.append("paymentupdatereceipt", imageSource);
+
+      console.log("FORM DATA :: " + JSON.stringify(formData));
+
+      const res = await updateDepositPaymentStatus({
+        accesstoken: accesstoken,
+        body: formData,
+      }).unwrap();
+
+      refetch();
+
+      showSuccessToast(res.message);
+    } else {
+      // const body = {
+      //   transactionId: item._id,
+      //   paymentStatus: "Completed",
+      // };
+
+      const formData = new FormData();
+      formData.append("transactionId", item._id);
+      formData.append("amount", amount);
+      formData.append("paymentStatus", "Cancelled");
+
+      console.log("FORM DATA :: " + JSON.stringify(formData));
+
+      const res = await updateDepositPaymentStatus({
+        accesstoken: accesstoken,
+        body: formData,
+      }).unwrap();
+
+      refetch();
+
+      showSuccessToast(res.message);
+    }
+
+    // const body = {
+    //   transactionId: item._id,
+    //   paymentStatus: "Cancelled",
+    // };
+
+    // const res = await updateDepositPaymentStatus({
+    //   accesstoken: accesstoken,
+    //   body: body,
+    // }).unwrap();
+
+    // refetch();
+
+    // showSuccessToast(res.message);
   };
 
   // FOR SHOWING RECEIPT
@@ -136,11 +295,22 @@ export const AllDeposit = ({ reloadKey }) => {
     setAlertVisibleAccepted(false);
   };
 
-  const handleYesAccepted = () => {
-    // Handle the Yes action here
+  // const handleYesAccepted = () => {
+  //   // Handle the Yes action here
+  //   setAlertVisibleAccepted(false);
+  //   acceptingData(selectedItem);
+  //   console.log("Yes pressed");
+  // };
+  const handleYesAccepted = ({ paymentUpdateNote, imageSource, amount }) => {
+    // Handle the returned values here
+    console.log("Payment Update Note:", paymentUpdateNote);
+    console.log("Selected Image:", imageSource);
+
     setAlertVisibleAccepted(false);
-    acceptingData(selectedItem);
+    acceptingData(selectedItem, paymentUpdateNote, imageSource, amount);
     console.log("Yes pressed");
+    // Do something with the note and image file
+    // e.g., send it to the server or update the state
   };
 
   const showAlertRejected = (item) => {
@@ -153,10 +323,10 @@ export const AllDeposit = ({ reloadKey }) => {
     setAlertVisibleRejected(false);
   };
 
-  const handleYesRejected = () => {
+  const handleYesRejected = ({ paymentUpdateNote, imageSource, amount }) => {
     // Handle the Yes action here
     setAlertVisibleRejected(false);
-    cancellingData(selectedItem);
+    cancellingData(selectedItem, paymentUpdateNote, imageSource, amount);
     console.log("Yes pressed");
   };
 
@@ -241,131 +411,142 @@ export const AllDeposit = ({ reloadKey }) => {
               </div>
 
               <div className="allLocationMainContainer">
-                {filteredData.map((item, index) => (
-                  <div key={index} className="dContentContainer">
-                    <div
-                      className="dHeaderContainerLabelContainer"
-                      onClick={() => settingDeposit(item)}
-                    >
-                      <label className="dHeaderContainerLabel">
-                        {item.userId}
-                      </label>
-                    </div>
-                    <div className="dHeaderContainerLabelContainer">
-                      <label className="dHeaderContainerLabel">
-                        {item.transactionId}
-                      </label>
-                    </div>
-                    <div className="dHeaderContainerLabelContainer">
-                      <label className="dHeaderContainerLabel">
-                        {" "}
-                        {item.paymentType}
-                      </label>
-                    </div>
-                    <div
-                      className="dHeaderContainerLabelContainer"
-                      onClick={() => handleOpenAlert(item)}
-                    >
-                      <label
-                        className="dHeaderContainerLabel"
-                        style={{ cursor: "pointer" }}
-                      >
-                        Show Receipt
-                      </label>
-                    </div>
+                <div className="allLocationMainContainer">
+                  {filteredData.map((item, index) => {
+                    const calculatedAmount = item.convertedAmount
+                      ? item.convertedAmount
+                      : multiplyStringNumbers(
+                          item.amount,
+                          item.currency !== undefined
+                            ? item.currency.countrycurrencyvaluecomparedtoinr
+                            : 1
+                        );
 
-                    <ImageAlertModal
-                      isOpen={isAlertOpen}
-                      onClose={handleCloseAlert}
-                      imageUrl={selectedReceiptUrl} // Use the state holding the selected receipt URL
-                    />
+                    return (
+                      <div key={index} className="dContentContainer">
+                        <div
+                          className="dHeaderContainerLabelContainer"
+                          onClick={() => settingDeposit(item)}
+                        >
+                          <label className="dHeaderContainerLabel">
+                            {item.userId}
+                          </label>
+                        </div>
+                        <div className="dHeaderContainerLabelContainer">
+                          <label className="dHeaderContainerLabel">
+                            {item.transactionId}
+                          </label>
+                        </div>
+                        <div className="dHeaderContainerLabelContainer">
+                          <label className="dHeaderContainerLabel">
+                            {" "}
+                            {item.paymentType}
+                          </label>
+                        </div>
+                        <div
+                          className="dHeaderContainerLabelContainer"
+                          onClick={() => handleOpenAlert(item)}
+                        >
+                          <label
+                            className="dHeaderContainerLabel"
+                            style={{ cursor: "pointer" }}
+                          >
+                            Show Receipt
+                          </label>
+                        </div>
 
-                    <div className="dHeaderContainerLabelContainer">
-                      <label className="dHeaderContainerLabel">
-                        {item.convertedAmount
-                          ? item.convertedAmount
-                          : multiplyStringNumbers(
-                              item.amount,
-                              item.currency !== undefined
-                                ? item.currency
-                                    .countrycurrencyvaluecomparedtoinr
-                                : 1
-                            )}
-                      </label>
-                    </div>
-                    <div
-                      className="dHeaderContainerLabelContainer"
-                      style={{ flex: 2, justifyContent: "center", gap: "1rem" }}
-                    >
-                      {updateStatusIsLoading && item._id === selectedItemId ? (
-                        <LoadingComponent />
-                      ) : (
-                        <>
-                          {/** FOR ACCEPTING */}
+                        <ImageAlertModal
+                          isOpen={isAlertOpen}
+                          onClose={handleCloseAlert}
+                          imageUrl={selectedReceiptUrl} // Use the state holding the selected receipt URL
+                        />
 
-                          <AlertModal
-                            isOpen={alertVisibleAccepted}
-                            onClose={closeAlertAccepted}
-                            onConfirm={handleYesAccepted} // Pass handleYesAccepted to run when "Yes" is clicked
-                          />
-                          {/** FOR CANCELLING */}
-                          <AlertModal
-                            isOpen={alertVisibleRejected}
-                            onClose={closeAlertRejected}
-                            onConfirm={handleYesRejected}
-                          />
-
-                          {item.paymentStatus === "Pending" && (
-                            <div
-                              className="allContentContainerIconContainer"
-                              onClick={() => showAlertAccepted(item)}
-                            >
-                              <CiCircleCheck
-                                color={COLORS.background}
-                                size={"2.5rem"}
-                              />
-                            </div>
-                          )}
-
-                          {item.paymentStatus === "Pending" ? (
-                            <label
-                              className="dHeaderContainerLabel"
-                              style={{ color: COLORS.orange }}
-                            >
-                              {item.paymentStatus}
-                            </label>
-                          ) : item.paymentStatus === "Completed" ? (
-                            <label
-                              className="dHeaderContainerLabel"
-                              style={{ color: COLORS.green }}
-                            >
-                              {item.paymentStatus}
-                            </label>
+                        <div className="dHeaderContainerLabelContainer">
+                          <label className="dHeaderContainerLabel">
+                            {calculatedAmount}
+                          </label>
+                        </div>
+                        <div
+                          className="dHeaderContainerLabelContainer"
+                          style={{
+                            flex: 2,
+                            justifyContent: "center",
+                            gap: "1rem",
+                          }}
+                        >
+                          {updateStatusIsLoading &&
+                          item._id === selectedItemId ? (
+                            <LoadingComponent />
                           ) : (
-                            <label
-                              className="dHeaderContainerLabel"
-                              style={{ color: COLORS.red }}
-                            >
-                              {item.paymentStatus}
-                            </label>
-                          )}
-
-                          {item.paymentStatus === "Pending" && (
-                            <div
-                              className="allContentContainerIconContainer"
-                              onClick={() => showAlertRejected(item)}
-                            >
-                              <MdOutlineCancel
-                                color={COLORS.background}
-                                size={"2.5rem"}
+                            <>
+                              {/** FOR ACCEPTING */}
+                              <AlertModal
+                                isOpen={alertVisibleAccepted}
+                                onClose={closeAlertAccepted}
+                                onConfirm={handleYesAccepted}
+                                defaultAmount={calculatedAmount} // Pass the calculated amount
                               />
-                            </div>
+                              {/** FOR REJECTING */}
+                              <AlertModal
+                                isOpen={alertVisibleRejected}
+                                onClose={closeAlertRejected}
+                                onConfirm={handleYesRejected}
+                                defaultAmount={calculatedAmount} // Pass the calculated amount
+                              />
+
+                              {item.paymentStatus === "Pending" && (
+                                <div
+                                  className="allContentContainerIconContainer"
+                                  onClick={() => showAlertAccepted(item)}
+                                >
+                                  <CiCircleCheck
+                                    color={COLORS.background}
+                                    size={"2.5rem"}
+                                  />
+                                </div>
+                              )}
+
+                              {item.paymentStatus === "Pending" ? (
+                                <label
+                                  className="dHeaderContainerLabel"
+                                  style={{ color: COLORS.orange }}
+                                >
+                                  {item.paymentStatus}
+                                </label>
+                              ) : item.paymentStatus === "Completed" ? (
+                                <label
+                                  className="dHeaderContainerLabel"
+                                  style={{ color: COLORS.green }}
+                                >
+                                  {item.paymentStatus}
+                                </label>
+                              ) : (
+                                <label
+                                  className="dHeaderContainerLabel"
+                                  style={{ color: COLORS.red }}
+                                >
+                                  {item.paymentStatus}
+                                </label>
+                              )}
+
+                              {item.paymentStatus === "Pending" && (
+                                <div
+                                  className="allContentContainerIconContainer"
+                                  onClick={() => showAlertRejected(item)}
+                                >
+                                  <MdOutlineCancel
+                                    color={COLORS.background}
+                                    size={"2.5rem"}
+                                  />
+                                </div>
+                              )}
+                            </>
                           )}
-                        </>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </>
           )}

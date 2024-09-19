@@ -10,12 +10,16 @@ import { PiSubtitles } from "react-icons/pi";
 import { IoDocumentText } from "react-icons/io5";
 import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
 import { useSelector } from "react-redux";
-import { useCreateCryptoAccountMutation, useDeleteCryptoAccountMutation } from "../../helper/Networkcall";
+import {
+  useCreateCryptoAccountMutation,
+  useDeleteCryptoAccountMutation,
+} from "../../helper/Networkcall";
 import axios from "axios";
 import UrlHelper, { servername } from "../../helper/UrlHelper";
 import { LoadingComponent } from "../helper/LoadingComponent";
 import { NodataFound } from "../helper/NodataFound";
 import CircularProgressBar from "../helper/CircularProgressBar";
+import { ToastContainer } from "react-toastify";
 
 export const CryptoDeposit = ({ selectingPaymentType }) => {
   const goToPreviousPage = () => {
@@ -49,7 +53,7 @@ export const CryptoDeposit = ({ selectingPaymentType }) => {
 
   const [walletaddress, setwalletaddress] = useState("");
   const [networktype, setnetworktype] = useState("");
-
+  const [paymentnote, setpaymentnote] = useState("");
   const [imageSource, setImageSource] = useState(null);
 
   const selectDoc = (e) => {
@@ -116,30 +120,35 @@ export const CryptoDeposit = ({ selectingPaymentType }) => {
 
   // CREATING CRYPTO
 
-  const [createCryptoAccount, {isLoading, error}] =
-  useCreateCryptoAccountMutation();
+  const [createCryptoAccount, { isLoading, error }] =
+    useCreateCryptoAccountMutation();
 
   const submitCreateRequest = async () => {
     if (!walletaddress) {
-      showErrorToast('Enter wallet address')
+      showErrorToast("Enter wallet address");
       return;
     }
     if (!networktype) {
-      showErrorToast('Enter network type')
+      showErrorToast("Enter network type");
+      return;
+    }
+    if (!paymentnote) {
+      showErrorToast("Add payment note");
       return;
     }
     if (!imageSource) {
-      showErrorToast('Add QR code')
+      showErrorToast("Add QR code");
       return;
     } else {
-      console.log('Create UPI Running');
+      console.log("Create UPI Running");
       try {
         const formData = new FormData();
-        formData.append('walletaddress', walletaddress);
-        formData.append('networktype', networktype);
-        formData.append('qrcode', imageSource);
+        formData.append("walletaddress", walletaddress);
+        formData.append("networktype", networktype);
+        formData.append("qrcode", imageSource);
+        formData.append("paymentnote", paymentnote);
 
-        console.log('FORM DATA :: ' + JSON.stringify(formData));
+        console.log("FORM DATA :: " + JSON.stringify(formData));
 
         const res = await createCryptoAccount({
           accesstoken: accesstoken,
@@ -149,12 +158,13 @@ export const CryptoDeposit = ({ selectingPaymentType }) => {
         showSuccessToast(res.message);
         allTheDepositData();
         backHandlerShowCreateUpi();
-        setwalletaddress("")
-        setnetworktype("")
-        setImageSource(null)
+        setwalletaddress("");
+        setnetworktype("");
+        setpaymentnote("");
+        setImageSource(null);
       } catch (error) {
-        showErrorToast("Something went wrong")
-        console.log('Error during deposit:', error);
+        showErrorToast("Something went wrong");
+        console.log("Error during deposit:", error);
         // if (error.response) {
         //   Toast.show({type: 'error', text1: error.response.data});
         // } else if (error.request) {
@@ -192,7 +202,9 @@ export const CryptoDeposit = ({ selectingPaymentType }) => {
           {loadingAllData ? (
             <LoadingComponent />
           ) : allDepositdata.length === 0 ? (
-            <NodataFound title={"This payment method is temporarily unavailable."} />
+            <NodataFound
+              title={"This payment method is temporarily unavailable."}
+            />
           ) : (
             <>
               <div className="upipdMainContainer">
@@ -259,7 +271,7 @@ export const CryptoDeposit = ({ selectingPaymentType }) => {
                         <label className="pdSB">Network type</label>
                       </div>
                       <div className="uCCTopSC">
-                        <label className="pdR">  {item.networktype}</label>
+                        <label className="pdR"> {item.networktype}</label>
                       </div>
                       <div
                         onClick={() => handleCopyClick(item.networktype)}
@@ -280,28 +292,27 @@ export const CryptoDeposit = ({ selectingPaymentType }) => {
                     </div>
 
                     <div className="uCCBottomC">
-                      <div className="uCCTopFC">
-                        <label className="pdSB">Note</label>
-                      </div>
-                      <div className="uCCBottomSC">
-                        <label className="pdRBottom">
-                          this is to infrom that i am going to not send your
-                          amount because their is some missing.
-                        </label>
-                      </div>
-                    </div>
+                          <div className="uCCTopFC">
+                            <label className="pdSB">Note</label>
+                          </div>
+                          <div className="uCCBottomSC">
+                            <label className="pdRBottom">
+                              {item.paymentnote}
+                            </label>
+                          </div>
+                        </div>
+
+
 
                   </div>
                 ))}
               </div>
-
-              <div className="alBottomContainer" onClick={settingShowCreateUpi}>
-                <label className="alBottomContainerlabel">
-                  Create new crypto
-                </label>
-              </div>
             </>
           )}
+
+          <div className="alBottomContainer" onClick={settingShowCreateUpi}>
+            <label className="alBottomContainerlabel">Create new crypto</label>
+          </div>
         </>
       )}
 
@@ -375,6 +386,21 @@ export const CryptoDeposit = ({ selectingPaymentType }) => {
                 />
               </div>
             </div>
+
+            {/** PAYMENT NOTE */}
+            <label className="alCLLabel">Note</label>
+            <div className="alSearchContainer">
+              <div className="searchIconContainer">
+                <PiSubtitles color={COLORS.background} size={"2.5rem"} />
+              </div>
+
+              <input
+                className="al-search-input"
+                placeholder="Enter note"
+                value={paymentnote}
+                onChange={(e) => setpaymentnote(e.target.value)}
+              />
+            </div>
           </div>
 
           {isLoading ? (
@@ -386,6 +412,8 @@ export const CryptoDeposit = ({ selectingPaymentType }) => {
           )}
         </>
       )}
+
+<ToastContainer/>
     </div>
   );
 };

@@ -55,6 +55,8 @@ export const BankDeposit = ({ selectingPaymentType }) => {
   const [accountholdername, setaccountholdername] = useState("");
   const [ifsccode, setifsccode] = useState("");
   const [accountnumber, setaccountnumber] = useState("");
+  const [swiftcode, setswiftcode] = useState("");
+  const [paymentnote, setpaymentnote] = useState("");
 
   const [imageSource, setImageSource] = useState(null);
 
@@ -149,11 +151,19 @@ export const BankDeposit = ({ selectingPaymentType }) => {
       return;
     }
     if (!ifsccode) {
-      showErrorToast("Add ifsc code");
+      showErrorToast("Add ifsc code / routing no.");
       return;
     }
     if (!accountnumber) {
       showErrorToast("Add account number");
+      return;
+    }
+    if (!swiftcode) {
+      showErrorToast("Add swift code");
+      return;
+    }
+    if (!paymentnote) {
+      showErrorToast("Add payment note");
       return;
     } else {
       try {
@@ -162,6 +172,8 @@ export const BankDeposit = ({ selectingPaymentType }) => {
           accountholdername,
           ifsccode,
           accountnumber,
+          swiftcode,
+          paymentnote,
         };
 
         console.log("JSON BODY :: ", JSON.stringify(body));
@@ -178,6 +190,7 @@ export const BankDeposit = ({ selectingPaymentType }) => {
         setifsccode("");
         setaccountholdername("");
         setaccountnumber("");
+        setpaymentnote("")
       } catch (error) {
         showErrorToast("Something went wrong");
         console.log("Error during deposit:", error);
@@ -320,10 +333,10 @@ export const BankDeposit = ({ selectingPaymentType }) => {
                         <label className="pdSB">Swift code</label>
                       </div>
                       <div className="uCCTopSC">
-                        <label className="pdR">{item.ifsccode}</label>
+                        <label className="pdR">{item.swiftcode}</label>
                       </div>
                       <div
-                        onClick={() => handleCopyClick(item.ifsccode)}
+                        onClick={() => handleCopyClick(item.swiftcode)}
                         className="copyCon"
                       >
                         <FaCopy color={COLORS.background} size={"2rem"} />
@@ -352,8 +365,7 @@ export const BankDeposit = ({ selectingPaymentType }) => {
                       </div>
                       <div className="uCCBottomSC">
                         <label className="pdRBottom">
-                          this is to infrom that i am going to not send your
-                          amount because their is some missing.
+                         {item.paymentnote}
                         </label>
                       </div>
                     </div>
@@ -361,14 +373,12 @@ export const BankDeposit = ({ selectingPaymentType }) => {
                   </div>
                 ))}
               </div>
-
-              <div className="alBottomContainer" onClick={settingShowCreateUpi}>
-                <label className="alBottomContainerlabel">
-                  Create new Bank
-                </label>
-              </div>
             </>
           )}
+
+          <div className="alBottomContainer" onClick={settingShowCreateUpi}>
+            <label className="alBottomContainerlabel">Create new Bank</label>
+          </div>
         </>
       )}
 
@@ -440,7 +450,7 @@ export const BankDeposit = ({ selectingPaymentType }) => {
             </div>
 
             {/** UPI ID */}
-            <label className="alCLLabel">IFSC code</label>
+            <label className="alCLLabel">IFSC code / Routing no.</label>
             <div className="alSearchContainer">
               <div className="searchIconContainer">
                 <PiSubtitles color={COLORS.background} size={"2.5rem"} />
@@ -448,11 +458,42 @@ export const BankDeposit = ({ selectingPaymentType }) => {
 
               <input
                 className="al-search-input"
-                placeholder="Enter IFSC code"
+                placeholder="Enter IFSC code / Routing no."
                 value={ifsccode}
                 onChange={(e) => setifsccode(e.target.value)}
               />
             </div>
+
+            {/** SWIFT CODE */}
+            <label className="alCLLabel">Swift code</label>
+            <div className="alSearchContainer">
+              <div className="searchIconContainer">
+                <PiSubtitles color={COLORS.background} size={"2.5rem"} />
+              </div>
+
+              <input
+                className="al-search-input"
+                placeholder="Enter swift code"
+                value={swiftcode}
+                onChange={(e) => setswiftcode(e.target.value)}
+              />
+            </div>
+
+            {/** PAYMENT NOTE */}
+            <label className="alCLLabel">Note</label>
+            <div className="alSearchContainer">
+              <div className="searchIconContainer">
+                <PiSubtitles color={COLORS.background} size={"2.5rem"} />
+              </div>
+
+              <input
+                className="al-search-input"
+                placeholder="Enter note"
+                value={paymentnote}
+                onChange={(e) => setpaymentnote(e.target.value)}
+              />
+            </div>
+
           </div>
 
           {isLoading ? (

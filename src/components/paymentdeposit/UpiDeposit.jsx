@@ -19,6 +19,7 @@ import { showErrorToast, showSuccessToast } from "../helper/showErrorToast";
 import { LoadingComponent } from "../helper/LoadingComponent";
 import { NodataFound } from "../helper/NodataFound";
 import CircularProgressBar from "../helper/CircularProgressBar";
+import { ToastContainer } from "react-toastify";
 
 export const UpiDeposit = ({ selectingPaymentType }) => {
   const goToPreviousPage = () => {
@@ -52,6 +53,7 @@ export const UpiDeposit = ({ selectingPaymentType }) => {
 
   const [upiholdername, setupiholdername] = useState("");
   const [upiid, setupiid] = useState("");
+  const [paymentnote, setpaymentnote] = useState("");
 
   const [imageSource, setImageSource] = useState(null);
 
@@ -136,6 +138,10 @@ export const UpiDeposit = ({ selectingPaymentType }) => {
       showErrorToast("Enter UPI ID");
       return;
     }
+    if (!paymentnote) {
+      showErrorToast("Add payment note");
+      return;
+    }
     if (!imageSource) {
       showErrorToast("Add QR code");
       return;
@@ -146,6 +152,7 @@ export const UpiDeposit = ({ selectingPaymentType }) => {
         formData.append("upiholdername", upiholdername);
         formData.append("upiid", upiid);
         formData.append("qrcode", imageSource);
+        formData.append("paymentnote", paymentnote);
 
         const res = await createUPIAccount({
           accesstoken: accesstoken,
@@ -155,9 +162,10 @@ export const UpiDeposit = ({ selectingPaymentType }) => {
         showSuccessToast(res.message);
         allTheDepositData();
         backHandlerShowCreateUpi();
-        setupiholdername("")
-        setupiid("")
-        setImageSource(null)
+        setupiholdername("");
+        setupiid("");
+        setpaymentnote("")
+        setImageSource(null);
       } catch (error) {
         showErrorToast("Something went wrong");
         console.log("Error during create upi:", error);
@@ -200,7 +208,9 @@ export const UpiDeposit = ({ selectingPaymentType }) => {
           ) : (
             <>
               {allDepositdata.length === 0 ? (
-                <NodataFound title={"This payment method is temporarily unavailable."} />
+                <NodataFound
+                  title={"This payment method is temporarily unavailable."}
+                />
               ) : (
                 <>
                   <div className="upipdMainContainer">
@@ -291,33 +301,26 @@ export const UpiDeposit = ({ selectingPaymentType }) => {
                         </div>
 
                         <div className="uCCBottomC">
-                      <div className="uCCTopFC">
-                        <label className="pdSB">Note</label>
-                      </div>
-                      <div className="uCCBottomSC">
-                        <label className="pdRBottom">
-                          this is to infrom that i am going to not send your
-                          amount because their is some missing.
-                        </label>
-                      </div>
-                    </div>
-
+                          <div className="uCCTopFC">
+                            <label className="pdSB">Note</label>
+                          </div>
+                          <div className="uCCBottomSC">
+                            <label className="pdRBottom">
+                              {item.paymentnote}
+                            </label>
+                          </div>
+                        </div>
                       </div>
                     ))}
-                  </div>
-
-                  <div
-                    className="alBottomContainer"
-                    onClick={settingShowCreateUpi}
-                  >
-                    <label className="alBottomContainerlabel">
-                      Create new UPI
-                    </label>
                   </div>
                 </>
               )}
             </>
           )}
+
+          <div className="alBottomContainer" onClick={settingShowCreateUpi}>
+            <label className="alBottomContainerlabel">Create new UPI</label>
+          </div>
         </>
       )}
 
@@ -391,6 +394,21 @@ export const UpiDeposit = ({ selectingPaymentType }) => {
                 />
               </div>
             </div>
+
+            {/** PAYMENT NOTE */}
+            <label className="alCLLabel">Note</label>
+            <div className="alSearchContainer">
+              <div className="searchIconContainer">
+                <PiSubtitles color={COLORS.background} size={"2.5rem"} />
+              </div>
+
+              <input
+                className="al-search-input"
+                placeholder="Enter note"
+                value={paymentnote}
+                onChange={(e) => setpaymentnote(e.target.value)}
+              />
+            </div>
           </div>
 
           {isLoading ? (
@@ -402,6 +420,8 @@ export const UpiDeposit = ({ selectingPaymentType }) => {
           )}
         </>
       )}
+
+      <ToastContainer/>
     </div>
   );
 };
