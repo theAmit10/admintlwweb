@@ -46,7 +46,7 @@
   .PLCotentContainerRight {
     flex: 1; /* Takes up the remaining space */
 
-    width: 70vw;
+    width: 60vw;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;

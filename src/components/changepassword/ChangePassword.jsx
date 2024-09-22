@@ -131,7 +131,7 @@ function ChangePassword() {
         </div>
       )}
 
-      <ToastContainer />
+    
     </div>
   );
 }

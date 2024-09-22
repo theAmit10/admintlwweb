@@ -464,6 +464,8 @@ export const AllWithdraw = () => {
                           ? item.currency.countrycurrencyvaluecomparedtoinr
                           : 1
                       );
+
+                      const usercountry = item.currency;
                   return (
                     <div
                       className="wContentContainer"
@@ -518,21 +520,26 @@ export const AllWithdraw = () => {
                             <LoadingComponent />
                           ) : (
                             <>
-                              {/** FOR ACCEPTING */}
-
-                              <AlertModal
-                                isOpen={alertVisibleAccepted}
-                                onClose={closeAlertAccepted}
-                                onConfirm={handleYesAccepted}
-                                defaultAmount={calculatedAmount} // Pass the calculated amount
-                              />
-                              {/** FOR CANCELLING */}
-                              <AlertModal
-                                isOpen={alertVisibleRejected}
-                                onClose={closeAlertRejected}
-                                onConfirm={handleYesRejected}
-                                defaultAmount={calculatedAmount}
-                              />
+                              {selectedItemId === item._id && (
+                                <>
+                                  {/** FOR ACCEPTING */}
+                                  <AlertModal
+                                    isOpen={alertVisibleAccepted}
+                                    onClose={closeAlertAccepted}
+                                    onConfirm={handleYesAccepted}
+                                    defaultAmount={calculatedAmount} // Pass the calculated amount
+                                    usercountry={usercountry}
+                                  />
+                                  {/** FOR REJECTING */}
+                                  <AlertModal
+                                    isOpen={alertVisibleRejected}
+                                    onClose={closeAlertRejected}
+                                    onConfirm={handleYesRejected}
+                                    defaultAmount={calculatedAmount} // Pass the calculated amount
+                                    usercountry={usercountry}
+                                  />
+                                </>
+                              )}
 
                               {item.paymentStatus === "Pending" && (
                                 <div
@@ -927,7 +934,7 @@ export const AllWithdraw = () => {
         <AllUser userdata={userdata} backhandlerDeposit={backhandlerDeposit} />
       )}
 
-      <ToastContainer />
+  
     </>
   );
 };

@@ -54,6 +54,7 @@
     padding-left: 1rem;
     padding-right: 1rem;
     align-items: center;
+    gap: 1rem
 }
 .hdAllContainerContentBottom{
     flex: 1;
@@ -62,6 +63,7 @@
     padding-left: 1rem;
     padding-right: 1rem;
     align-items: center;
+    gap: 1rem
 }
 
 .hdAllContainerContentTopBoldLabel{

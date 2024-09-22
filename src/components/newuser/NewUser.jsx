@@ -835,7 +835,7 @@ export const NewUser = () => {
         ))}
       {/** FOR NOTIFICATION */}
 
-      <ToastContainer />
+
     </div>
   );
 };

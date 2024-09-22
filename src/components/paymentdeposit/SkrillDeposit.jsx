@@ -334,7 +334,7 @@ export const SkrillDeposit = ({ selectingPaymentType }) => {
         </>
       )}
 
-      <ToastContainer/>
+
     </div>
   );
 };

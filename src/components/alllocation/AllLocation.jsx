@@ -29,7 +29,7 @@ import { LoadingComponent } from "../helper/LoadingComponent";
 import { NodataFound } from "../helper/NodataFound";
 import CircularProgressBar from "../helper/CircularProgressBar";
 import { ToastContainer } from "react-toastify";
-import moment from 'moment-timezone';
+import moment from "moment-timezone";
 import { getDateAccordingToLocationAndTime } from "../../redux/actions/dateAction";
 import { getResultAccordingToLocationTimeDate } from "../../redux/actions/resultAction";
 
@@ -153,10 +153,6 @@ function AllLocation() {
     setFilteredDataL(filtered);
   };
 
-
-
-
-
   const [isToggled, setIsToggled] = useState(false);
 
   const handleToggle = (checked) => {
@@ -232,11 +228,16 @@ function AllLocation() {
     setShowUpdateLocation(true);
   };
 
-  const backhandlerCreateTime = () => {
+  const backhandlerCreateTime = async () => {
     setShowAllLocation(false);
     setShowCreateLocation(false);
     setShowAllTime(true);
     setShowCreateTime(false);
+
+    await allLocationRefetch();
+    if (!allLocationIsLoading && allLocationData && selectedLocation) {
+      setFilteredDataT(selectedLocation.times); // Update filteredData whenever locations change
+    }
   };
 
   const backhandlerAllTime = () => {
@@ -454,6 +455,7 @@ function AllLocation() {
   const [date, setDate] = useState(null);
 
   const [nextResultData, setNextResultData] = useState("");
+  const [updateKey, setUpdateKey] = useState(0);
 
   // FOR LOCATION
 
@@ -470,12 +472,15 @@ function AllLocation() {
   } = useGetAllLocationWithTimeQuery(accesstoken);
 
   console.log(allLocationData);
+  useEffect(() => {
+    allLocationRefetch();
+  }, [updateKey]);
 
   useEffect(() => {
-    if (allLocationData) {
+    if (!allLocationIsLoading && allLocationData) {
       setFilteredDataL(allLocationData.locationData); // Update filteredData whenever locations change
     }
-  }, [allLocationData]);
+  }, [allLocationData, allLocationIsLoading, allLocationRefetch, updateKey]);
 
   const [selectedItem, setSelectedItem] = useState("");
   const [showProgressBar, setProgressBar] = useState(false);
@@ -656,11 +661,44 @@ function AllLocation() {
     setFilteredDataT(filtered);
   };
 
-  useEffect(() => {
-    if (selectedLocation) {
-      setFilteredDataT(selectedLocation.times); // Update filteredData whenever locations change
+  const findLocationById = (id, locationData) => {
+    // Loop through all locations
+    for (let location of locationData) {
+      // Check if the location _id matches
+      if (location._id === id) {
+        return location;
+      }
+
+      // Check within times array if there's a matching _id
+      const foundTime = location.times.find((time) => time._id === id);
+
+      if (foundTime) {
+        return foundTime;
+      }
     }
-  }, [selectedLocation]);
+  };
+
+  useEffect(() => {
+    if (!allLocationIsLoading && allLocationData && selectedLocation) {
+      console.log("Setting New Time");
+      console.log(selectedLocation);
+      const foundLocation = findLocationById(
+        selectedLocation._id,
+        allLocationData.locationData
+      );
+      console.log("After setting check location");
+      console.log(foundLocation);
+      setSelectedLocation(foundLocation)
+      setFilteredDataT(foundLocation.times); // Update filteredData whenever locations change
+    }
+  }, [
+    selectedLocation,
+    updateKey,
+    allLocationRefetch,
+    allLocationData,
+    allLocationIsLoading,
+    filteredDataL,
+  ]);
 
   const [selectedItemTime, setSelectedItemTime] = useState("");
 
@@ -740,7 +778,8 @@ function AllLocation() {
       setEnterData("");
       showSuccessToast("Success");
       removeInputForLocation();
-      allLocationRefetch();
+      await allLocationRefetch();
+      setUpdateKey((prevKey) => prevKey + 1);
       backhandlerCreateTime();
       setTime(null);
       setLoadingCreateTime(false);
@@ -824,22 +863,21 @@ function AllLocation() {
   //   }
   // }, [dates]);
 
-
   const handleSearchD = (e) => {
     const text = e.target.value;
-  
+
     // Get current date
-    const currentDate = moment().startOf('day');
+    const currentDate = moment().startOf("day");
     // Get the next date
-    const nextDate = currentDate.clone().add(1, 'days');
-  
+    const nextDate = currentDate.clone().add(1, "days");
+
     if (dates) {
       const filtered = dates.filter((item) => {
-        const itemDate = moment(item.lotdate, 'DD-MM-YYYY'); // Parse lotdate with correct format
-  
+        const itemDate = moment(item.lotdate, "DD-MM-YYYY"); // Parse lotdate with correct format
+
         // Exclude if the item.lotdate matches the next day
         return (
-          !itemDate.isSame(nextDate, 'day') &&
+          !itemDate.isSame(nextDate, "day") &&
           item.lotdate.toLowerCase().includes(text.toLowerCase())
         );
       });
@@ -847,18 +885,17 @@ function AllLocation() {
     }
   };
 
-
   useEffect(() => {
     if (dates) {
-      const currentDate = moment().startOf('day');
-      const nextDate = currentDate.clone().add(1, 'days');
-  
+      const currentDate = moment().startOf("day");
+      const nextDate = currentDate.clone().add(1, "days");
+
       // Filter out items where the lotdate is the next day
       const filtered = dates.filter((item) => {
-        const itemDate = moment(item.lotdate, 'DD-MM-YYYY'); // Adjust format as needed
-        return !itemDate.isSame(nextDate, 'day');
+        const itemDate = moment(item.lotdate, "DD-MM-YYYY"); // Adjust format as needed
+        return !itemDate.isSame(nextDate, "day");
       });
-  
+
       setFilteredDataD(filtered); // Update filteredData whenever dates change
     }
   }, [dates]);
@@ -2288,7 +2325,7 @@ function AllLocation() {
         </div>
       )}
 
-      <ToastContainer />
+      <ToastContainer/>
     </>
   );
 }

@@ -421,7 +421,7 @@ export const UpiDeposit = ({ selectingPaymentType }) => {
         </>
       )}
 
-      <ToastContainer/>
+
     </div>
   );
 };

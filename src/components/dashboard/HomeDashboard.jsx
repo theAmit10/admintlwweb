@@ -463,6 +463,7 @@ export const HomeDashboard = ({ selectedComponent, handleComponentClick }) => {
                   ) : (
                     dates?.map((item, index) => (
                       <div
+                      key={(item) => item._id}
                         className="hdLocationContainerRightTimeContainerContentContainer-time"
                         onClick={() => seletingDate(item)}
                       >

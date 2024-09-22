@@ -312,7 +312,7 @@ export const AllWallet = ({reloadKey}) => {
           )}
         </div>
       )}
-         <ToastContainer/>
+      
     </div>
  
   );

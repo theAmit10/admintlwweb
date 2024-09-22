@@ -336,7 +336,7 @@ export const PayPalDeposit = ({ selectingPaymentType }) => {
         </>
       )}
 
-<ToastContainer/>
+
     </div>
   );
 };

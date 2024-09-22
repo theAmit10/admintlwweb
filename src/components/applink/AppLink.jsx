@@ -383,7 +383,7 @@ export const AppLink = ({reloadKey} ) => {
             </div>
           )}
 
-          <ToastContainer />
+  
         </>
       )}
     </div>

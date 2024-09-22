@@ -100,8 +100,7 @@ export const AllDeposit = ({ reloadKey }) => {
     setSelectedItem(item._id);
     if (isNaN(amount)) {
       showErrorToast("Enter valid amount");
-    }
-    else if (paymentUpdateNote && imageSource) {
+    } else if (paymentUpdateNote && imageSource) {
       const formData = new FormData();
       formData.append("transactionId", item._id);
       formData.append("paymentStatus", "Completed");
@@ -189,8 +188,7 @@ export const AllDeposit = ({ reloadKey }) => {
     setSelectedItem(item._id);
     if (isNaN(amount)) {
       showErrorToast("Enter valid amount");
-    }
-    else if (paymentUpdateNote && imageSource) {
+    } else if (paymentUpdateNote && imageSource) {
       const formData = new FormData();
       formData.append("transactionId", item._id);
       formData.append("paymentStatus", "Cancelled");
@@ -386,7 +384,7 @@ export const AllDeposit = ({ reloadKey }) => {
                 <div className="dHeaderContainerLabelContainer">
                   <label className="dHeaderContainerLabel">UserID</label>
                 </div>
-                <div className="dHeaderContainerLabelContainer">
+                <div className="dHeaderContainerLabelContainer"  style={{ flex: 1.5, }}>
                   <label className="dHeaderContainerLabel">
                     Transaction ID
                   </label>
@@ -422,6 +420,8 @@ export const AllDeposit = ({ reloadKey }) => {
                             : 1
                         );
 
+                    const usercountry = item.currency;
+
                     return (
                       <div key={index} className="dContentContainer">
                         <div
@@ -432,7 +432,7 @@ export const AllDeposit = ({ reloadKey }) => {
                             {item.userId}
                           </label>
                         </div>
-                        <div className="dHeaderContainerLabelContainer">
+                        <div className="dHeaderContainerLabelContainer"  style={{ flex: 1.5,  }}>
                           <label className="dHeaderContainerLabel">
                             {item.transactionId}
                           </label>
@@ -479,20 +479,26 @@ export const AllDeposit = ({ reloadKey }) => {
                             <LoadingComponent />
                           ) : (
                             <>
-                              {/** FOR ACCEPTING */}
-                              <AlertModal
-                                isOpen={alertVisibleAccepted}
-                                onClose={closeAlertAccepted}
-                                onConfirm={handleYesAccepted}
-                                defaultAmount={calculatedAmount} // Pass the calculated amount
-                              />
-                              {/** FOR REJECTING */}
-                              <AlertModal
-                                isOpen={alertVisibleRejected}
-                                onClose={closeAlertRejected}
-                                onConfirm={handleYesRejected}
-                                defaultAmount={calculatedAmount} // Pass the calculated amount
-                              />
+                              {selectedItemId === item._id && (
+                                <>
+                                  {/** FOR ACCEPTING */}
+                                  <AlertModal
+                                    isOpen={alertVisibleAccepted}
+                                    onClose={closeAlertAccepted}
+                                    onConfirm={handleYesAccepted}
+                                    defaultAmount={calculatedAmount} // Pass the calculated amount
+                                    usercountry={usercountry}
+                                  />
+                                  {/** FOR REJECTING */}
+                                  <AlertModal
+                                    isOpen={alertVisibleRejected}
+                                    onClose={closeAlertRejected}
+                                    onConfirm={handleYesRejected}
+                                    defaultAmount={calculatedAmount} // Pass the calculated amount
+                                    usercountry={usercountry}
+                                  />
+                                </>
+                              )}
 
                               {item.paymentStatus === "Pending" && (
                                 <div
@@ -550,7 +556,7 @@ export const AllDeposit = ({ reloadKey }) => {
               </div>
             </>
           )}
-          <ToastContainer />
+      
         </div>
       )}
 

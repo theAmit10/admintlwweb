@@ -48,7 +48,7 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
 
   useEffect(() => {
     if (userdata) {
-      console.log("userdata :: "+JSON.stringify(userdata))
+      console.log("userdata :: " + JSON.stringify(userdata));
       dispatch(loadSingleUser(accesstoken, userdata.userId));
       setShowSA(false);
       setShowEditSA(true);
@@ -232,6 +232,9 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
 
     if (!amount) {
       showErrorToast("Please Enter Amount");
+    }
+    if (isNaN(amount)) {
+      showErrorToast("Please Enter Valid Amount");
     } else {
       setProgressBar(true);
 
@@ -254,11 +257,17 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
 
         showSuccessToast("User Wallet Updated Successfully");
 
-        dispatch(loadSingleUser(accesstoken, selectItem._id));
+        // dispatch(loadSingleUser(accesstoken, selectItem._id));
+        dispatch(
+          loadSingleUser(
+            accesstoken,
+            userdata ? selectItem.userId : selectItem._id
+          )
+        );
         setProgressBar(false);
         // backHanndlerWalletOne();
         setAmount("");
-        dispatch(loadSingleUser(accesstoken, selectItem._id));
+        // dispatch(loadSingleUser(accesstoken, selectItem._id));
       } catch (error) {
         setProgressBar(false);
         showErrorToast("Something went wrong");
@@ -271,6 +280,9 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
 
     if (!amount) {
       showErrorToast("Please Enter Amount");
+    }
+    if (isNaN(amount)) {
+      showErrorToast("Please Enter Valid Amount");
     } else {
       setProgressBar(true);
 
@@ -292,10 +304,16 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
         console.log("datat :: " + data);
 
         showSuccessToast("User Wallet Updated Successfully");
-        dispatch(loadSingleUser(accesstoken, selectItem._id));
+        // dispatch(loadSingleUser(accesstoken, selectItem._id));
+        dispatch(
+          loadSingleUser(
+            accesstoken,
+            userdata ? selectItem.userId : selectItem._id
+          )
+        );
         setProgressBar(false);
         // backHanndlerWalletOne();
-     
+
         setAmount("");
       } catch (error) {
         setProgressBar(false);
@@ -339,20 +357,19 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
       console.log("Data :: " + data.message);
 
       showSuccessToast(data.message);
-      setAmount("");
-      // backHanndlerUserId();
-      dispatch(loadSingleUser(accesstoken, selectItem._id));
 
+      // backHanndlerUserId();
+      dispatch(loadSingleUser(accesstoken, amount));
+      setAmount("");
       setLoadingUpdateUserId(false);
     } catch (error) {
       setLoadingUpdateUserId(false);
       console.log(" Err :: " + error);
       console.log(" Err :: " + error.response.data.message);
-     
-      if(error.response.data.message)
-      {
+
+      if (error.response.data.message) {
         showErrorToast(error.response.data.message);
-      }else{
+      } else {
         showErrorToast("Something went Wrong");
       }
     }
@@ -378,7 +395,7 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
             title: titleValue,
             description: discriptionValue,
             devicetoken: singleuser?.devicetoken,
-            userId: singleuser._id
+            userId: singleuser._id,
           },
           {
             headers: {
@@ -396,7 +413,7 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
         setLoadingSendNotification(false);
       } catch (error) {
         setLoadingSendNotification(false);
-        console.log(error.response.data.message)
+        console.log(error.response.data.message);
         showErrorToast("Something went wrong");
         console.log(error);
       }
@@ -473,171 +490,188 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
 
       {showEditSA && (
         <div className="pnMainContainer">
-          {
-            userdata ? (<div className="alCreatLocationTopContainer">
-            <div className="searchIconContainer" onClick={backhandlerDeposit}>
-              <IoArrowBackCircleOutline
-                color={COLORS.white_s}
-                size={"2.5rem"}
-              />
-            </div>
-            <div className="alCreatLocationTopContaineCL">
-              <label className="alCreatLocationTopContainerlabel">
-                {selectItem.username}
-              </label>
-            </div>
-          </div>) : (<div className="alCreatLocationTopContainer">
-            <div className="searchIconContainer" onClick={backHanndler}>
-              <IoArrowBackCircleOutline
-                color={COLORS.white_s}
-                size={"2.5rem"}
-              />
-            </div>
-            <div className="alCreatLocationTopContaineCL">
-              <label className="alCreatLocationTopContainerlabel">
-                {selectItem.name}
-              </label>
-            </div>
-          </div>)
-          }
-          <div className="hdAllContainer" style={{ background: "transparent" }}>
-            {/** WALLET ONE  */}
-            <div
-              className="hdAllContainerContent"
-              onClick={settingForWalletOne}
-            >
-              <div className="hdAllContainerContentTop">
-                <label className="hdAllContainerContentTopBoldLabel">
-                {singleuser.walletOne?.walletName}
-                </label>
-                <div className="hdContenContainerIcon">
-                  <CiEdit color={COLORS.background} size={"2.5rem"} />
-                </div>
+          {userdata ? (
+            <div className="alCreatLocationTopContainer">
+              <div className="searchIconContainer" onClick={backhandlerDeposit}>
+                <IoArrowBackCircleOutline
+                  color={COLORS.white_s}
+                  size={"2.5rem"}
+                />
               </div>
-              <div className="hdAllContainerContentBottom">
-                <label className="hdAllContainerContentTopRegularLabel">
-                  Update {singleuser.walletOne?.walletName} balance
+              <div className="alCreatLocationTopContaineCL">
+                <label className="alCreatLocationTopContainerlabel">
+                  {selectItem.username}
                 </label>
-                <div className="hdContenContainerIcon">
-                  <FaWallet color={COLORS.background} size={"2.5rem"} />
-                </div>
               </div>
             </div>
+          ) : (
+            <div className="alCreatLocationTopContainer">
+              <div className="searchIconContainer" onClick={backHanndler}>
+                <IoArrowBackCircleOutline
+                  color={COLORS.white_s}
+                  size={"2.5rem"}
+                />
+              </div>
+              <div className="alCreatLocationTopContaineCL">
+                <label className="alCreatLocationTopContainerlabel">
+                  {selectItem.name}
+                </label>
+              </div>
+            </div>
+          )}
+          {loadingSingleUser ? (
+            <LoadingComponent />
+          ) : (
+            singleuser.userId && (
+              <div
+                className="hdAllContainer"
+                style={{ background: "transparent" }}
+              >
+                {/** WALLET ONE  */}
+                <div
+                  className="hdAllContainerContent"
+                  onClick={settingForWalletOne}
+                >
+                  <div className="hdAllContainerContentTop">
+                    <label className="hdAllContainerContentTopBoldLabel">
+                      {singleuser.walletOne?.walletName}
+                    </label>
+                    <div className="hdContenContainerIcon">
+                      <CiEdit color={COLORS.background} size={"2.5rem"} />
+                    </div>
+                  </div>
+                  <div className="hdAllContainerContentBottom">
+                    <label className="hdAllContainerContentTopRegularLabel">
+                      Update {singleuser.walletOne?.walletName} balance
+                    </label>
+                    <div className="hdContenContainerIcon">
+                      <FaWallet color={COLORS.background} size={"2.5rem"} />
+                    </div>
+                  </div>
+                </div>
 
-            {/** WALLET TWO */}
-            <div
-              className="hdAllContainerContent"
-              onClick={settingForWalletTwo}
-            >
-              <div className="hdAllContainerContentTop">
-                <label className="hdAllContainerContentTopBoldLabel">
-                {singleuser.walletTwo?.walletName}
-                </label>
-                <div className="hdContenContainerIcon">
-                  <CiEdit color={COLORS.background} size={"2.5rem"} />
+                {/** WALLET TWO */}
+                <div
+                  className="hdAllContainerContent"
+                  onClick={settingForWalletTwo}
+                >
+                  <div className="hdAllContainerContentTop">
+                    <label className="hdAllContainerContentTopBoldLabel">
+                      {singleuser.walletTwo?.walletName}
+                    </label>
+                    <div className="hdContenContainerIcon">
+                      <CiEdit color={COLORS.background} size={"2.5rem"} />
+                    </div>
+                  </div>
+                  <div className="hdAllContainerContentBottom">
+                    <label className="hdAllContainerContentTopRegularLabel">
+                      Update {singleuser.walletTwo?.walletName} balance
+                    </label>
+                    <div className="hdContenContainerIcon">
+                      <FaWallet color={COLORS.background} size={"2.5rem"} />
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="hdAllContainerContentBottom">
-                <label className="hdAllContainerContentTopRegularLabel">
-                  Update {singleuser.walletTwo?.walletName} balance
-                </label>
-                <div className="hdContenContainerIcon">
-                  <FaWallet color={COLORS.background} size={"2.5rem"} />
-                </div>
-              </div>
-            </div>
 
-            {/** USER ID  */}
-            <div className="hdAllContainerContent" onClick={settingForUserId}>
-              <div className="hdAllContainerContentTop">
-                <label className="hdAllContainerContentTopBoldLabel">
-                  User ID
-                </label>
-                <div className="hdContenContainerIcon">
-                  <CiEdit color={COLORS.background} size={"2.5rem"} />
+                {/** USER ID  */}
+                <div
+                  className="hdAllContainerContent"
+                  onClick={settingForUserId}
+                >
+                  <div className="hdAllContainerContentTop">
+                    <label className="hdAllContainerContentTopBoldLabel">
+                      User ID
+                    </label>
+                    <div className="hdContenContainerIcon">
+                      <CiEdit color={COLORS.background} size={"2.5rem"} />
+                    </div>
+                  </div>
+                  <div className="hdAllContainerContentBottom">
+                    <label className="hdAllContainerContentTopRegularLabel">
+                      Update user ID
+                    </label>
+                    <div className="hdContenContainerIcon">
+                      <GrUserNew color={COLORS.background} size={"2.5rem"} />
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="hdAllContainerContentBottom">
-                <label className="hdAllContainerContentTopRegularLabel">
-                  Update user ID
-                </label>
-                <div className="hdContenContainerIcon">
-                  <GrUserNew color={COLORS.background} size={"2.5rem"} />
-                </div>
-              </div>
-            </div>
 
-            {/** NOTIFICATIONL */}
-            <div
-              className="hdAllContainerContent"
-              onClick={settingForNotication}
-            >
-              <div className="hdAllContainerContentTop">
-                <label className="hdAllContainerContentTopBoldLabel">
-                  Notification
-                </label>
-                <div className="hdContenContainerIcon">
-                  <CiEdit color={COLORS.background} size={"2.5rem"} />
+                {/** NOTIFICATIONL */}
+                <div
+                  className="hdAllContainerContent"
+                  onClick={settingForNotication}
+                >
+                  <div className="hdAllContainerContentTop">
+                    <label className="hdAllContainerContentTopBoldLabel">
+                      Notification
+                    </label>
+                    <div className="hdContenContainerIcon">
+                      <CiEdit color={COLORS.background} size={"2.5rem"} />
+                    </div>
+                  </div>
+                  <div className="hdAllContainerContentBottom">
+                    <label className="hdAllContainerContentTopRegularLabel">
+                      create a push notification
+                    </label>
+                    <div className="hdContenContainerIcon">
+                      <AiFillNotification
+                        color={COLORS.background}
+                        size={"2.5rem"}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="hdAllContainerContentBottom">
-                <label className="hdAllContainerContentTopRegularLabel">
-                  create a push notification
-                </label>
-                <div className="hdContenContainerIcon">
-                  <AiFillNotification
-                    color={COLORS.background}
-                    size={"2.5rem"}
-                  />
-                </div>
-              </div>
-            </div>
 
-            {/** PLAY HISTORY  */}
-            <div
-              className="hdAllContainerContent"
-              onClick={settingForPlayHistory}
-            >
-              <div className="hdAllContainerContentTop">
-                <label className="hdAllContainerContentTopBoldLabel">
-                  Play History
-                </label>
-                <div className="hdContenContainerIcon">
-                  <FaUserCircle color={COLORS.background} size={"2.5rem"} />
+                {/** PLAY HISTORY  */}
+                <div
+                  className="hdAllContainerContent"
+                  onClick={settingForPlayHistory}
+                >
+                  <div className="hdAllContainerContentTop">
+                    <label className="hdAllContainerContentTopBoldLabel">
+                      Play History
+                    </label>
+                    <div className="hdContenContainerIcon">
+                      <FaUserCircle color={COLORS.background} size={"2.5rem"} />
+                    </div>
+                  </div>
+                  <div className="hdAllContainerContentBottom">
+                    <label className="hdAllContainerContentTopRegularLabel">
+                      User's play history
+                    </label>
+                    <div className="hdContenContainerIcon">
+                      <FaHistory color={COLORS.background} size={"2.5rem"} />
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="hdAllContainerContentBottom">
-                <label className="hdAllContainerContentTopRegularLabel">
-                  User's play history
-                </label>
-                <div className="hdContenContainerIcon">
-                  <FaHistory color={COLORS.background} size={"2.5rem"} />
-                </div>
-              </div>
-            </div>
 
-            {/** HISTORY  */}
-            <div className="hdAllContainerContent" onClick={settingForHistory}>
-              <div className="hdAllContainerContentTop">
-                <label className="hdAllContainerContentTopBoldLabel">
-                  Transaction History
-                </label>
-                <div className="hdContenContainerIcon">
-                  <FaUserCircle color={COLORS.background} size={"2.5rem"} />
+                {/** HISTORY  */}
+                <div
+                  className="hdAllContainerContent"
+                  onClick={settingForHistory}
+                >
+                  <div className="hdAllContainerContentTop">
+                    <label className="hdAllContainerContentTopBoldLabel">
+                      Transaction History
+                    </label>
+                    <div className="hdContenContainerIcon">
+                      <FaUserCircle color={COLORS.background} size={"2.5rem"} />
+                    </div>
+                  </div>
+                  <div className="hdAllContainerContentBottom">
+                    <label className="hdAllContainerContentTopRegularLabel">
+                      User's transaction history
+                    </label>
+                    <div className="hdContenContainerIcon">
+                      <FaHistory color={COLORS.background} size={"2.5rem"} />
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="hdAllContainerContentBottom">
-                <label className="hdAllContainerContentTopRegularLabel">
-                  User's transaction history
-                </label>
-                <div className="hdContenContainerIcon">
-                  <FaHistory color={COLORS.background} size={"2.5rem"} />
-                </div>
-              </div>
-            </div>
 
-            {/** END */}
-          </div>
+                {/** END */}
+              </div>
+            )
+          )}
         </div>
       )}
 
@@ -989,8 +1023,6 @@ export const AllUser = ({ userdata, backhandlerDeposit }) => {
           backHanndlerForPlayHistory={backHanndlerForPlayHistory}
         />
       )}
-
-      <ToastContainer />
     </div>
   );
 };

@@ -292,18 +292,13 @@ export const CryptoDeposit = ({ selectingPaymentType }) => {
                     </div>
 
                     <div className="uCCBottomC">
-                          <div className="uCCTopFC">
-                            <label className="pdSB">Note</label>
-                          </div>
-                          <div className="uCCBottomSC">
-                            <label className="pdRBottom">
-                              {item.paymentnote}
-                            </label>
-                          </div>
-                        </div>
-
-
-
+                      <div className="uCCTopFC">
+                        <label className="pdSB">Note</label>
+                      </div>
+                      <div className="uCCBottomSC">
+                        <label className="pdRBottom">{item.paymentnote}</label>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -412,8 +407,6 @@ export const CryptoDeposit = ({ selectingPaymentType }) => {
           )}
         </>
       )}
-
-<ToastContainer/>
     </div>
   );
 };

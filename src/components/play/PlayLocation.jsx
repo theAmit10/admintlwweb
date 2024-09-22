@@ -347,9 +347,17 @@ export const PlayLocation = () => {
   console.log(isLoadingPlayGame);
   console.log(dataPlayGame);
 
-  const formatDateTime = (dateTimeString) => {
-    return moment(dateTimeString).format("MMMM DD, YYYY hh:mm A");
-  };
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      console.log("Refetching data...");
+      refetchPlayGame(); // Trigger a refetch every 6 seconds
+    }, 6000);
+
+    // Cleanup the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [refetchPlayGame,shouldFetch]);
+
+ 
 
   const [filteredDataPG, setFilteredDataPG] = useState([]);
   const [playinsightdata, setplayinsightdata] = useState(null);
@@ -362,7 +370,7 @@ export const PlayLocation = () => {
   // }, [dataPlayGame,isLoadingPlayGame]);
 
   useEffect(() => {
-    if (dataPlayGame?.playzone?.playnumbers) {
+    if (!isLoadingPlayGame && dataPlayGame?.playzone?.playnumbers) {
       setFilteredDataPG(dataPlayGame.playzone.playnumbers);
       setplayinsightdata(dataPlayGame);
     }

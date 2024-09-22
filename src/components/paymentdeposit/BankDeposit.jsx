@@ -506,7 +506,7 @@ export const BankDeposit = ({ selectingPaymentType }) => {
         </>
       )}
 
-      <ToastContainer />
+
     </div>
   );
 };

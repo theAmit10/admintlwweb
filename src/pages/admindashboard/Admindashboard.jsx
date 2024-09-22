@@ -521,13 +521,13 @@ function Admindashboard() {
           {selectedComponent === "play" && <PlayLocation reloadKey={reloadKey} />}
           {selectedComponent === "alluser" && <AllUser reloadKey={reloadKey} />}
           {selectedComponent === "newuser" && <NewUser reloadKey={reloadKey} />}
-          {selectedComponent === "allresults" && <AllResults reloadKey={reloadKey} />}
+          {selectedComponent === "allresults" && <AllResults />}
           {selectedComponent === "history" && <Historyc key={reloadKey} />}
           {selectedComponent === "applink" && <AppLink reloadKey={reloadKey} />}
         </div>
       </div>
 
-      <ToastContainer/>
+      {/* <ToastContainer/> */}
 
       {/** MAIN CONTENT CONTAINER END */}
     </div>

@@ -3,7 +3,7 @@ import "./AlertModal.css";
 import images from "../../assets/constants/images";
 import COLORS from "../../assets/constants/colors";
 
-export const AlertModal = ({ isOpen, onClose, onConfirm, defaultAmount }) => {
+export const AlertModal = ({ isOpen, onClose, onConfirm, defaultAmount , usercountry}) => {
   const [paymentUpdateNote, setPaymentUpdateNote] = useState("");
   const [imageSource, setImageSource] = useState(null);
   const [amount, setAmount] = useState(defaultAmount);
@@ -35,12 +35,18 @@ export const AlertModal = ({ isOpen, onClose, onConfirm, defaultAmount }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
+       
+
+      
+        <p className="textp">Country : {usercountry.countryname}</p>
+        <p className="textp">Currency name : {usercountry.countrycurrencysymbol}</p>
+        <p className="textp">Currency value : {usercountry.countrycurrencyvaluecomparedtoinr}</p>
+
         <div className="imgconM">
           <div className="catimagecontainer">
             <img src={images.cat} alt="cat" className="catandtrophyimg" />
           </div>
         </div>
-
         <p className="textp">Are you sure?</p>
 
         {/* New Text Input for Amount */}

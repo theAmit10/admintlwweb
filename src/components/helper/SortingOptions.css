@@ -1,4 +1,4 @@
-.container {
+.sortcontainer {
     background: linear-gradient(180deg, #0162AF, #011833);
     padding: 2rem;
     border-radius: 1rem;
@@ -10,7 +10,7 @@
     z-index: 10;
   }
   
-  .title {
+  .sorttitle {
     text-align: center;
     font-family: 'MB'; /* Replace with your actual font */
     font-size: 2rem;
@@ -18,7 +18,7 @@
     margin-bottom: 20px;
   }
   
-  .btn {
+  .sortbtn {
     background-color: var(--background); /* Replace with actual green color */
     padding: 2rem;
     text-align: center;
@@ -32,7 +32,7 @@
     cursor: pointer;
   }
   
-  .btn:hover {
+  .sortbtn:hover {
     background-color: var(--green); /* Replace with actual dark green color */
   }
   
