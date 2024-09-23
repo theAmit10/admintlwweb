@@ -241,4 +241,11 @@
   font-size: 6rem;
   font-family: "MB";
 }
+
+@media (max-width: 480px){
+  .PLGIMainContainer{
+    flex-direction: column;
+  }
+ 
+}
  

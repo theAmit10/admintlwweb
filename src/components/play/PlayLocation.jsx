@@ -1173,7 +1173,7 @@ export const PlayLocation = () => {
                     </div>
                     <div className="PLGIRtopR">
                       <label className="pdSB">Next Result</label>
-                      <label className="pdR">09:00 PM</label>
+                      <label className="pdR">{filteredDataR[0].nextresulttime}</label>
                     </div>
                   </div>
                   <div className="PLGIRmiddle">

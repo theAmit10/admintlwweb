@@ -64,10 +64,10 @@ function Admindashboard() {
     if (selectedComponent === comp) {
       // If the same component is clicked, increment the reloadKey to force a reload
       setReloadKey((prevKey) => prevKey + 1);
-      showWarningToast("processing :: "+reloadKey)
+      // showWarningToast("processing :: "+reloadKey)
     } else {
       // Otherwise, set the selected component and reset the key
-      showWarningToast("processing :: "+reloadKey)
+      // showWarningToast("processing :: "+reloadKey)
       setSelectedComponent(comp);
       setReloadKey(0);
     }

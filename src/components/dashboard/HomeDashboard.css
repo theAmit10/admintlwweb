@@ -54,7 +54,8 @@
     padding-left: 1rem;
     padding-right: 1rem;
     align-items: center;
-    gap: 1rem
+    gap: 1rem;
+
 }
 .hdAllContainerContentBottom{
     flex: 1;
@@ -69,7 +70,9 @@
 .hdAllContainerContentTopBoldLabel{
     color: var(--white_s);
     font-family: "MB";
-    font-size: 2.5rem;
+    font-size: 2rem;
+
+
 }
 .hdAllContainerContentTopRegularLabel{
     color: var(--white_s);
